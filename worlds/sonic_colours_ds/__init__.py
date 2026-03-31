@@ -10,6 +10,8 @@ from worlds.AutoWorld import WebWorld, World
 from .client import SonicColoursDSClient
 from .items import SonicColoursDSItem, item_groups, planet_access_table, wisp_unlocks_table, emeralds_table, item_table, event_table, junk_table
 from .locations import SonicColoursDSLocation, location_groups, location_table, setup_locations
+from .regions import create_regions, connect_regions
+from .rules import set_rules
 from .options import SonicColoursDSOptions, Goal
 from .data import ItemNames, LocationNames
 
@@ -58,27 +60,35 @@ class SonicColorsDSWorld(World):
 
     required_client_version = (0, 6, 6)
 
+    starting_planet_access: list[str] = [ItemNames.tropical_resort_unlock] # Todo: convert to option
+
     def create_regions(self):
         active_locations = setup_locations(self, self.player)
-        menu_region = Region("Menu", self.player, self.multiworld)
-        menu_region.add_locations(active_locations, SonicColoursDSLocation)
-        # todo: add other regions
-        self.multiworld.regions.append(menu_region)
+        create_regions(self, active_locations)
+        connect_regions(self)
         pass
 
+    def pre_fill(self):
+        for planet_access in self.starting_planet_access:
+            self.multiworld.push_precollected(self.create_item(planet_access))
+        if self.options.goal.value == Goal.option_wisp_armor:
+            self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
+        elif self.options.goal.value == Goal.option_mother_wisp:
+            self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
+        
+
     def create_items(self):
+        num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[SonicColoursDSItem] = []
         for item in wisp_unlocks_table.keys():
             itempool.append(self.create_item(item))
         for item in planet_access_table.keys():
-            itempool.append(self.create_item(item))
-        if self.options.goal.value == Goal.option_wisp_armor:
-            self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
-        elif self.options.goal.value == Goal.option_mother_wisp:
+            if not item in self.starting_planet_access:
+                itempool.append(self.create_item(item))
+        if self.options.goal.value == Goal.option_mother_wisp:
             for item in emeralds_table.keys():
                 itempool.append(self.create_item(item))
-            self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
-        surplus_checks = len(self.get_locations()) - len(itempool) - 1
+        surplus_checks = num_locations_to_fill - len(itempool)
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
         
@@ -96,6 +106,7 @@ class SonicColorsDSWorld(World):
         return item
 
     def set_rules(self):
+        set_rules(self)
         self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.park_keys if self.options.goal.value == Goal.option_wisp_armor else ItemNames.mother_wisp, self.player)  
 
     def get_filler_item_name(self) -> str:

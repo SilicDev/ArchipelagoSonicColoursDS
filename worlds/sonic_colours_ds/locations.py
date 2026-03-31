@@ -59,11 +59,7 @@ level_clear_table = {
     LocationNames.asteroid_coaster_mission_2: 64,
     LocationNames.asteroid_coaster_mission_3: 65,
 
-    LocationNames.terminal_velocity_chase: 70,
-    
-    LocationNames.nega_wisp_armor: None,
-
-    LocationNames.nega_mother_wisp: None,
+    LocationNames.terminal_velocity_chase: 70
 }
 
 red_rings_table = {
@@ -198,6 +194,204 @@ location_table = {
     **special_stage_table,
 }
 
+tropical_resort_region_locations = [
+    LocationNames.movement_tutorial,
+    LocationNames.white_wisp_tutorial,
+
+    LocationNames.tropical_resort_act_1,
+    LocationNames.tropical_resort_act_1_red_ring_1,
+    LocationNames.tropical_resort_act_1_red_ring_2,
+    LocationNames.tropical_resort_act_1_red_ring_3,
+    LocationNames.tropical_resort_act_1_red_ring_4,
+    LocationNames.tropical_resort_act_1_red_ring_5,
+
+    LocationNames.tropical_resort_act_2,
+    LocationNames.tropical_resort_act_2_red_ring_1,
+    LocationNames.tropical_resort_act_2_red_ring_2,
+    LocationNames.tropical_resort_act_2_red_ring_3,
+    LocationNames.tropical_resort_act_2_red_ring_4,
+    LocationNames.tropical_resort_act_2_red_ring_5,
+
+    LocationNames.tropical_resort_mission_1,
+    LocationNames.tropical_resort_mission_1_red_ring_1,
+    LocationNames.tropical_resort_mission_1_red_ring_2,
+
+    LocationNames.tropical_resort_mission_2,
+    LocationNames.tropical_resort_mission_2_red_ring_1,
+    LocationNames.tropical_resort_mission_2_red_ring_2,
+
+    LocationNames.tropical_resort_mission_3,
+    LocationNames.tropical_resort_mission_3_red_ring_1,
+    LocationNames.tropical_resort_mission_3_red_ring_2,
+
+    LocationNames.tropical_resort_boss,
+]
+
+sweet_mountain_region_locations = [
+    LocationNames.red_wisp_tutorial,
+
+    LocationNames.sweet_mountain_act_1,
+    LocationNames.sweet_mountain_act_1_red_ring_1,
+    LocationNames.sweet_mountain_act_1_red_ring_2,
+    LocationNames.sweet_mountain_act_1_red_ring_3,
+    LocationNames.sweet_mountain_act_1_red_ring_4,
+    LocationNames.sweet_mountain_act_1_red_ring_5,
+
+    LocationNames.sweet_mountain_act_2,
+    LocationNames.sweet_mountain_act_2_red_ring_1,
+    LocationNames.sweet_mountain_act_2_red_ring_2,
+    LocationNames.sweet_mountain_act_2_red_ring_3,
+    LocationNames.sweet_mountain_act_2_red_ring_4,
+    LocationNames.sweet_mountain_act_2_red_ring_5,
+
+    LocationNames.sweet_mountain_mission_1,
+    LocationNames.sweet_mountain_mission_1_red_ring_1,
+    LocationNames.sweet_mountain_mission_1_red_ring_2,
+
+    LocationNames.sweet_mountain_mission_2,
+    LocationNames.sweet_mountain_mission_2_red_ring_1,
+    LocationNames.sweet_mountain_mission_2_red_ring_2,
+
+    LocationNames.sweet_mountain_mission_3,
+    LocationNames.sweet_mountain_mission_3_red_ring_1,
+    LocationNames.sweet_mountain_mission_3_red_ring_2,
+
+    LocationNames.sweet_mountain_boss,
+]
+
+starlight_carnival_region_locations = [
+    LocationNames.orange_wisp_tutorial,
+
+    LocationNames.starlight_carnival_act_1,
+    LocationNames.starlight_carnival_act_1_red_ring_1,
+    LocationNames.starlight_carnival_act_1_red_ring_2,
+    LocationNames.starlight_carnival_act_1_red_ring_3,
+    LocationNames.starlight_carnival_act_1_red_ring_4,
+    LocationNames.starlight_carnival_act_1_red_ring_5,
+
+    LocationNames.starlight_carnival_act_2,
+    LocationNames.starlight_carnival_act_2_red_ring_1,
+    LocationNames.starlight_carnival_act_2_red_ring_2,
+    LocationNames.starlight_carnival_act_2_red_ring_3,
+    LocationNames.starlight_carnival_act_2_red_ring_4,
+    LocationNames.starlight_carnival_act_2_red_ring_5,
+
+    LocationNames.starlight_carnival_mission_1,
+    LocationNames.starlight_carnival_mission_1_red_ring_1,
+    LocationNames.starlight_carnival_mission_1_red_ring_2,
+
+    LocationNames.starlight_carnival_mission_2,
+    LocationNames.starlight_carnival_mission_2_red_ring_1,
+    LocationNames.starlight_carnival_mission_2_red_ring_2,
+
+    LocationNames.starlight_carnival_mission_3,
+    LocationNames.starlight_carnival_mission_3_red_ring_1,
+    LocationNames.starlight_carnival_mission_3_red_ring_2,
+
+    LocationNames.starlight_carnival_boss,
+]
+
+planet_wisp_region_locations = [
+    LocationNames.yellow_wisp_tutorial,
+
+    LocationNames.planet_wisp_act_1,
+    LocationNames.planet_wisp_act_1_red_ring_1,
+    LocationNames.planet_wisp_act_1_red_ring_2,
+    LocationNames.planet_wisp_act_1_red_ring_3,
+    LocationNames.planet_wisp_act_1_red_ring_4,
+    LocationNames.planet_wisp_act_1_red_ring_5,
+
+    LocationNames.planet_wisp_act_2,
+    LocationNames.planet_wisp_act_2_red_ring_1,
+    LocationNames.planet_wisp_act_2_red_ring_2,
+    LocationNames.planet_wisp_act_2_red_ring_3,
+    LocationNames.planet_wisp_act_2_red_ring_4,
+    LocationNames.planet_wisp_act_2_red_ring_5,
+
+    LocationNames.planet_wisp_mission_1,
+    LocationNames.planet_wisp_mission_1_red_ring_1,
+    LocationNames.planet_wisp_mission_1_red_ring_2,
+
+    LocationNames.planet_wisp_mission_2,
+    LocationNames.planet_wisp_mission_2_red_ring_1,
+    LocationNames.planet_wisp_mission_2_red_ring_2,
+
+    LocationNames.planet_wisp_mission_3,
+    LocationNames.planet_wisp_mission_3_red_ring_1,
+    LocationNames.planet_wisp_mission_3_red_ring_2,
+
+    LocationNames.planet_wisp_boss,
+]
+
+aquarium_park_region_locations = [
+    LocationNames.cyan_wisp_tutorial,
+
+    LocationNames.aquarium_park_act_1,
+    LocationNames.aquarium_park_act_1_red_ring_1,
+    LocationNames.aquarium_park_act_1_red_ring_2,
+    LocationNames.aquarium_park_act_1_red_ring_3,
+    LocationNames.aquarium_park_act_1_red_ring_4,
+    LocationNames.aquarium_park_act_1_red_ring_5,
+
+    LocationNames.aquarium_park_act_2,
+    LocationNames.aquarium_park_act_2_red_ring_1,
+    LocationNames.aquarium_park_act_2_red_ring_2,
+    LocationNames.aquarium_park_act_2_red_ring_3,
+    LocationNames.aquarium_park_act_2_red_ring_4,
+    LocationNames.aquarium_park_act_2_red_ring_5,
+
+    LocationNames.aquarium_park_mission_1,
+    LocationNames.aquarium_park_mission_1_red_ring_1,
+    LocationNames.aquarium_park_mission_1_red_ring_2,
+
+    LocationNames.aquarium_park_mission_2,
+    LocationNames.aquarium_park_mission_2_red_ring_1,
+    LocationNames.aquarium_park_mission_2_red_ring_2,
+
+    LocationNames.aquarium_park_mission_3,
+    LocationNames.aquarium_park_mission_3_red_ring_1,
+    LocationNames.aquarium_park_mission_3_red_ring_2,
+
+    LocationNames.aquarium_park_boss,
+]
+
+asteroid_coaster_region_locations = [
+    LocationNames.violet_wisp_tutorial,
+
+    LocationNames.asteroid_coaster_act_1,
+    LocationNames.asteroid_coaster_act_1_red_ring_1,
+    LocationNames.asteroid_coaster_act_1_red_ring_2,
+    LocationNames.asteroid_coaster_act_1_red_ring_3,
+    LocationNames.asteroid_coaster_act_1_red_ring_4,
+    LocationNames.asteroid_coaster_act_1_red_ring_5,
+
+    LocationNames.asteroid_coaster_act_2,
+    LocationNames.asteroid_coaster_act_2_red_ring_1,
+    LocationNames.asteroid_coaster_act_2_red_ring_2,
+    LocationNames.asteroid_coaster_act_2_red_ring_3,
+    LocationNames.asteroid_coaster_act_2_red_ring_4,
+    LocationNames.asteroid_coaster_act_2_red_ring_5,
+
+    LocationNames.asteroid_coaster_mission_1,
+    LocationNames.asteroid_coaster_mission_1_red_ring_1,
+    LocationNames.asteroid_coaster_mission_1_red_ring_2,
+
+    LocationNames.asteroid_coaster_mission_2,
+    LocationNames.asteroid_coaster_mission_2_red_ring_1,
+    LocationNames.asteroid_coaster_mission_2_red_ring_2,
+
+    LocationNames.asteroid_coaster_mission_3,
+    LocationNames.asteroid_coaster_mission_3_red_ring_1,
+    LocationNames.asteroid_coaster_mission_3_red_ring_2,
+
+    LocationNames.asteroid_coaster_boss,
+]
+
+terminal_velocity_region_locations = [
+    LocationNames.terminal_velocity_chase,
+    LocationNames.nega_wisp_armor,
+]
+
 def setup_locations(world: World, player: int):
     locations = {}
 
@@ -206,6 +400,13 @@ def setup_locations(world: World, player: int):
 
     if world.options.redringsanity:
         locations.update({**red_rings_table})
+    if world.options.goal.value == 0:
+        locations.update({LocationNames.nega_wisp_armor: None})
+    elif world.options.goal.value == 1:
+        locations.update({
+            LocationNames.nega_wisp_armor: 80,
+            LocationNames.nega_mother_wisp: None
+        })
 
     return locations
 
@@ -215,11 +416,20 @@ location_groups = {
     "Level Clear": list(level_clear_table.keys()),
     "Red Rings": list(red_rings_table.keys()),
     "Special Stage": list(special_stage_table.keys()),
-    "Tutorial": {name for name, _ in location_table.items() if name.endswith("Tutorial")},
-    "Tropical Resort": {name for name, _ in location_table.items() if name.startswith("Tropical Resort")},
-    "Sweet Mountain": {name for name, _ in location_table.items() if name.startswith("Sweet Mountain")},
-    "Starlight Carnival": {name for name, _ in location_table.items() if name.startswith("Starlight Carnival")},
-    "Planet Wisp": {name for name, _ in location_table.items() if name.startswith("Planet Wisp")},
-    "Aquarium Park": {name for name, _ in location_table.items() if name.startswith("Aquarium Park")},
-    "Asteroid Coaster": {name for name, _ in location_table.items() if name.startswith("Asteroid Coaster")},
+    "Tutorial": {
+        LocationNames.movement_tutorial,
+        LocationNames.white_wisp_tutorial,
+        LocationNames.red_wisp_tutorial,
+        LocationNames.orange_wisp_tutorial,
+        LocationNames.yellow_wisp_tutorial,
+        LocationNames.cyan_wisp_tutorial,
+        LocationNames.violet_wisp_tutorial,
+    },
+    "Tropical Resort": tropical_resort_region_locations,
+    "Sweet Mountain": sweet_mountain_region_locations,
+    "Starlight Carnival": starlight_carnival_region_locations,
+    "Planet Wisp": planet_wisp_region_locations,
+    "Aquarium Park": aquarium_park_region_locations,
+    "Asteroid Coaster": asteroid_coaster_region_locations,
+    "Terminal Velocity": terminal_velocity_region_locations,
 }
