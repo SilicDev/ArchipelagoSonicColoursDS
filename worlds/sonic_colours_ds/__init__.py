@@ -1,6 +1,7 @@
 """
 Archipelago World definition for Sonic Colours (DS)
 """
+import os
 import typing
 
 from BaseClasses import Item, ItemClassification, Region, Tutorial
@@ -12,6 +13,7 @@ from .items import SonicColoursDSItem, item_groups, planet_access_table, wisp_un
 from .locations import SonicColoursDSLocation, location_groups, location_table, setup_locations
 from .regions import create_regions, connect_regions
 from .rules import set_rules
+from .rom import SonicColoursDSPatch
 from .options import SonicColoursDSOptions, Goal
 from .data import ItemNames, LocationNames
 
@@ -38,7 +40,7 @@ class SonicColoursDSSettings(settings.Group):
         """File name of your European Sonic Colours (DS) ROM"""
         description = "Sonic Colours (DS) ROM File"
         copy_to = "Sonic Colours (Europe) (En,Ja,Fr,De,Es,It).nds"
-        md5s = ["d098c9ea8192ebb4ea63a6bd2d2b4670"]
+        md5s = [SonicColoursDSPatch.hash]
 
     rom_file: SonicColoursDSRomFile = SonicColoursDSRomFile(SonicColoursDSRomFile.copy_to)
 
@@ -112,3 +114,23 @@ class SonicColorsDSWorld(World):
     def get_filler_item_name(self) -> str:
         junk_keys = list(junk_table.keys())
         return self.multiworld.random.choice(junk_keys)
+    
+    def generate_output(self, output_directory: str):
+        try:
+            multiworld = self.multiworld
+            player = self.player
+
+            rom = open(self.settings.rom_file, "rb")
+            #patch rom
+
+            rompath = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}.nds")
+            out_rom = open(rompath, "wb+")
+            out_rom.write(rom.read())
+            rom.close()
+            out_rom.close()
+
+            patch = SonicColoursDSPatch(os.path.splitext(rompath)[0]+SonicColoursDSPatch.patch_file_ending, player=player,
+                                  player_name=multiworld.player_name[player])
+            patch.write()
+        except:
+            raise
