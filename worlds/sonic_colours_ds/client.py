@@ -8,14 +8,22 @@ from worlds._bizhawk.client import BizHawkClient
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
 
-from .data import DataMaps
-from .locations import location_table
+from .data import DataMaps, ItemNames, LocationNames
+from .locations import location_table, red_rings_table, level_clear_table
+from .items import item_table, wisp_unlocks_table, emeralds_table
 
 
+SCDS_RED_RINGS = 0x119BB4
+SCDS_SCORES = 0x119BC0
 SCDS_AREA_ID = 0x1207C4
 SCDS_LEVEL_ID = 0x1207C8
 SCDS_LEVEL_RED_RINGS = 0x1208D7
+SCDS_ACTIVE_WISPS = 0x120900
+
+SCDS_COUNTER_POINTER = 0x163D6C
 SCDS_SONIC_POINTER = 0x19B19C
+
+SCDS_RAM_START = 0x02000000
 
 class SonicColoursDSClient(BizHawkClient):
     game = "Sonic Colours (DS)"
@@ -23,11 +31,17 @@ class SonicColoursDSClient(BizHawkClient):
     patch_suffix = ".apscds"
 
     local_checked_locations: Set[int]
+    local_active_wisps: int
+    local_red_rings = 0
     last_level: int
+    num_items_received: int
 
     def initialize_client(self) -> None:
         self.local_checked_locations = set()
         self.last_level = -1
+        self.local_active_wisps = 0
+        self.local_red_rings = 0
+        self.num_items_received = 0
         pass
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
@@ -45,7 +59,7 @@ class SonicColoursDSClient(BizHawkClient):
             return False  # Should verify on the next pass
 
         ctx.game = self.game
-        ctx.items_handling = 0b001
+        ctx.items_handling = 0b011
         ctx.want_slot_data = True
         ctx.watcher_timeout = 0.125
 
@@ -62,12 +76,15 @@ class SonicColoursDSClient(BizHawkClient):
             read_result = await bizhawk.read(
                 ctx.bizhawk_ctx, 
                 [
-                    (SCDS_SONIC_POINTER, 4, "Main RAM")
+                    (SCDS_SONIC_POINTER, 4, "Main RAM"),
+                    (SCDS_COUNTER_POINTER, 4, "Main RAM")
                 ])
             
             guards["SONIC"] = (SCDS_SONIC_POINTER, read_result[0], "Main RAM")
+            guards["COUNTERS"] = (SCDS_COUNTER_POINTER, read_result[1], "Main RAM")
 
             sonic = int.from_bytes(guards["SONIC"][1], "little")
+            counters = int.from_bytes(guards["COUNTERS"][1], "little")
             
             read_result = await bizhawk.read(
                 ctx.bizhawk_ctx, 
@@ -81,12 +98,28 @@ class SonicColoursDSClient(BizHawkClient):
 
             area_id = int.from_bytes(guards["AREA"][1], "little")
             level_id = int.from_bytes(guards["LEVEL"][1], "little")
+            location_prefix = DataMaps.level_id_to_location[level_id]
+
+            if ctx.slot_data["redringsanity"] == Toggle.option_true:
+                red_ring_storage = 0
+                for location in ctx.checked_locations:
+                    location_name = ctx.location_names.lookup_in_game(location)
+                    if location_name in red_rings_table.keys():
+                        red_ring_storage |= 1 << (location_table[location_name] - location_table[LocationNames.tropical_resort_act_1_red_ring_1])
+                if red_ring_storage != self.local_red_rings:
+                    await bizhawk.guarded_write(
+                        ctx.bizhawk_ctx,
+                        [
+                            (SCDS_RED_RINGS, red_ring_storage.to_bytes(12, "little"), "Main RAM")
+                        ], [guards["SONIC"]])
+                    self.local_red_rings = red_ring_storage
+
+            await self.handle_received_items(ctx, guards)
 
             local_checked_locations: set[int] = set()
-            if ctx.slot_data["redringsanity"] == Toggle.option_true:
-                location_prefix = DataMaps.level_id_to_location[level_id]
+            if counters > SCDS_RAM_START and ctx.slot_data["redringsanity"] == Toggle.option_true:
                 read_result = await bizhawk.guarded_read(
-                    ctx.bizhawk_ctx, 
+                    ctx.bizhawk_ctx,
                     [
                         (SCDS_LEVEL_RED_RINGS, 5, "Main RAM")
                     ],
@@ -95,6 +128,65 @@ class SonicColoursDSClient(BizHawkClient):
                     for ring in range(len(read_result[0])):
                         if read_result[0][ring] == 1:
                             local_checked_locations.add(location_table[location_prefix + " - Red Star Ring " + str(ring + 1)])
+            
+            for location in ctx.checked_locations:
+                location_name = ctx.location_names.lookup_in_game(location)
+                if (location >= location_table[LocationNames.tropical_resort_act_1] 
+                        and location <= location_table[LocationNames.asteroid_coaster_mission_3] 
+                        and location_name in level_clear_table.keys()):
+                    offset = (location_table[location_name] - location_table[LocationNames.tropical_resort_act_1]) * 4
+                    read_result = await bizhawk.guarded_read(
+                        ctx.bizhawk_ctx,
+                        [
+                            (SCDS_SCORES + offset, 4, "Main RAM")
+                        ],
+                        [guards["SONIC"]])
+                    if read_result is not None:
+                        score = int.from_bytes(read_result[0], "little")
+                        if score == 0:
+                            score = 1
+                            await bizhawk.guarded_write(
+                                ctx.bizhawk_ctx,
+                                [
+                                    (SCDS_SCORES + offset, score.to_bytes(4, "little"), "Main RAM")
+                                ], [guards["SONIC"]])
+            
+            for location in level_clear_table.keys():
+                location_code = level_clear_table[location]
+                if location_code <= location_table[LocationNames.asteroid_coaster_mission_3]:
+                    offset = (location_code - location_table[LocationNames.tropical_resort_act_1]) * 4
+                    read_result = await bizhawk.guarded_read(
+                        ctx.bizhawk_ctx,
+                        [
+                            (SCDS_SCORES + offset, 4, "Main RAM")
+                        ],
+                        [guards["SONIC"]])
+                    if read_result is not None:
+                        score = int.from_bytes(read_result[0], "little")
+                        if score > 0xF: #ignore rank
+                            rank = score & 0xF
+                            local_checked_locations.add(location_code)
+
+
+
+            location_prefix = DataMaps.level_id_to_location[level_id]
+            read_result = await bizhawk.guarded_read(
+                ctx.bizhawk_ctx,
+                [
+                    (SCDS_ACTIVE_WISPS, 5, "Main RAM")
+                ],
+                [guards["SONIC"], guards["LEVEL"]])
+            if read_result is not None:
+                wisps = int.from_bytes(read_result[0])
+                if self.local_active_wisps != wisps:
+                    await bizhawk.guarded_write(
+                        ctx.bizhawk_ctx,
+                        [
+                            (SCDS_ACTIVE_WISPS, [self.local_active_wisps], "Main RAM")
+                        ], [guards["SONIC"]])
+            
+
+            
             # Send locations
             if local_checked_locations != self.local_checked_locations:
                 self.local_checked_locations = local_checked_locations
@@ -106,3 +198,15 @@ class SonicColoursDSClient(BizHawkClient):
             # Exit handler and return to main loop to reconnect
             pass
         pass
+
+    async def handle_received_items(self, ctx: "BizHawkClientContext", guards: Dict[str, Tuple[int, bytes, str]]) -> None:
+        if len(ctx.items_received) > self.num_items_received:
+            item = ctx.items_received[self.num_items_received]
+            if item.player == ctx.slot:
+                item_name = ctx.item_names.lookup_in_game(item.item)
+                if item_name in wisp_unlocks_table.keys():
+                    self.local_active_wisps |= 1 << (item_table[item_name].code - item_table[ItemNames.white_wisp_unlock].code)
+
+    def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
+        if cmd == "Connected":
+            self.initialize_client()

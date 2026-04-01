@@ -13,11 +13,11 @@ class SonicColoursDSItem(Item):
     game: str = "Sonic Colours (DS)"
 
 junk_table = {
-    ItemNames.five_rings: ItemData(0, False),
-    ItemNames.ten_rings: ItemData(1, False),
-    ItemNames.twenty_rings: ItemData(2, False),
-    ItemNames.extra_life: ItemData(3, False),
-    ItemNames.invincibility: ItemData(4, False),
+    ItemNames.five_rings: ItemData(1, False),
+    ItemNames.ten_rings: ItemData(2, False),
+    ItemNames.twenty_rings: ItemData(3, False),
+    ItemNames.extra_life: ItemData(4, False),
+    ItemNames.invincibility: ItemData(5, False),
 }
 
 emeralds_table = {
