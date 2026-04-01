@@ -38,8 +38,8 @@ starlight_carnival_unlock = "Starlight Carnival Shuttle"
 planet_wisp_unlock = "Planet Wisp Shuttle"
 aquarium_park_unlock = "Aquarium Park Shuttle"
 asteroid_coaster_unlock = "Asteroid Coaster Shuttle"
-terminal_velocity_unlock = "Elevator Access Code"
+terminal_velocity_unlock = "Space Elevator Access Code"
 
 # Goal Items
-park_keys = "The Keys to Eggman's Incredible Interstellar Amusement Park"
-mother_wisp = "The Mother Wisp"
+park_keys = "Keys to Eggman's Incredible Interstellar Amusement Park"
+mother_wisp = "Mother Wisp"

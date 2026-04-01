@@ -94,7 +94,7 @@ class SonicColoursDSClient(BizHawkClient):
                 if read_result is not None:
                     for ring in range(len(read_result[0])):
                         if read_result[0][ring] == 1:
-                            local_checked_locations.add(location_table[location_prefix + " - Red Ring " + str(ring + 1)])
+                            local_checked_locations.add(location_table[location_prefix + " - Red Star Ring " + str(ring + 1)])
             # Send locations
             if local_checked_locations != self.local_checked_locations:
                 self.local_checked_locations = local_checked_locations

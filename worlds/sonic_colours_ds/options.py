@@ -10,8 +10,8 @@ class Goal(Choice):
     """
     Determines what your goal is to consider the game beaten.
 
-    - Nega Wisp Armor: Beat Eggman at the end of Terminal Velocity (requires all Wisps)
-    - Nega Mother Wisp: Beat the Nega Mother Wisp after collecting all seven chaos emeralds
+    - Nega-Wisp Armor: Beat Eggman at the end of Terminal Velocity (requires all Wisps)
+    - Nega-Mother Wisp: Beat the Nega-Mother Wisp after collecting all seven Chaos Emeralds
     """
     display_name = "Goal"
     default = 0
@@ -20,7 +20,7 @@ class Goal(Choice):
 
 class RedRingSanity(Toggle):
     """
-    Collecting a red ring gives you an item.
+    Collecting a Red Star Ring gives you an item.
     """
     display_name = "RedRingSanity"
 
