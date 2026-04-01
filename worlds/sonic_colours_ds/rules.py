@@ -26,5 +26,113 @@ def set_rules(world: World) -> None:
     if world.options.redringsanity:
         set_red_ring_rules(world)
 
+    set_level_rules(world)
+
+def set_level_rules(world: World) -> None:
+    # Tropical Resort
+    set_rule(world.get_location(LocationNames.white_wisp_tutorial),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_1),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player)) # TODO: Make this dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_2),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_3),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
+    
+    # Sweet Mountain
+    set_rule(world.get_location(LocationNames.red_wisp_tutorial),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_act_1),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_act_2),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_boss),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_1),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_3),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    
+    # Starlight Carnival
+    set_rule(world.get_location(LocationNames.orange_wisp_tutorial),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.starlight_carnival_act_1),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.starlight_carnival_act_2),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.starlight_carnival_mission_1),
+            lambda state: state.has_any([
+                ItemNames.white_wisp_unlock,
+                ItemNames.orange_wisp_unlock
+            ], world.player)) # TODO: Make both dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.starlight_carnival_mission_2),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player) or state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock
+            ], world.player)) # TODO: Make Boost + Laser dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.starlight_carnival_mission_3),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
+    
+    # Planet Wisp
+    set_rule(world.get_location(LocationNames.yellow_wisp_tutorial),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    
+    # Aquarium Park
+    set_rule(world.get_location(LocationNames.cyan_wisp_tutorial),
+            lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
+
+    # Asteroid Coaster
+    set_rule(world.get_location(LocationNames.violet_wisp_tutorial),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+
 def set_red_ring_rules(world: World) -> None:
-    pass
+    # Tropical Resort Act 1
+
+    # Tropical Resort Act 2
+
+    # Tropical Resort Missions
+
+    # Sweet Mountain Act 1
+
+    # Sweet Mountain Act 2
+
+    # Sweet Mountain Missions
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_1_red_ring_1),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_1_red_ring_2),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_2_red_ring_1),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_3_red_ring_1),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_1_red_ring_2),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    
+    # Starlight Carnival Act 1
+
+    # Starlight Carnival Act 2
+    
+    # Starlight Carnival Missions
+    set_rule(world.get_location(LocationNames.starlight_carnival_mission_2_red_ring_2),
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player) or state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock
+            ], world.player)) # TODO: Make Boost + Laser dependent on Rando Difficulty
+
+    # Planet Wisp Act 1
+
+    # Planet Wisp Act 2
+
+    # Planet Wisp Missions
+
+    # Aquarium Park Act 1
+
+    # Aquarium Park Act 2
+
+    # Aquarium Park Missions
+
+    # Asteroid Coaster Act 1
+
+    # Asteroid Coaster Act 2
+
+    # Asteroid Coaster Missions
