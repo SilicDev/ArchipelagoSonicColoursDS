@@ -134,3 +134,10 @@ class SonicColorsDSWorld(World):
             patch.write()
         except:
             raise
+    
+    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+        slot_data = self.options.as_dict(
+            "goal",
+            "redringsanity",
+        )
+        return slot_data

@@ -20,7 +20,7 @@ class Goal(Choice):
 
 class RedRingSanity(Toggle):
     """
-    Collecting a ring gives you an item.
+    Collecting a red ring gives you an item.
     """
     display_name = "RedRingSanity"
 
