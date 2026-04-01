@@ -206,6 +206,7 @@ class SonicColoursDSClient(BizHawkClient):
                 item_name = ctx.item_names.lookup_in_game(item.item)
                 if item_name in wisp_unlocks_table.keys():
                     self.local_active_wisps |= 1 << (item_table[item_name].code - item_table[ItemNames.white_wisp_unlock].code)
+            self.num_items_received += 1
 
     def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
         if cmd == "Connected":
