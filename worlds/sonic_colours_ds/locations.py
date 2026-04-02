@@ -404,6 +404,7 @@ terminal_velocity_region_locations = [
 def setup_locations(world: World, player: int):
     locations = {}
 
+    locations.update({**tutorial_clear_table})
     locations.update({**level_clear_table})
     locations.update({**special_stage_table})
 
