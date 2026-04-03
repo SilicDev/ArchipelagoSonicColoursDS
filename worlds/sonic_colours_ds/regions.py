@@ -4,11 +4,9 @@ from BaseClasses import CollectionState, Region, Entrance, ItemClassification
 from worlds.AutoWorld import World
 from .locations import *
 from .data import LocationNames, ItemNames
+from .options import Goal
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
-    menu_locations = []
-    if world.options.goal.value == 1:
-        menu_locations.append(LocationNames.nega_mother_wisp)
     menu_region = create_region(world, "Menu", active_locations, menu_locations)
     tropical_resort_region = create_region(world, LocationNames.tropical_resort_region, active_locations, tropical_resort_region_locations)
     sweet_mountain_region = create_region(world, LocationNames.sweet_mountain_region, active_locations, sweet_mountain_region_locations)
@@ -17,6 +15,8 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     aquarium_park_region = create_region(world, LocationNames.aquarium_park_region, active_locations, aquarium_park_region_locations)
     asteroid_coaster_region = create_region(world, LocationNames.asteroid_coaster_region, active_locations, asteroid_coaster_region_locations)
     terminal_velocity_region = create_region(world, LocationNames.terminal_velocity_region, active_locations, terminal_velocity_region_locations)
+    if world.options.goal.value == Goal.option_mother_wisp:
+        terminal_velocity_region.locations.append(LocationNames.nega_mother_wisp)
 
     world.multiworld.regions += [
         menu_region,
