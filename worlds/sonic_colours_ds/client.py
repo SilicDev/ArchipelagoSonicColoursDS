@@ -18,6 +18,7 @@ from .options import Goal
 SCDS_RED_RINGS = 0x119BB4
 SCDS_SCORES = 0x119BC0
 SCDS_ITEMS_RECEIVED = 0x119C0C # actually this is the score for the nega-mother wisp
+SCDS_SPECIAL_STAGE_SCORES = 0x119C58
 SCDS_AREA_ID = 0x1207C4
 SCDS_LEVEL_ID = 0x1207C8
 SCDS_LEVEL_RED_RINGS = 0x1208D7
@@ -39,6 +40,7 @@ SCDS_TV_BOSS_WISPS = 0x1A00B4 # five 4 byte values
 SCDS_LEVEL_SELECT_PREVIEW = 0x1A098A
 
 SCDS_RAM_START = 0x02000000
+SCDS_RAM_SIZE = 0x00400000
 
 class SonicColoursDSClient(BizHawkClient):
     game = "Sonic Colours (DS)"
@@ -107,7 +109,7 @@ class SonicColoursDSClient(BizHawkClient):
             sonic = int.from_bytes(guards["SONIC"][1], "little")
             counters = int.from_bytes(guards["COUNTERS"][1], "little")
 
-            if counters > 0x6000000:
+            if counters > (SCDS_RAM_START + SCDS_RAM_SIZE):
                 return # assume invalid
             
             read_result = await bizhawk.read(
@@ -217,17 +219,25 @@ class SonicColoursDSClient(BizHawkClient):
                                     (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
                                 ], [guards["SONIC"], guards["AREA"]])
 
-            read_result = await bizhawk.guarded_read(
+            await bizhawk.guarded_write(
                 ctx.bizhawk_ctx,
                 [
-                    (SCDS_SPECIAL_STAGE_UNLOCKED, 4, "Main RAM")
+                    (SCDS_SPECIAL_STAGE_UNLOCKED, (0x3333333).to_bytes(4, "little"), "Main RAM")
                 ],
                 [guards["SONIC"], guards["AREA"]])
-            if read_result is not None:
-                special_stages = int.from_bytes(read_result[0], "little")
-                for i in range(7):
-                    if (special_stages >> (i * 4)) & 0xF == 3:
-                        local_checked_locations.add(location_table["Special Stage " + str(i + 1)])
+            for i in range(7):
+                read_result = await bizhawk.guarded_read(
+                    ctx.bizhawk_ctx,
+                    [
+                        (SCDS_SPECIAL_STAGE_SCORES + i * 4, 4, "Main RAM")
+                    ],
+                    [guards["SONIC"], guards["LEVEL"]])
+                if read_result is not None:
+                    score = int.from_bytes(read_result[0], "little")
+                    if score > 0xF: #ignore rank
+                        rank = score & 0xF
+                        if rank > ctx.slot_data["rankrequirement"]:
+                            local_checked_locations.add(location_table["Special Stage " + str(i + 1)])
             if counters > SCDS_RAM_START and ctx.slot_data["redringsanity"] == Toggle.option_true:
                 read_result = await bizhawk.guarded_read(
                     ctx.bizhawk_ctx,

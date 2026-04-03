@@ -207,7 +207,13 @@ location_table = {
 }
 
 menu_locations = [
-    LocationNames.special_stage_7
+    LocationNames.special_stage_1,
+    LocationNames.special_stage_2,
+    LocationNames.special_stage_3,
+    LocationNames.special_stage_4,
+    LocationNames.special_stage_5,
+    LocationNames.special_stage_6,
+    LocationNames.special_stage_7,
 ]
 
 tropical_resort_region_locations = [
@@ -241,8 +247,6 @@ tropical_resort_region_locations = [
     LocationNames.tropical_resort_mission_3_red_ring_2,
 
     LocationNames.tropical_resort_boss,
-
-    LocationNames.special_stage_1,
 ]
 
 sweet_mountain_region_locations = [
@@ -275,8 +279,6 @@ sweet_mountain_region_locations = [
     LocationNames.sweet_mountain_mission_3_red_ring_2,
 
     LocationNames.sweet_mountain_boss,
-    
-    LocationNames.special_stage_2,
 ]
 
 starlight_carnival_region_locations = [
@@ -309,8 +311,6 @@ starlight_carnival_region_locations = [
     LocationNames.starlight_carnival_mission_3_red_ring_2,
 
     LocationNames.starlight_carnival_boss,
-    
-    LocationNames.special_stage_3,
 ]
 
 planet_wisp_region_locations = [
@@ -343,8 +343,6 @@ planet_wisp_region_locations = [
     LocationNames.planet_wisp_mission_3_red_ring_2,
 
     LocationNames.planet_wisp_boss,
-    
-    LocationNames.special_stage_4,
 ]
 
 aquarium_park_region_locations = [
@@ -377,8 +375,6 @@ aquarium_park_region_locations = [
     LocationNames.aquarium_park_mission_3_red_ring_2,
 
     LocationNames.aquarium_park_boss,
-    
-    LocationNames.special_stage_5,
 ]
 
 asteroid_coaster_region_locations = [
@@ -411,8 +407,6 @@ asteroid_coaster_region_locations = [
     LocationNames.asteroid_coaster_mission_3_red_ring_2,
 
     LocationNames.asteroid_coaster_boss,
-    
-    LocationNames.special_stage_6,
 ]
 
 terminal_velocity_region_locations = [
