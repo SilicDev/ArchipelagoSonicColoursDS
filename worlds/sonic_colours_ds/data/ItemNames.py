@@ -24,12 +24,12 @@ cyan_wisp = "Cyan Wisp"
 violet_wisp = "Violet Wisp"
 
 # Wisp unlocks
-white_wisp_unlock = "White Wisp Translator"
-red_wisp_unlock = "Red Wisp Translator"
-orange_wisp_unlock = "Orange Wisp Translator"
-yellow_wisp_unlock = "Yellow Wisp Translator"
-cyan_wisp_unlock = "Cyan Wisp Translator"
-violet_wisp_unlock = "Violet Wisp Translator"
+white_wisp_unlock = "White Wisp Translator (White Boost)"
+red_wisp_unlock = "Red Wisp Translator (Red Burst)"
+orange_wisp_unlock = "Orange Wisp Translator (Orange Rocket)"
+yellow_wisp_unlock = "Yellow Wisp Translator (Yellow Drill)"
+cyan_wisp_unlock = "Cyan Wisp Translator (Cyan Laser)"
+violet_wisp_unlock = "Violet Wisp Translator (Violet Void)"
 
 # Planet unlocks
 tropical_resort_unlock = "Tropical Resort Shuttle"
