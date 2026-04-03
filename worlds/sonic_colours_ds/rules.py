@@ -33,7 +33,7 @@ def set_level_rules(world: World) -> None:
     set_rule(world.get_location(LocationNames.white_wisp_tutorial),
             lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.tropical_resort_mission_1),
-            lambda state: state.has(ItemNames.white_wisp_unlock, world.player)) # TODO: Make this dependent on Rando Difficulty
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.tropical_resort_mission_2),
             lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.tropical_resort_mission_3),
@@ -50,6 +50,8 @@ def set_level_rules(world: World) -> None:
             lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.sweet_mountain_mission_1),
             lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_2),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.sweet_mountain_mission_3),
             lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
     
@@ -71,7 +73,10 @@ def set_level_rules(world: World) -> None:
                 ItemNames.cyan_wisp_unlock
             ], world.player)) # TODO: Make Boost + Laser dependent on Rando Difficulty
     set_rule(world.get_location(LocationNames.starlight_carnival_mission_3),
-            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.orange_wisp_unlock
+            ], world.player))
     
     # Planet Wisp
     set_rule(world.get_location(LocationNames.yellow_wisp_tutorial),
@@ -88,7 +93,10 @@ def set_level_rules(world: World) -> None:
     set_rule(world.get_location(LocationNames.planet_wisp_mission_1),
             lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.planet_wisp_mission_2),
-            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.yellow_wisp_unlock
+            ], world.player))
     set_rule(world.get_location(LocationNames.planet_wisp_mission_3),
             lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
 
