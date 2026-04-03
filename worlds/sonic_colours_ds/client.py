@@ -202,13 +202,13 @@ class SonicColoursDSClient(BizHawkClient):
                             [
                                 (SCDS_CHAOS_EMERALDS, self.local_emeralds.to_bytes(2, "little"), "Main RAM")
                             ], [guards["SONIC"], guards["AREA"]])
-                        if self.local_emeralds == 0x7F:
+                        if self.local_emeralds == 0x7F and story_completion > 0xF0000 and story_completion < 0x110000:
                             await bizhawk.guarded_write(
                                 ctx.bizhawk_ctx,
                                 [
                                     (SCDS_STORY_COMPLETION, 0x104455.to_bytes(3, "little"), "Main RAM"), # game handles opening mother wisp from here
-                                    (SCDS_PLANET_AREA_FLAGS, 0x777777.to_bytes(3, "little"), "Main RAM"),
-                                    (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
+                                    (SCDS_PLANET_AREA_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM"),
+                                    (SCDS_MISSION_UNLOCK_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM")
                                 ], [guards["SONIC"], guards["AREA"]])
                         elif story_completion < 0xF0000:
                             await bizhawk.guarded_write(
