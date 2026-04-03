@@ -76,14 +76,71 @@ def set_level_rules(world: World) -> None:
     # Planet Wisp
     set_rule(world.get_location(LocationNames.yellow_wisp_tutorial),
             lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
-    
+    set_rule(world.get_location(LocationNames.planet_wisp_act_1),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_act_2),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_boss),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.yellow_wisp_unlock
+            ], world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_1),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_2),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_3),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+
     # Aquarium Park
     set_rule(world.get_location(LocationNames.cyan_wisp_tutorial),
             lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.aquarium_park_act_2),
+            lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_1),
+            lambda state: state.has_any([
+                ItemNames.white_wisp_unlock,
+                ItemNames.yellow_wisp_unlock,
+                ItemNames.cyan_wisp_unlock
+            ], world.player))
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_2),
+            lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_3),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock
+            ], world.player))
 
     # Asteroid Coaster
     set_rule(world.get_location(LocationNames.violet_wisp_tutorial),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_1),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost/Laser dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_3),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player) or state.has_all([
+                ItemNames.cyan_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost/Laser dependent on Rando Difficulty
+    
+    # Terminal Velocity
+    set_rule(world.get_location(LocationNames.terminal_velocity_chase),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player)) # TODO: Make this dependent on Rando Difficulty
 
 def set_red_ring_rules(world: World) -> None:
     # Tropical Resort Act 1
@@ -124,17 +181,71 @@ def set_red_ring_rules(world: World) -> None:
     # Planet Wisp Act 1
 
     # Planet Wisp Act 2
+    set_rule(world.get_location(LocationNames.planet_wisp_act_2_red_ring_4),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_act_2_red_ring_5),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
 
     # Planet Wisp Missions
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_1_red_ring_1),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_1_red_ring_2),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_2_red_ring_1),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_2_red_ring_2),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_3_red_ring_1),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_3_red_ring_2),
+            lambda state: state.has(ItemNames.yellow_wisp_unlock, world.player))
 
     # Aquarium Park Act 1
 
     # Aquarium Park Act 2
+    set_rule(world.get_location(LocationNames.aquarium_park_act_2_red_ring_5),
+            lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
 
     # Aquarium Park Missions
+    set_rule(world.get_location(LocationNames.planet_wisp_mission_3_red_ring_2),
+            lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
 
     # Asteroid Coaster Act 1
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_1_red_ring_5),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost dependent on Rando Difficulty
 
     # Asteroid Coaster Act 2
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2_red_ring_1),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2_red_ring_2),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2_red_ring_3),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2_red_ring_4),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost/Laser dependent on Rando Difficulty
+    set_rule(world.get_location(LocationNames.asteroid_coaster_act_2_red_ring_5),
+            lambda state: state.has_all([
+                ItemNames.white_wisp_unlock,
+                ItemNames.cyan_wisp_unlock,
+                ItemNames.violet_wisp_unlock
+            ], world.player)) # TODO: Make Boost/Laser dependent on Rando Difficulty
 
     # Asteroid Coaster Missions
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1_red_ring_1),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1_red_ring_1),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_2),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_2),
+            lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
