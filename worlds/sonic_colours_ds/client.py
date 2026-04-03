@@ -85,6 +85,9 @@ class SonicColoursDSClient(BizHawkClient):
 
             sonic = int.from_bytes(guards["SONIC"][1], "little")
             counters = int.from_bytes(guards["COUNTERS"][1], "little")
+
+            if counters > 0x6000000:
+                return # assume invalid
             
             read_result = await bizhawk.read(
                 ctx.bizhawk_ctx, 
@@ -144,7 +147,7 @@ class SonicColoursDSClient(BizHawkClient):
                     if read_result is not None:
                         score = int.from_bytes(read_result[0], "little")
                         if score == 0:
-                            score = 1
+                            score = ctx.slot_data["rankrequirement"] + 1
                             await bizhawk.guarded_write(
                                 ctx.bizhawk_ctx,
                                 [
@@ -165,7 +168,8 @@ class SonicColoursDSClient(BizHawkClient):
                         score = int.from_bytes(read_result[0], "little")
                         if score > 0xF: #ignore rank
                             rank = score & 0xF
-                            local_checked_locations.add(location_code)
+                            if rank > ctx.slot_data["rankrequirement"]:
+                                local_checked_locations.add(location_code)
 
 
 

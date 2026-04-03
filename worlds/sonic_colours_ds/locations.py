@@ -1,9 +1,11 @@
 import typing
 
+from Options import Toggle
 from BaseClasses import Location
 from worlds.AutoWorld import World
 
 from .data import LocationNames
+from .options import Goal
 
 class SonicColoursDSLocation(Location):
     game: str = "Sonic Colours (DS)"
@@ -298,6 +300,8 @@ starlight_carnival_region_locations = [
     LocationNames.starlight_carnival_mission_3_red_ring_2,
 
     LocationNames.starlight_carnival_boss,
+    
+    LocationNames.special_stage_3,
 ]
 
 planet_wisp_region_locations = [
@@ -408,11 +412,11 @@ def setup_locations(world: World, player: int):
     locations.update({**level_clear_table})
     locations.update({**special_stage_table})
 
-    if world.options.redringsanity:
+    if world.options.redringsanity == Toggle.option_true:
         locations.update({**red_rings_table})
-    if world.options.goal.value == 0:
+    if world.options.goal.value == Goal.option_wisp_armor:
         locations.update({LocationNames.nega_wisp_armor: None})
-    elif world.options.goal.value == 1:
+    elif world.options.goal.value == Goal.option_mother_wisp:
         locations.update({
             LocationNames.nega_wisp_armor: 80,
             LocationNames.nega_mother_wisp: None

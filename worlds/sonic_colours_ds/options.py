@@ -18,14 +18,37 @@ class Goal(Choice):
     option_wisp_armor = 0
     option_mother_wisp = 1
 
+class RankRequirement(Choice):
+    """
+    The rank required to consider a level beaten.
+    """
+    display_name = "Rank Requirement"
+    default = 0
+    option_rank_d = 0
+    option_rank_c = 1
+    option_rank_b = 2
+    option_rank_a = 3
+    option_rank_s = 4
+
 class RedRingSanity(Toggle):
     """
     Collecting a Red Star Ring gives you an item.
     """
-    display_name = "RedRingSanity"
+    display_name = "Red Ring Sanity"
+
+scds_option_groups = [
+    OptionGroup("Goal Options", [
+        Goal,
+        RankRequirement
+    ]),
+    OptionGroup("Sanity Options", [
+        RedRingSanity
+    ])
+]
 
 @dataclass
 class SonicColoursDSOptions(PerGameCommonOptions):
     goal: Goal
+    rankrequirement: RankRequirement
 
     redringsanity: RedRingSanity

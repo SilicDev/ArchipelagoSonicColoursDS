@@ -14,7 +14,7 @@ from .locations import SonicColoursDSLocation, location_groups, location_table, 
 from .regions import create_regions, connect_regions
 from .rules import set_rules
 from .rom import SonicColoursDSPatch
-from .options import SonicColoursDSOptions, Goal
+from .options import SonicColoursDSOptions, Goal, scds_option_groups
 from .data import ItemNames, LocationNames
 
 class SonicColoursDSWebWorld(WebWorld):
@@ -33,6 +33,8 @@ class SonicColoursDSWebWorld(WebWorld):
     )
 
     tutorials = [setup_en]
+
+    option_groups = scds_option_groups
 
 
 class SonicColoursDSSettings(settings.Group):
@@ -90,7 +92,7 @@ class SonicColorsDSWorld(World):
         if self.options.goal.value == Goal.option_mother_wisp:
             for item in emeralds_table.keys():
                 itempool.append(self.create_item(item))
-        surplus_checks = num_locations_to_fill - len(itempool)
+        surplus_checks = num_locations_to_fill - len(itempool) - 1
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
         
@@ -138,6 +140,7 @@ class SonicColorsDSWorld(World):
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data = self.options.as_dict(
             "goal",
+            "rankrequirement",
             "redringsanity",
         )
         return slot_data
