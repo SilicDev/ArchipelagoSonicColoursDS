@@ -16,7 +16,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     asteroid_coaster_region = create_region(world, LocationNames.asteroid_coaster_region, active_locations, asteroid_coaster_region_locations)
     terminal_velocity_region = create_region(world, LocationNames.terminal_velocity_region, active_locations, terminal_velocity_region_locations)
     if world.options.goal.value == Goal.option_mother_wisp:
-        terminal_velocity_region.locations.append(LocationNames.nega_mother_wisp)
+        terminal_velocity_region.locations.append(SonicColoursDSLocation(world.player, LocationNames.nega_mother_wisp, active_locations[LocationNames.nega_mother_wisp], terminal_velocity_region))
 
     world.multiworld.regions += [
         menu_region,
