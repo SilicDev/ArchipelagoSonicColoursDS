@@ -21,13 +21,13 @@ junk_table = {
 }
 
 emeralds_table = {
-    ItemNames.white_emerald: ItemData(10, True),
-    ItemNames.red_emerald: ItemData(11, True),
-    ItemNames.cyan_emerald: ItemData(12, True),
-    ItemNames.purple_emerald: ItemData(13, True),
-    ItemNames.green_emerald: ItemData(14, True),
-    ItemNames.yellow_emerald: ItemData(15, True),
-    ItemNames.blue_emerald: ItemData(16, True),
+    ItemNames.green_emerald: ItemData(10, True),
+    ItemNames.yellow_emerald: ItemData(11, True),
+    ItemNames.white_emerald: ItemData(12, True),
+    ItemNames.red_emerald: ItemData(13, True),
+    ItemNames.purple_emerald: ItemData(14, True),
+    ItemNames.blue_emerald: ItemData(15, True),
+    ItemNames.cyan_emerald: ItemData(16, True),
 }
 
 wisps_table = {

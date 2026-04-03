@@ -87,7 +87,9 @@ def set_level_rules(world: World) -> None:
 
 def set_red_ring_rules(world: World) -> None:
     # Tropical Resort Act 1
-
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_1_red_ring_2),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
+    
     # Tropical Resort Act 2
 
     # Tropical Resort Missions

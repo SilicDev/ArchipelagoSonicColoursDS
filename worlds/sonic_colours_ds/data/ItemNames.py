@@ -7,13 +7,13 @@ extra_life = "Extra Life"
 invincibility = "Invincibility"
 
 # Chaos Emeralds
-white_emerald  = "White Chaos Emerald"
-red_emerald    = "Red Chaos Emerald"
-cyan_emerald   = "Cyan Chaos Emerald"
-purple_emerald = "Purple Chaos Emerald"
 green_emerald  = "Green Chaos Emerald"
 yellow_emerald = "Yellow Chaos Emerald"
+white_emerald  = "White Chaos Emerald"
+red_emerald    = "Red Chaos Emerald"
+purple_emerald = "Purple Chaos Emerald"
 blue_emerald   = "Blue Chaos Emerald"
+cyan_emerald   = "Cyan Chaos Emerald"
 
 # Wisps
 white_wisp = "White Wisp"

@@ -1,4 +1,4 @@
-from . import LocationNames
+from . import LocationNames, ItemNames
 
 level_id_to_location = [
     LocationNames.tropical_resort_region,
@@ -54,4 +54,24 @@ level_id_to_location = [
     LocationNames.asteroid_coaster_mission_1,
     LocationNames.asteroid_coaster_mission_2,
     LocationNames.asteroid_coaster_mission_3,
+]
+
+level_id_to_access_item = [ # only use for planet map
+    ItemNames.tropical_resort_unlock,
+    ItemNames.sweet_mountain_unlock,
+    ItemNames.starlight_carnival_unlock,
+    ItemNames.planet_wisp_unlock,
+    ItemNames.aquarium_park_unlock,
+    ItemNames.asteroid_coaster_unlock,
+    ItemNames.terminal_velocity_unlock,
+]
+
+area_id_to_tutorial = [
+    None,
+    LocationNames.white_wisp_tutorial,
+    LocationNames.red_wisp_tutorial,
+    LocationNames.orange_wisp_tutorial,
+    LocationNames.yellow_wisp_tutorial,
+    LocationNames.cyan_wisp_tutorial,
+    LocationNames.violet_wisp_tutorial,
 ]
