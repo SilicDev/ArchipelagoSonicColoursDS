@@ -11,13 +11,13 @@ class SonicColoursDSLocation(Location):
     game: str = "Sonic Colours (DS)"
 
 tutorial_clear_table = {
-    LocationNames.movement_tutorial: 0,
-    LocationNames.white_wisp_tutorial: 1,
-    LocationNames.red_wisp_tutorial: 2,
-    LocationNames.orange_wisp_tutorial: 3,
-    LocationNames.yellow_wisp_tutorial: 4,
-    LocationNames.cyan_wisp_tutorial: 5,
-    LocationNames.violet_wisp_tutorial: 6,
+    LocationNames.movement_tutorial: 1,
+    LocationNames.white_wisp_tutorial: 2,
+    LocationNames.red_wisp_tutorial: 3,
+    LocationNames.orange_wisp_tutorial: 4,
+    LocationNames.yellow_wisp_tutorial: 5,
+    LocationNames.cyan_wisp_tutorial: 6,
+    LocationNames.violet_wisp_tutorial: 7,
 }
 
 level_clear_table = {
