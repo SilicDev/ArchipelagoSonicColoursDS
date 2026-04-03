@@ -17,6 +17,7 @@ from .options import Goal
 
 SCDS_RED_RINGS = 0x119BB4
 SCDS_SCORES = 0x119BC0
+SCDS_ITEMS_RECEIVED = 0x119C0C # actually this is the score for the nega-mother wisp
 SCDS_AREA_ID = 0x1207C4
 SCDS_LEVEL_ID = 0x1207C8
 SCDS_LEVEL_RED_RINGS = 0x1208D7
@@ -34,6 +35,7 @@ SCDS_MISSION_UNLOCK_FLAGS = 0x119B6B
 SCDS_SPECIAL_STAGE_UNLOCKED = 0x119B8C
 
 SCDS_LEVEL_SELECT_TARGET = 0x19BF34
+SCDS_TV_BOSS_WISPS = 0x1A00B4 # five 4 byte values
 SCDS_LEVEL_SELECT_PREVIEW = 0x1A098A
 
 SCDS_RAM_START = 0x02000000
@@ -48,12 +50,14 @@ class SonicColoursDSClient(BizHawkClient):
     local_active_wisps: int
     local_red_rings: int
     local_emeralds: int
+    local_junk_items: list[int]
     last_level: int
     num_items_received: int
 
     def initialize_client(self) -> None:
         self.local_checked_locations = set()
         self.local_access_items = set()
+        self.local_junk_items = []
         self.last_level = -1
         self.local_active_wisps = 0
         self.local_red_rings = 0
@@ -300,6 +304,16 @@ class SonicColoursDSClient(BizHawkClient):
                 if read_result is not None:
                     tv_flags = int.from_bytes(read_result[0], "little")
                     if tv_flags & 0x2 != 0:
+                        write_list = []
+                        for i in range(5):
+                            if self.local_active_wisps & (1 << (i + 1)) == 0:
+                                write_list.append((SCDS_TV_BOSS_WISPS + 4 * i, (0).to_bytes(4, "little"), "Main RAM"))
+                        if not len(write_list) == 0:
+                            await bizhawk.guarded_write(
+                                ctx.bizhawk_ctx,
+                                write_list,
+                                [guards["SONIC"], guards["COUNTERS"]]
+                            )
                         local_checked_locations.add(location_table[LocationNames.terminal_velocity_chase])
 
 
@@ -335,9 +349,17 @@ class SonicColoursDSClient(BizHawkClient):
         pass
 
     async def handle_received_items(self, ctx: "BizHawkClientContext", guards: Dict[str, Tuple[int, bytes, str]]) -> None:
+        game_num_items_received = 0
+        read_result = await bizhawk.guarded_read(
+            ctx.bizhawk_ctx,
+            [
+                (SCDS_ITEMS_RECEIVED, 4, "Main RAM")
+            ], [guards["SONIC"]])
+        if read_result is not None:
+            game_num_items_received = int.from_bytes(read_result[0]) >> 4
+
         if len(ctx.items_received) > self.num_items_received:
             item = ctx.items_received[self.num_items_received]
-            #if item.player == ctx.slot:
             item_name = ctx.item_names.lookup_in_game(item.item)
             if item_name in wisp_unlocks_table.keys():
                 self.local_active_wisps |= 1 << (item_table[item_name].code - item_table[ItemNames.white_wisp_unlock].code)
@@ -345,6 +367,13 @@ class SonicColoursDSClient(BizHawkClient):
                 self.local_emeralds |= 1 << (item_table[item_name].code - item_table[ItemNames.green_emerald].code)
             if item_name in planet_access_table.keys():
                 self.local_access_items.add(item_name)
+            if game_num_items_received < self.num_items_received:
+                read_result = await bizhawk.guarded_write(
+                    ctx.bizhawk_ctx,
+                    [
+                        (SCDS_ITEMS_RECEIVED, (self.num_items_received << 4).to_bytes(4, "little"), "Main RAM")
+                    ], [guards["SONIC"]])
+                self.local_junk_items.append(item)
             self.num_items_received += 1
 
     def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:

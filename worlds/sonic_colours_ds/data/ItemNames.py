@@ -40,6 +40,8 @@ aquarium_park_unlock = "Aquarium Park Shuttle"
 asteroid_coaster_unlock = "Asteroid Coaster Shuttle"
 terminal_velocity_unlock = "Space Elevator Access Code"
 
+planet_clear_token = "Destroyed Tractor Beam"
+
 # Goal Items
 park_keys = "Keys to Eggman's Incredible Interstellar Amusement Park"
 mother_wisp = "Mother Wisp"

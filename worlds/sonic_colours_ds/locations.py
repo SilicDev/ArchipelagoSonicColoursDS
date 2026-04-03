@@ -420,6 +420,15 @@ terminal_velocity_region_locations = [
     LocationNames.nega_wisp_armor,
 ]
 
+planet_boss_locations = [
+    LocationNames.tropical_resort_boss,
+    LocationNames.sweet_mountain_boss,
+    LocationNames.starlight_carnival_boss,
+    LocationNames.planet_wisp_boss,
+    LocationNames.aquarium_park_boss,
+    LocationNames.asteroid_coaster_boss,
+]
+
 def setup_locations(world: World, player: int):
     locations = {}
 
@@ -446,6 +455,7 @@ location_groups = {
     "Red Rings": list(red_rings_table.keys()),
     "Special Stage": list(special_stage_table.keys()),
     "Tutorial": list(tutorial_clear_table.keys()),
+    "Planet Boss": planet_boss_locations,
     "Tropical Resort": tropical_resort_region_locations,
     "Sweet Mountain": sweet_mountain_region_locations,
     "Starlight Carnival": starlight_carnival_region_locations,

@@ -17,7 +17,6 @@ junk_table = {
     ItemNames.ten_rings: ItemData(2, False),
     ItemNames.twenty_rings: ItemData(3, False),
     ItemNames.extra_life: ItemData(4, False),
-    ItemNames.invincibility: ItemData(5, False),
 }
 
 emeralds_table = {
