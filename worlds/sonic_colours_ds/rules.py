@@ -202,7 +202,7 @@ def set_red_ring_rules(world: World) -> None:
     
     # Starlight Carnival Missions
     set_rule(world.get_location(LocationNames.starlight_carnival_mission_2_red_ring_1),
-            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player), world.player)
+            lambda state: state.has(ItemNames.orange_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.starlight_carnival_mission_2_red_ring_2),
             lambda state: state.has(ItemNames.orange_wisp_unlock, world.player) or state.has_all([
                 ItemNames.white_wisp_unlock,
