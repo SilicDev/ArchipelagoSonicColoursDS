@@ -42,6 +42,9 @@ SCDS_LEVEL_SELECT_PREVIEW = 0x1A098A
 SCDS_RAM_START = 0x02000000
 SCDS_RAM_SIZE = 0x00400000
 
+EU_HASH = "406514E483EE092A89F4298F59FD53A9"
+US_HASH = "1996db2bdd78f30082ac003c1bc14a9b"
+
 class SonicColoursDSClient(BizHawkClient):
     game = "Sonic Colours (DS)"
     system = "NDS"
@@ -71,11 +74,11 @@ class SonicColoursDSClient(BizHawkClient):
         from CommonClient import logger
 
         try:
-            # Check ROM name
-            rom_name_bytes = ((await bizhawk.read(ctx.bizhawk_ctx, [(0x0, 16, "ROM")]))[0])
-            rom_name = bytes([byte for byte in rom_name_bytes if byte != 0]).decode("ascii")
-            if not rom_name == "SONICCOLORSBXSP":
-                return False
+            rom_hash = await bizhawk.get_hash(ctx.bizhawk_ctx)
+            if rom_hash != EU_HASH:
+                if rom_hash == US_HASH:
+                    logger.info("ERROR: You seem to have a US ROM loaded!")
+                return False    
         except UnicodeDecodeError:
             return False
         except bizhawk.RequestFailedError:

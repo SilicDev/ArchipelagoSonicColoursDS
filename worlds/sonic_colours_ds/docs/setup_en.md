@@ -4,12 +4,14 @@
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases)
 - An European Sonic Colours (DS) ROM. The Archipelago community cannot provide this.
-- [BizHawk](https://tasvideos.org/BizHawk/ReleaseHistory) 2.10 or later
+- [BizHawk](https://tasvideos.org/BizHawk/ReleaseHistory) 2.7 or later
 
 ### Configuring BizHawk
 
 Once you have installed BizHawk, open `EmuHawk.exe` and change the following settings:
 
+- If you're using BizHawk 2.7 or 2.8, go to `Config > Customize`. On the Advanced tab, switch the Lua Core from
+`NLua+KopiLua` to `Lua+LuaInterface`, then restart EmuHawk. (If you're using BizHawk 2.9, you can skip this step.)
 - Under `Config > Customize`, check the "Run in background" option to prevent disconnecting from the client while you're
 tabbed out of EmuHawk.
 - Open a `.nds` file in EmuHawk and go to `Config > Controllers…` to configure your inputs. If you can't click
