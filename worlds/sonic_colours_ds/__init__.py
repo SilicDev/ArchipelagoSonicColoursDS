@@ -79,6 +79,12 @@ class SonicColorsDSWorld(World):
             self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
         elif self.options.goal.value == Goal.option_mother_wisp:
             self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
+
+    def get_pre_fill_items(self):
+        items = super().get_pre_fill_items()
+        for planet_access in self.starting_planet_access:
+            items.append(self.create_item(planet_access))
+        return items
         
 
     def create_items(self):
