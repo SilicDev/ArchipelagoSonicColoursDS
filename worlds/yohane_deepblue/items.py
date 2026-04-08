@@ -26,10 +26,10 @@ character_upgrade_table = {
 }
 
 unique_accessories_table = {
-    ItemNames.sea_deitys_charm: ItemData(9, True),
-    ItemNames.fallen_angels_soarshoes: ItemData(10, True),
-    ItemNames.gloves_of_might: ItemData(11, True),
-    ItemNames.extra_accessory_slot: ItemData(12, True, 2), # also 13
+    ItemNames.extra_accessory_slot: ItemData(9, True, 2), # also 10
+    ItemNames.fallen_angels_soarshoes: ItemData(11, True),
+    ItemNames.gloves_of_might: ItemData(12, True),
+    ItemNames.sea_deitys_charm: ItemData(13, True),
 }
 
 breakable_material_table = {
@@ -41,25 +41,25 @@ enemy_material_table = {
 }
 
 rare_material_table = {
-    ItemNames.bright_red_cloth: ItemData(50, False),
-    ItemNames.canola_bouquet: ItemData(51, False),
-    ItemNames.enchanted_optical_lens: ItemData(52, False),
-    ItemNames.hole_filled_cube: ItemData(53, False),
-    ItemNames.lady_of_the_lakes_bromide: ItemData(56, False),
-    ItemNames.lady_of_the_lakes_fin: ItemData(57, False),
-    ItemNames.lucent_matter: ItemData(58, False, 2),
-    ItemNames.lunar_grindstone: ItemData(59, False),
-    ItemNames.miniature_train: ItemData(60, False),
-    ItemNames.numazu_star: ItemData(61, False, 3),
-    ItemNames.phantom_jewel: ItemData(62, False),
-    ItemNames.princesss_diary: ItemData(63, False),
-    ItemNames.ripple_spell: ItemData(64, False),
-    ItemNames.torn_collar: ItemData(66, False),
-    ItemNames.twinkling_stardust: ItemData(67, False, 2),
-    ItemNames.whale_harp: ItemData(68, False, 2),
-    ItemNames.world_pinetree_lumber: ItemData(69, False),
+    ItemNames.whale_harp: ItemData(226, False, 2),
     ItemNames.shark_rip: ItemData(270, False),
     ItemNames.ichimonji_scabbard: ItemData(284, False),
+    ItemNames.ripple_shell: ItemData(311, False),
+    ItemNames.world_pinetree_lumber: ItemData(320, False),
+    ItemNames.phantom_jewel: ItemData(321, False),
+    ItemNames.lunar_grindstone: ItemData(323, False),
+    ItemNames.twinkling_stardust: ItemData(324, False, 2),
+    ItemNames.lucent_matter: ItemData(325, False, 2),
+    ItemNames.princesss_diary: ItemData(326, False),
+    ItemNames.numazu_star: ItemData(327, False, 3),
+    ItemNames.torn_collar: ItemData(328, False),
+    ItemNames.enchanted_optical_lens: ItemData(329, False),
+    ItemNames.lady_of_the_lakes_fin: ItemData(330, False),
+    ItemNames.lady_of_the_lakes_bromide: ItemData(331, False),
+    ItemNames.bright_red_cloth: ItemData(332, False),
+    ItemNames.hole_filled_cube: ItemData(333, False),
+    ItemNames.canola_bouquet: ItemData(334, False),
+    ItemNames.miniature_train: ItemData(335, False),
     ItemNames.huge_conch: ItemData(336, False),
 }
 
