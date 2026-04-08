@@ -7,9 +7,9 @@ from Options import (Choice, DeathLink, DefaultOnToggle, OptionSet, NamedRange, 
                      PerGameCommonOptions, OptionGroup, StartInventory, OptionList)
 
 yohane_deepblue_option_groups = [
-    
+
 ]
 
 @dataclass
 class YohaneDeepblueOptions(PerGameCommonOptions):
-    pass
+    deathlink: DeathLink

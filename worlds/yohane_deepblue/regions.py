@@ -6,7 +6,7 @@ from .locations import *
 from .data import LocationNames, ItemNames
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
-    menu_region = create_region(world, "Menu", active_locations, [])
+    menu_region = create_region(world, "Menu", active_locations, location_table.keys())
     
     world.multiworld.regions += [
         menu_region,

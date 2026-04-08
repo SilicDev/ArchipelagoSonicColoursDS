@@ -6,7 +6,7 @@ import typing
 from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
 
-from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table
+from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table
 from .locations import YohaneDeepblueLocation, location_groups, location_table, setup_locations
 from .regions import create_regions, connect_regions
 from .rules import set_rules
@@ -54,9 +54,19 @@ class YohaneDeepblueWorld(World):
         connect_regions(self)
         pass
 
+    def pre_fill(self):
+        self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
+
     def create_items(self):
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[YohaneDeepblueItem] = []
+        for item in unique_accessories_table.keys():
+            for i in range(unique_accessories_table[item].quantity):
+                itempool.append(self.create_item(item))
+        for item in character_unlock_table.keys():
+            itempool.append(self.create_item(item))
+        for item in character_upgrade_table.keys():
+            itempool.append(self.create_item(item))
         surplus_checks = num_locations_to_fill - len(itempool) - 1
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
@@ -75,14 +85,15 @@ class YohaneDeepblueWorld(World):
 
     def set_rules(self):
         set_rules(self)
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.victory)
+        self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.victory, self.player)
     
     def get_filler_item_name(self) -> str:
+        return "Nothing"
         junk_keys = list(junk_table.keys())
         return self.multiworld.random.choice(junk_keys)
     
-    # No options yet
-    #def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
-        #slot_data = self.options.as_dict(
-        #)
-        #return slot_data
+    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+        slot_data = self.options.as_dict(
+            "deathlink"
+        )
+        return slot_data

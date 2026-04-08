@@ -1,3 +1,51 @@
+# Accessories
+sea_deitys_charm = "Sea Deity's Charm"
+fallen_angels_soarshoes = "Fallen Angel's Soarshoes"
+gloves_of_might = "Gloves of Might"
+extra_accessory_slot = "Fashion For Dummies"
 
+# Character Unlocks
+lailaps_unlock = "Lailaps"
+chika_unlock = "Chika"
+riko_unlock = "Riko"
+kanan_unlock = "Kanan"
+dia_unlock = "Dia"
+you_unlock = "You"
+mari_unlock = "Mari"
+hanamaru_unlock = "Hanamaru"
+ruby_unlock = "Ruby"
+
+# Character Upgrades
+#lailaps_upgrade = "Lailaps Upgrade" # Unused
+chika_upgrade = "Katy's Mask"
+riko_upgrade = "Flame Spellbook"
+kanan_upgrade = "Tonosama's Parts"
+dia_upgrade = "Scarlet Delta Suit"
+you_upgrade = "Postal Guild Bag"
+mari_upgrade = "Lost Monstie"
+hanamaru_upgrade = "Laptop"
+ruby_upgrade = "Cute Pochette"
+
+# Rare Materials
+bright_red_cloth = "Bright Red Cloth"
+canola_bouquet = "Canola Bouquet"
+enchanted_optical_lens = "Enchanted Optical Lens"
+hole_filled_cube = "Hole-Filled Cube"
+huge_conch = "Huge Conch"
+ichimonji_scabbard = "Ichimonji Scabbard"
+lady_of_the_lakes_bromide = "Lady of the Lake's Bromide"
+lady_of_the_lakes_fin = "Lady of the Lake's Fin"
+lucent_matter = "Lucent Matter"
+lunar_grindstone = "Lunar Grindstone"
+miniature_train = "Miniature Train"
+numazu_star = "Numazu Star"
+phantom_jewel = "Phantom Jewel"
+princesss_diary = "Princess's Diary"
+ripple_spell = "Ripple Spell"
+shark_rip = "Shark Rip"
+torn_collar = "Torn Collar"
+twinkling_stardust = "Twinkling Stardust"
+whale_harp = "Whale Harp"
+world_pinetree_lumber = "World Pinetree Lumber"
 
 victory = "Victory"
