@@ -175,52 +175,53 @@ class SonicColoursDSClient(BizHawkClient):
                 [guards["SONIC"], guards["AREA"]])
             if read_result is not None:
                 story_completion = int.from_bytes(read_result[0], "little")
-                if ctx.slot_data["goal"] == Goal.option_wisp_armor:
-                    if not ctx.finished_game and story_completion >= 0x100000:
-                        ctx.finished_game = True
-                        await ctx.send_msgs([{
-                            "cmd": "StatusUpdate",
-                            "status": ClientStatus.CLIENT_GOAL,
-                        }])
-                    if not ctx.finished_game and story_completion < 0xF0000:
-                        await bizhawk.guarded_write(
-                            ctx.bizhawk_ctx,
-                            [
-                                (SCDS_STORY_COMPLETION, 0xE4455.to_bytes(3, "little"), "Main RAM"),
-                                (SCDS_PLANET_AREA_FLAGS, 0x777777.to_bytes(3, "little"), "Main RAM"),
-                                (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
-                            ], [guards["SONIC"], guards["AREA"]])
-                if ctx.slot_data["goal"] == Goal.option_mother_wisp:
-                    if story_completion >= 0x100000:
-                        local_checked_locations.add(location_table[LocationNames.nega_wisp_armor]) # Nega-Wisp Armor
-                    if not ctx.finished_game and story_completion >= 0x120000:
-                        ctx.finished_game = True
-                        await ctx.send_msgs([{
-                            "cmd": "StatusUpdate",
-                            "status": ClientStatus.CLIENT_GOAL,
-                        }])
-                    if not ctx.finished_game:
-                        await bizhawk.guarded_write(
-                            ctx.bizhawk_ctx,
-                            [
-                                (SCDS_CHAOS_EMERALDS, self.local_emeralds.to_bytes(2, "little"), "Main RAM")
-                            ], [guards["SONIC"], guards["AREA"]])
-                        if self.local_emeralds == 0x7F and story_completion > 0xF0000 and story_completion < 0x110000:
+                if story_completion < 0x200000: # during hard reset memory read
+                    if ctx.slot_data["goal"] == Goal.option_wisp_armor:
+                        if not ctx.finished_game and story_completion >= 0x100000:
+                            ctx.finished_game = True
+                            await ctx.send_msgs([{
+                                "cmd": "StatusUpdate",
+                                "status": ClientStatus.CLIENT_GOAL,
+                            }])
+                        if not ctx.finished_game and story_completion < 0xF0000:
                             await bizhawk.guarded_write(
                                 ctx.bizhawk_ctx,
                                 [
-                                    (SCDS_STORY_COMPLETION, 0x104455.to_bytes(3, "little"), "Main RAM"), # game handles opening mother wisp from here
-                                    (SCDS_PLANET_AREA_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM"),
-                                    (SCDS_MISSION_UNLOCK_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM")
-                                ], [guards["SONIC"], guards["AREA"]])
-                        elif story_completion < 0xF0000:
-                            await bizhawk.guarded_write(
-                                ctx.bizhawk_ctx,
-                                [
-                                    (SCDS_STORY_COMPLETION, 0x0E4455.to_bytes(3, "little"), "Main RAM"),
+                                    (SCDS_STORY_COMPLETION, 0xE4455.to_bytes(3, "little"), "Main RAM"),
                                     (SCDS_PLANET_AREA_FLAGS, 0x777777.to_bytes(3, "little"), "Main RAM"),
                                     (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
                                 ], [guards["SONIC"], guards["AREA"]])
+                    if ctx.slot_data["goal"] == Goal.option_mother_wisp:
+                        if story_completion >= 0x100000:
+                            local_checked_locations.add(location_table[LocationNames.nega_wisp_armor]) # Nega-Wisp Armor
+                        if not ctx.finished_game and story_completion >= 0x120000:
+                            ctx.finished_game = True
+                            await ctx.send_msgs([{
+                                "cmd": "StatusUpdate",
+                                "status": ClientStatus.CLIENT_GOAL,
+                            }])
+                        if not ctx.finished_game:
+                            await bizhawk.guarded_write(
+                                ctx.bizhawk_ctx,
+                                [
+                                    (SCDS_CHAOS_EMERALDS, self.local_emeralds.to_bytes(2, "little"), "Main RAM")
+                                ], [guards["SONIC"], guards["AREA"]])
+                            if self.local_emeralds == 0x7F and story_completion > 0xF0000 and story_completion < 0x110000:
+                                await bizhawk.guarded_write(
+                                    ctx.bizhawk_ctx,
+                                    [
+                                        (SCDS_STORY_COMPLETION, 0x104455.to_bytes(3, "little"), "Main RAM"), # game handles opening mother wisp from here
+                                        (SCDS_PLANET_AREA_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM"),
+                                        (SCDS_MISSION_UNLOCK_FLAGS, 0xFFFFFF.to_bytes(3, "little"), "Main RAM")
+                                    ], [guards["SONIC"], guards["AREA"]])
+                            elif story_completion < 0xF0000:
+                                await bizhawk.guarded_write(
+                                    ctx.bizhawk_ctx,
+                                    [
+                                        (SCDS_STORY_COMPLETION, 0x0E4455.to_bytes(3, "little"), "Main RAM"),
+                                        (SCDS_PLANET_AREA_FLAGS, 0x777777.to_bytes(3, "little"), "Main RAM"),
+                                        (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
+                                    ], [guards["SONIC"], guards["AREA"]])
 
             await bizhawk.guarded_write(
                 ctx.bizhawk_ctx,
