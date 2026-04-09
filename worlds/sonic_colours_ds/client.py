@@ -301,11 +301,11 @@ class SonicColoursDSClient(BizHawkClient):
             if read_result is not None:
                 tutorial_flags = int.from_bytes(read_result[0], "little")
                 game_flags = int.from_bytes(read_result[1], "little")
-                if game_flags == 0x10:
-                    if tutorial_flags == 0x8 and level_id != 15:
-                        local_checked_locations.add(location_table[DataMaps.area_id_to_tutorial[area_id]])
+                if tutorial_flags == 0x8 and game_flags == 0x10:
+                    if level_id == 15: # movement tutorial
+                        local_checked_locations.add(location_table[LocationNames.movement_tutorial])
                     else:
-                        local_checked_locations.add(location_table[DataMaps.level_id_to_location[level_id]])
+                        local_checked_locations.add(location_table[DataMaps.area_id_to_tutorial[area_id]])
 
             if level_id == 6:
                 read_result = await bizhawk.guarded_read(
