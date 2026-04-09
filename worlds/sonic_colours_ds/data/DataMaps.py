@@ -75,3 +75,19 @@ area_id_to_tutorial = [
     LocationNames.cyan_wisp_tutorial,
     LocationNames.violet_wisp_tutorial,
 ]
+
+level_id_to_emeralds = {
+    8: 0x3F, 
+    9: 0x00, 
+    10: 0x00, 
+    16: 0x01, 
+    17: 0x01, 
+    22: 0x03, 
+    23: 0x03, 
+    28: 0x07, 
+    29: 0x07, 
+    34: 0x0F, 
+    35: 0x0F, 
+    40: 0x1F, 
+    41: 0x1F
+}

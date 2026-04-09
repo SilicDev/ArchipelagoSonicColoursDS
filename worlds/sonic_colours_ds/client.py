@@ -176,6 +176,12 @@ class SonicColoursDSClient(BizHawkClient):
             if read_result is not None:
                 story_completion = int.from_bytes(read_result[0], "little")
                 if story_completion < 0x200000: # during hard reset memory read
+                    if level_id in DataMaps.level_id_to_emeralds.keys() and counters > SCDS_RAM_START:
+                        await bizhawk.guarded_write(
+                            ctx.bizhawk_ctx,
+                            [
+                                (SCDS_CHAOS_EMERALDS, DataMaps.level_id_to_emeralds[level_id].to_bytes(2, "little"), "Main RAM")
+                            ], [guards["SONIC"], guards["AREA"]])
                     if ctx.slot_data["goal"] == Goal.option_wisp_armor:
                         if not ctx.finished_game and story_completion >= 0x100000:
                             ctx.finished_game = True
@@ -201,11 +207,18 @@ class SonicColoursDSClient(BizHawkClient):
                                 "status": ClientStatus.CLIENT_GOAL,
                             }])
                         if not ctx.finished_game:
-                            await bizhawk.guarded_write(
-                                ctx.bizhawk_ctx,
-                                [
-                                    (SCDS_CHAOS_EMERALDS, self.local_emeralds.to_bytes(2, "little"), "Main RAM")
-                                ], [guards["SONIC"], guards["AREA"]])
+                            if level_id in DataMaps.level_id_to_emeralds.keys() and counters > SCDS_RAM_START:
+                                await bizhawk.guarded_write(
+                                    ctx.bizhawk_ctx,
+                                    [
+                                        (SCDS_CHAOS_EMERALDS, DataMaps.level_id_to_emeralds[level_id].to_bytes(2, "little"), "Main RAM")
+                                    ], [guards["SONIC"], guards["AREA"]])
+                            else:
+                                await bizhawk.guarded_write(
+                                    ctx.bizhawk_ctx,
+                                    [
+                                        (SCDS_CHAOS_EMERALDS, self.local_emeralds.to_bytes(2, "little"), "Main RAM")
+                                    ], [guards["SONIC"], guards["AREA"]])
                             if self.local_emeralds == 0x7F and story_completion > 0xF0000 and story_completion < 0x110000:
                                 await bizhawk.guarded_write(
                                     ctx.bizhawk_ctx,
@@ -222,13 +235,7 @@ class SonicColoursDSClient(BizHawkClient):
                                         (SCDS_PLANET_AREA_FLAGS, 0x777777.to_bytes(3, "little"), "Main RAM"),
                                         (SCDS_MISSION_UNLOCK_FLAGS, 0x3FFFF.to_bytes(3, "little"), "Main RAM")
                                     ], [guards["SONIC"], guards["AREA"]])
-
-            await bizhawk.guarded_write(
-                ctx.bizhawk_ctx,
-                [
-                    (SCDS_SPECIAL_STAGE_UNLOCKED, (0x3333333).to_bytes(4, "little"), "Main RAM")
-                ],
-                [guards["SONIC"], guards["AREA"]])
+            
             for i in range(7):
                 read_result = await bizhawk.guarded_read(
                     ctx.bizhawk_ctx,
