@@ -165,6 +165,10 @@ def set_red_ring_rules(world: World) -> None:
             ], world.player))
 
     # Tropical Resort Missions
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_2_red_ring_1),
+            lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
+    set_rule(world.get_location(LocationNames.tropical_resort_mission_2_red_ring_2),
+            lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.tropical_resort_mission_3_red_ring_1),
             lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.tropical_resort_mission_3_red_ring_2),
@@ -269,11 +273,11 @@ def set_red_ring_rules(world: World) -> None:
             lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
 
     # Aquarium Park Missions
-    set_rule(world.get_location(LocationNames.planet_wisp_mission_2_red_ring_1),
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_2_red_ring_1),
             lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.planet_wisp_mission_2_red_ring_2),
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_2_red_ring_2),
             lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.planet_wisp_mission_3_red_ring_2),
+    set_rule(world.get_location(LocationNames.aquarium_park_mission_3_red_ring_2),
             lambda state: state.has(ItemNames.cyan_wisp_unlock, world.player))
 
     # Asteroid Coaster Act 1
