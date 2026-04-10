@@ -76,6 +76,45 @@ area_id_to_tutorial = [
     LocationNames.violet_wisp_tutorial,
 ]
 
+level_id_to_wisps = {
+    9: [ItemNames.red_wisp], 
+    10: [ItemNames.red_wisp], 
+    11: [ItemNames.red_wisp], 
+    12: [ItemNames.red_wisp], 
+    13: [ItemNames.red_wisp], 
+    14: [ItemNames.red_wisp],
+    16: [ItemNames.red_wisp, ItemNames.violet_wisp], 
+    17: [ItemNames.red_wisp, ItemNames.violet_wisp], 
+    18: [ItemNames.red_wisp],
+    19: [ItemNames.red_wisp, ItemNames.violet_wisp], 
+    20: [ItemNames.red_wisp, ItemNames.violet_wisp], 
+    21: [ItemNames.red_wisp, ItemNames.violet_wisp], 
+    22: [ItemNames.orange_wisp, ItemNames.cyan_wisp], 
+    23: [ItemNames.orange_wisp, ItemNames.cyan_wisp], 
+    24: [ItemNames.orange_wisp], 
+    25: [ItemNames.orange_wisp, ItemNames.cyan_wisp], 
+    26: [ItemNames.orange_wisp, ItemNames.cyan_wisp], 
+    27: [ItemNames.orange_wisp, ItemNames.cyan_wisp], 
+    28: [ItemNames.orange_wisp, ItemNames.yellow_wisp], 
+    29: [ItemNames.orange_wisp, ItemNames.yellow_wisp], 
+    30: [ItemNames.yellow_wisp], 
+    31: [ItemNames.orange_wisp, ItemNames.yellow_wisp], 
+    32: [ItemNames.orange_wisp, ItemNames.yellow_wisp], 
+    33: [ItemNames.orange_wisp, ItemNames.yellow_wisp], 
+    34: [ItemNames.yellow_wisp, ItemNames.cyan_wisp], 
+    35: [ItemNames.yellow_wisp, ItemNames.cyan_wisp], 
+    36: [ItemNames.cyan_wisp], 
+    37: [ItemNames.yellow_wisp, ItemNames.cyan_wisp], 
+    38: [ItemNames.yellow_wisp, ItemNames.cyan_wisp], 
+    39: [ItemNames.yellow_wisp, ItemNames.cyan_wisp], 
+    40: [ItemNames.cyan_wisp, ItemNames.violet_wisp], 
+    41: [ItemNames.cyan_wisp, ItemNames.violet_wisp],
+    42: [ItemNames.violet_wisp],
+    43: [ItemNames.cyan_wisp, ItemNames.violet_wisp],
+    44: [ItemNames.cyan_wisp, ItemNames.violet_wisp],
+    45: [ItemNames.cyan_wisp, ItemNames.violet_wisp],
+}
+
 level_id_to_emeralds = {
     8: 0x3F, 
     9: 0x00, 
@@ -90,4 +129,10 @@ level_id_to_emeralds = {
     35: 0x0F, 
     40: 0x1F, 
     41: 0x1F
+}
+
+item_to_rings = {
+    ItemNames.five_rings: 5,
+    ItemNames.ten_rings: 10,
+    ItemNames.twenty_rings: 20,
 }
