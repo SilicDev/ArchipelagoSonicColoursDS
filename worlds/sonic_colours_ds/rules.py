@@ -30,22 +30,22 @@ def set_rules(world: World) -> None:
 
     set_rule(world.get_location(LocationNames.special_stage_1),
              lambda state: state.can_reach_location(LocationNames.tropical_resort_act_1, world.player) or
-                        state.can_reach_location(LocationNames.tropical_resort_act_2))
+                        state.can_reach_location(LocationNames.tropical_resort_act_2, world.player))
     set_rule(world.get_location(LocationNames.special_stage_2),
              lambda state: state.can_reach_location(LocationNames.sweet_mountain_act_1, world.player) or
-                        state.can_reach_location(LocationNames.sweet_mountain_act_2))
+                        state.can_reach_location(LocationNames.sweet_mountain_act_2, world.player))
     set_rule(world.get_location(LocationNames.special_stage_3),
              lambda state: state.can_reach_location(LocationNames.starlight_carnival_act_1, world.player) or
-                        state.can_reach_location(LocationNames.starlight_carnival_act_2))
+                        state.can_reach_location(LocationNames.starlight_carnival_act_2, world.player))
     set_rule(world.get_location(LocationNames.special_stage_4),
              lambda state: state.can_reach_location(LocationNames.planet_wisp_act_1, world.player) or
-                        state.can_reach_location(LocationNames.planet_wisp_act_2))
+                        state.can_reach_location(LocationNames.planet_wisp_act_2, world.player))
     set_rule(world.get_location(LocationNames.special_stage_5),
              lambda state: state.can_reach_location(LocationNames.aquarium_park_act_1, world.player) or
-                        state.can_reach_location(LocationNames.aquarium_park_act_2))
+                        state.can_reach_location(LocationNames.aquarium_park_act_2, world.player))
     set_rule(world.get_location(LocationNames.special_stage_6),
              lambda state: state.can_reach_location(LocationNames.asteroid_coaster_act_1, world.player) or
-                        state.can_reach_location(LocationNames.asteroid_coaster_act_2))
+                        state.can_reach_location(LocationNames.asteroid_coaster_act_2, world.player))
     #set_rule(world.get_location(LocationNames.special_stage_7),
             #lambda state: state.has(ItemNames.white_wisp_unlock, world.player))
 
