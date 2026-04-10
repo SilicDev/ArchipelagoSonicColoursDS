@@ -13,7 +13,6 @@ from .items import SonicColoursDSItem, item_groups, planet_access_table, wisp_un
 from .locations import SonicColoursDSLocation, location_groups, location_table, setup_locations
 from .regions import create_regions, connect_regions
 from .rules import set_rules
-from .rom import SonicColoursDSPatch
 from .options import SonicColoursDSOptions, Goal, scds_option_groups
 from .data import ItemNames, LocationNames
 
@@ -37,22 +36,10 @@ class SonicColoursDSWebWorld(WebWorld):
     option_groups = scds_option_groups
 
 
-class SonicColoursDSSettings(settings.Group):
-    class SonicColoursDSRomFile(settings.UserFilePath):
-        """File name of your European Sonic Colours (DS) ROM"""
-        description = "Sonic Colours (DS) ROM File"
-        copy_to = "Sonic Colours (Europe) (En,Ja,Fr,De,Es,It).nds"
-        md5s = [SonicColoursDSPatch.hash]
-
-    rom_file: SonicColoursDSRomFile = SonicColoursDSRomFile(SonicColoursDSRomFile.copy_to)
-
 class SonicColorsDSWorld(World):
     game = "Sonic Colours (DS)"
     web = SonicColoursDSWebWorld()
     topology_present = True
-
-    settings_key = "sonic_colours_ds_settings"
-    settings: typing.ClassVar[SonicColoursDSSettings]
 
     options_dataclass = SonicColoursDSOptions
     options: SonicColoursDSOptions
@@ -122,26 +109,6 @@ class SonicColorsDSWorld(World):
     def get_filler_item_name(self) -> str:
         junk_keys = list(junk_table.keys())
         return self.multiworld.random.choice(junk_keys)
-    
-    def generate_output(self, output_directory: str):
-        try:
-            multiworld = self.multiworld
-            player = self.player
-
-            rom = open(self.settings.rom_file, "rb")
-            #patch rom
-
-            rompath = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}.nds")
-            out_rom = open(rompath, "wb+")
-            out_rom.write(rom.read())
-            rom.close()
-            out_rom.close()
-
-            patch = SonicColoursDSPatch(os.path.splitext(rompath)[0]+SonicColoursDSPatch.patch_file_ending, player=player,
-                                  player_name=multiworld.player_name[player])
-            patch.write()
-        except:
-            raise
     
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data = self.options.as_dict(
