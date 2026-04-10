@@ -411,12 +411,12 @@ def set_red_ring_rules(world: World) -> None:
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_2),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_3_red_ring_3),
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_3_red_ring_1),
             lambda state: state.has_all([
                 ItemNames.white_wisp_unlock,
                 ItemNames.violet_wisp_unlock
             ], world.player))
-    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_3_red_ring_3),
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_3_red_ring_2),
             lambda state: state.has_all([
                 ItemNames.white_wisp_unlock,
                 ItemNames.violet_wisp_unlock
