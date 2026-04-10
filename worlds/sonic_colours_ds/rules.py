@@ -241,7 +241,7 @@ def set_red_ring_rules(world: World) -> None:
             lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.sweet_mountain_mission_3_red_ring_1),
             lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.sweet_mountain_mission_1_red_ring_2),
+    set_rule(world.get_location(LocationNames.sweet_mountain_mission_3_red_ring_2),
             lambda state: state.has(ItemNames.red_wisp_unlock, world.player))
     
     # Starlight Carnival Act 1
@@ -405,9 +405,9 @@ def set_red_ring_rules(world: World) -> None:
     # Asteroid Coaster Missions
     set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1_red_ring_1),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1_red_ring_1),
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_1_red_ring_2),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
-    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_2),
+    set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_1),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
     set_rule(world.get_location(LocationNames.asteroid_coaster_mission_2_red_ring_2),
             lambda state: state.has(ItemNames.violet_wisp_unlock, world.player))
