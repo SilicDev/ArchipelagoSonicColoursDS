@@ -4,11 +4,21 @@ from ..data import ItemNames, LocationNames
 class TestBasic(SonicColoursDSTestBase):
     def test_special_stage_access(self) -> None:
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_1))
+        self.collect_by_name([ItemNames.sweet_mountain_unlock, ItemNames.red_wisp_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_2))
+        self.remove_by_name([ItemNames.sweet_mountain_unlock, ItemNames.red_wisp_unlock])
+        self.collect_by_name([ItemNames.starlight_carnival_unlock, ItemNames.orange_wisp_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_3))
+        self.remove_by_name([ItemNames.starlight_carnival_unlock, ItemNames.orange_wisp_unlock])
+        self.collect_by_name([ItemNames.planet_wisp_unlock, ItemNames.yellow_wisp_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_4))
+        self.remove_by_name([ItemNames.planet_wisp_unlock, ItemNames.yellow_wisp_unlock])
+        self.collect_by_name([ItemNames.aquarium_park_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_5))
+        self.remove_by_name([ItemNames.aquarium_park_unlock])
+        self.collect_by_name([ItemNames.asteroid_coaster_unlock, ItemNames.white_wisp_unlock, ItemNames.violet_wisp_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_6))
+        self.remove_by_name([ItemNames.asteroid_coaster_unlock, ItemNames.white_wisp_unlock, ItemNames.violet_wisp_unlock])
         self.assertTrue(self.can_reach_location(LocationNames.special_stage_7))
     
     def test_planets_blocked(self) -> None: #TODO: read starting items
