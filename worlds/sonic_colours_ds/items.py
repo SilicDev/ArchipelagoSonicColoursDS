@@ -72,9 +72,9 @@ item_table = {
 
 lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
 
-item_groups: typing.Dict[str, str] = {
-    "Chaos Emeralds": list(emeralds_table.keys()),
-    "Wisps": list(wisps_table.keys()),
-    "Wisp Unlocks": list(wisp_unlocks_table.keys()),
-    "Planet Access": list(planet_access_table.keys()),
+item_groups: typing.Dict[str, typing.Set[str]] = {
+    "Chaos Emeralds": set(emeralds_table.keys()),
+    "Wisps": set(wisps_table.keys()),
+    "Wisp Unlocks": set(wisp_unlocks_table.keys()),
+    "Planet Access": set(planet_access_table.keys()),
 }

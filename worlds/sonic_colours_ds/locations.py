@@ -206,11 +206,11 @@ location_table = {
     **special_stage_table,
 }
 
-menu_locations = [
+menu_locations = {
     LocationNames.special_stage_7,
-]
+}
 
-tropical_resort_region_locations = [
+tropical_resort_region_locations = {
     LocationNames.movement_tutorial,
     LocationNames.white_wisp_tutorial,
 
@@ -242,9 +242,9 @@ tropical_resort_region_locations = [
 
     LocationNames.tropical_resort_boss,
     LocationNames.special_stage_1,
-]
+}
 
-sweet_mountain_region_locations = [
+sweet_mountain_region_locations = {
     LocationNames.red_wisp_tutorial,
 
     LocationNames.sweet_mountain_act_1,
@@ -275,9 +275,9 @@ sweet_mountain_region_locations = [
 
     LocationNames.sweet_mountain_boss,
     LocationNames.special_stage_2,
-]
+}
 
-starlight_carnival_region_locations = [
+starlight_carnival_region_locations = {
     LocationNames.orange_wisp_tutorial,
 
     LocationNames.starlight_carnival_act_1,
@@ -308,9 +308,9 @@ starlight_carnival_region_locations = [
 
     LocationNames.starlight_carnival_boss,
     LocationNames.special_stage_3,
-]
+}
 
-planet_wisp_region_locations = [
+planet_wisp_region_locations = {
     LocationNames.yellow_wisp_tutorial,
 
     LocationNames.planet_wisp_act_1,
@@ -341,9 +341,9 @@ planet_wisp_region_locations = [
 
     LocationNames.planet_wisp_boss,
     LocationNames.special_stage_4,
-]
+}
 
-aquarium_park_region_locations = [
+aquarium_park_region_locations = {
     LocationNames.cyan_wisp_tutorial,
 
     LocationNames.aquarium_park_act_1,
@@ -374,9 +374,9 @@ aquarium_park_region_locations = [
 
     LocationNames.aquarium_park_boss,
     LocationNames.special_stage_5,
-]
+}
 
-asteroid_coaster_region_locations = [
+asteroid_coaster_region_locations = {
     LocationNames.violet_wisp_tutorial,
 
     LocationNames.asteroid_coaster_act_1,
@@ -407,21 +407,21 @@ asteroid_coaster_region_locations = [
 
     LocationNames.asteroid_coaster_boss,
     LocationNames.special_stage_6,
-]
+}
 
-terminal_velocity_region_locations = [
+terminal_velocity_region_locations = {
     LocationNames.terminal_velocity_chase,
     LocationNames.nega_wisp_armor,
-]
+}
 
-planet_boss_locations = [
+planet_boss_locations = {
     LocationNames.tropical_resort_boss,
     LocationNames.sweet_mountain_boss,
     LocationNames.starlight_carnival_boss,
     LocationNames.planet_wisp_boss,
     LocationNames.aquarium_park_boss,
     LocationNames.asteroid_coaster_boss,
-]
+}
 
 def setup_locations(world: World, player: int):
     locations = {}
@@ -442,13 +442,13 @@ def setup_locations(world: World, player: int):
 
     return locations
 
-lookup_id_to_name: typing.Dict[int, str] = {id: name for name, _ in location_table.items()}
+lookup_id_to_name: typing.Dict[int, str] = {idx: name for name, idx in location_table.items()}
 
-location_groups = {
-    "Level Clear": list(level_clear_table.keys()),
-    "Red Rings": list(red_rings_table.keys()),
-    "Special Stage": list(special_stage_table.keys()),
-    "Tutorial": list(tutorial_clear_table.keys()),
+location_groups: typing.Dict[str, typing.Set[str]] = {
+    "Level Clear": set(level_clear_table.keys()),
+    "Red Rings": set(red_rings_table.keys()),
+    "Special Stage": set(special_stage_table.keys()),
+    "Tutorial": set(tutorial_clear_table.keys()),
     "Planet Boss": planet_boss_locations,
     "Tropical Resort": tropical_resort_region_locations,
     "Sweet Mountain": sweet_mountain_region_locations,

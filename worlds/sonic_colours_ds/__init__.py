@@ -89,7 +89,7 @@ class SonicColorsDSWorld(World):
 
     def create_items(self):
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
-        itempool: list[SonicColoursDSItem] = []
+        itempool: list[Item] = []
         for item in wisp_unlocks_table.keys():
             itempool.append(self.create_item(item))
         for item in planet_access_table.keys():
