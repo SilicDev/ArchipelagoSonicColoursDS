@@ -53,30 +53,25 @@ class SonicColorsDSWorld(World):
 
     starting_planet_access: list[str] = [ItemNames.tropical_resort_unlock] # Todo: convert to option
 
-    def create_regions(self):
+    def create_regions(self) -> None:
         active_locations = setup_locations(self, self.player)
         create_regions(self, active_locations)
         connect_regions(self)
         pass
 
-    def pre_fill(self):
-        for planet_access in self.starting_planet_access:
-            self.multiworld.push_precollected(self.create_item(planet_access))
+    def pre_fill(self) -> None:
         if self.options.goal.value == Goal.option_wisp_armor:
             self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
         elif self.options.goal.value == Goal.option_mother_wisp:
             self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
 
-    def get_pre_fill_items(self):
-        items = super().get_pre_fill_items()
+    def create_items(self) -> None:
         for planet_access in self.starting_planet_access:
-            items.append(self.create_item(planet_access))
-        return items
-        
+            self.multiworld.push_precollected(self.create_item(planet_access))
 
-    def create_items(self):
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []
+
         for item in wisp_unlocks_table.keys():
             itempool.append(self.create_item(item))
         for item in planet_access_table.keys():
@@ -102,7 +97,7 @@ class SonicColorsDSWorld(World):
         item = SonicColoursDSItem(name, classification, data.code, self.player)
         return item
 
-    def set_rules(self):
+    def set_rules(self) -> None:
         set_rules(self)
         self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.park_keys if self.options.goal.value == Goal.option_wisp_armor else ItemNames.mother_wisp, self.player)  
 
