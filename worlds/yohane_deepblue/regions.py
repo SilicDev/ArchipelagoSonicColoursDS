@@ -82,11 +82,17 @@ def create_region(world: World, name: str, active_locations: dict[str, int], loc
             region.locations.append(YohaneDeepblueLocation(world.player, location, code, region))
     return region
 
-def connect(world: World, source: str, destination: str, rule: typing.Optional[typing.Callable[[CollectionState],bool]]) -> None:
+def connect(world: World, source: str, destination: str, rule: typing.Optional[typing.Callable[[CollectionState],bool]], one_way: bool = False) -> None:
     source_region = world.multiworld.get_region(source, world.player)
     dest_region = world.multiworld.get_region(destination, world.player)
 
-    entrance = Entrance(world.player, destination, source_region)
+    entrance_name = source
+    if one_way:
+        entrance_name += " -> "
+    else:
+        entrance_name += " <-> "
+    entrance_name += destination 
+    entrance = Entrance(world.player, entrance_name, source_region)
 
     if rule:
         entrance.access_rule = rule
