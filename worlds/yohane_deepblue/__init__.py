@@ -88,9 +88,8 @@ class YohaneDeepblueWorld(World):
         self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.victory, self.player)
     
     def get_filler_item_name(self) -> str:
-        return "Nothing"
-        junk_keys = list(junk_table.keys())
-        return self.multiworld.random.choice(junk_keys)
+        junk_items = list(junk_table)
+        return self.multiworld.random.choice(junk_items)
     
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data = self.options.as_dict(
