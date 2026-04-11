@@ -57,17 +57,14 @@ class SonicColorsDSWorld(World):
         active_locations = setup_locations(self, self.player)
         create_regions(self, active_locations)
         connect_regions(self)
-        pass
-
-    def pre_fill(self) -> None:
-        if self.options.goal.value == Goal.option_wisp_armor:
-            self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
-        elif self.options.goal.value == Goal.option_mother_wisp:
-            self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
 
     def create_items(self) -> None:
         for planet_access in self.starting_planet_access:
             self.multiworld.push_precollected(self.create_item(planet_access))
+        if self.options.goal.value == Goal.option_wisp_armor:
+            self.multiworld.get_location(LocationNames.nega_wisp_armor, self.player).place_locked_item(self.create_item(ItemNames.park_keys))
+        elif self.options.goal.value == Goal.option_mother_wisp:
+            self.multiworld.get_location(LocationNames.nega_mother_wisp, self.player).place_locked_item(self.create_item(ItemNames.mother_wisp))
 
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []
@@ -80,7 +77,7 @@ class SonicColorsDSWorld(World):
         if self.options.goal.value == Goal.option_mother_wisp:
             for item in emeralds_table.keys():
                 itempool.append(self.create_item(item))
-        surplus_checks = num_locations_to_fill - len(itempool) - 1
+        surplus_checks = num_locations_to_fill - len(itempool)
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
         
