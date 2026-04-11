@@ -105,7 +105,7 @@ class SonicColorsDSWorld(World):
         junk_keys = list(junk_table.keys())
         return self.multiworld.random.choice(junk_keys)
     
-    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+    def fill_slot_data(self) -> dict[str, typing.Any]:
         slot_data = self.options.as_dict(
             "goal",
             "rankrequirement",

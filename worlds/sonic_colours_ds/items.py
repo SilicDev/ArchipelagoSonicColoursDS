@@ -70,9 +70,9 @@ item_table = {
     **planet_access_table
 }
 
-lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
+lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
 
-item_groups: typing.Dict[str, typing.Set[str]] = {
+item_groups: dict[str, set[str]] = {
     "Chaos Emeralds": set(emeralds_table.keys()),
     "Wisps": set(wisps_table.keys()),
     "Wisp Unlocks": set(wisp_unlocks_table.keys()),

@@ -442,9 +442,9 @@ def setup_locations(world: World, player: int):
 
     return locations
 
-lookup_id_to_name: typing.Dict[int, str] = {idx: name for name, idx in location_table.items()}
+lookup_id_to_name: dict[int, str] = {idx: name for name, idx in location_table.items()}
 
-location_groups: typing.Dict[str, typing.Set[str]] = {
+location_groups: dict[str, set[str]] = {
     "Level Clear": set(level_clear_table.keys()),
     "Red Rings": set(red_rings_table.keys()),
     "Special Stage": set(special_stage_table.keys()),
