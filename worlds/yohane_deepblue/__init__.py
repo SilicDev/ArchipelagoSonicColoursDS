@@ -45,7 +45,7 @@ class YohaneDeepblueWorld(World):
     item_name_groups = item_groups
     location_name_groups = location_groups
 
-    required_client_version = (0, 6, 6)
+    required_client_version = (0, 6, 7)
 
     def create_regions(self) -> None:
         active_locations = setup_locations(self, self.player)
