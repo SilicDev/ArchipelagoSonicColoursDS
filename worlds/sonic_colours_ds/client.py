@@ -446,7 +446,7 @@ class SonicColoursDSClient(BizHawkClient):
                     await bizhawk.guarded_write(
                         ctx.bizhawk_ctx,
                         [
-                            (counters + SCDS_LIFE_COUNTER, (life + 1).to_bytes(2, "little"), "Main RAM")
+                            (SCDS_LIFE_COUNTER, (life + 1).to_bytes(2, "little"), "Main RAM")
                         ], [guards["COUNTERS"]])
                     return
             else:
