@@ -115,7 +115,7 @@ chest_locations = {
     LocationNames.dark_room_chest: 124,
 }
 
-location_table: typing.Dict[str, int] = {
+location_table: dict[str, int] = {
     **character_rescue_locations,
     **character_upgrade_locations,
     **boss_fight_locations,
@@ -128,7 +128,7 @@ def setup_locations(world: World, player: int):
     locations = location_table
     return locations
 
-lookup_id_to_name: typing.Dict[int, str] = {idx: name for name, idx in location_table.items()}
+lookup_id_to_name: dict[int, str] = {idx: name for name, idx in location_table.items()}
 
-location_groups: typing.Dict[str, set[str]] = {
+location_groups: dict[str, set[str]] = {
 }

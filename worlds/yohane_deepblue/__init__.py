@@ -91,7 +91,7 @@ class YohaneDeepblueWorld(World):
         junk_items = list(junk_table)
         return self.multiworld.random.choice(junk_items)
     
-    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+    def fill_slot_data(self) -> dict[str, typing.Any]:
         slot_data = self.options.as_dict(
             "deathlink"
         )

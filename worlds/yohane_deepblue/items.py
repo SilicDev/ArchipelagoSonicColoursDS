@@ -13,7 +13,7 @@ class YohaneDeepblueItem(Item):
     game: str = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
 
 
-character_upgrade_table = {
+character_upgrade_table: dict[str, ItemData] = {
     #ItemNames.lailaps_upgrade: ItemData(0, True), # Unused
     ItemNames.chika_upgrade: ItemData(1, True),
     ItemNames.riko_upgrade: ItemData(2, True),
@@ -25,14 +25,14 @@ character_upgrade_table = {
     ItemNames.mari_upgrade: ItemData(8, True),
 }
 
-unique_accessories_table = {
+unique_accessories_table: dict[str, ItemData] = {
     ItemNames.extra_accessory_slot: ItemData(9, True, 2), # also 10
     ItemNames.fallen_angels_soarshoes: ItemData(11, True),
     ItemNames.gloves_of_might: ItemData(12, True),
     ItemNames.sea_deitys_charm: ItemData(13, True),
 }
 
-breakable_material_table = {
+breakable_material_table: dict[str, ItemData] = {
     ItemNames.deepsea_cotton: ItemData(201, False),
     ItemNames.seaworms_cotton: ItemData(202, False),
     ItemNames.sea_silk: ItemData(203, False),
@@ -65,7 +65,7 @@ breakable_material_table = {
     ItemNames.squishy_lens: ItemData(231, False),
 }
 
-enemy_material_table = {
+enemy_material_table: dict[str, ItemData] = {
     ItemNames.freaky_tentacle: ItemData(232, False),
     ItemNames.supreme_squid_ink: ItemData(233, False),
     ItemNames.sharp_tooth: ItemData(234, False),
@@ -154,7 +154,7 @@ enemy_material_table = {
     ItemNames.rusty_rod: ItemData(322, False),
 }
 
-rare_material_table = {
+rare_material_table: dict[str, ItemData] = {
     ItemNames.whale_harp: ItemData(226, False, 2),
     ItemNames.shark_rip: ItemData(270, False),
     ItemNames.ichimonji_scabbard: ItemData(284, False),
@@ -177,7 +177,7 @@ rare_material_table = {
     ItemNames.huge_conch: ItemData(336, False),
 }
 
-consumables_table = {
+consumables_table: dict[str, ItemData] = {
     ItemNames.health_potion: ItemData(401, False),
     ItemNames.quality_health_potion: ItemData(402, False),
     ItemNames.shinestew: ItemData(403, False),
@@ -199,7 +199,7 @@ consumables_table = {
     ItemNames.musical_score: ItemData(419, False),
 }
 
-weapons_table = {
+weapons_table: dict[str, ItemData] = {
     ItemNames.crossbow: ItemData(601, False),
     ItemNames.burstbow: ItemData(602, False),
     ItemNames.mistilteinn: ItemData(603, False),
@@ -229,7 +229,7 @@ weapons_table = {
     ItemNames.claiomh_solais: ItemData(627, False),
 }
 
-accessories_table = {
+accessories_table: dict[str, ItemData] = {
     ItemNames.fortune_tellers_veil: ItemData(801, False),
     ItemNames.cotton_cape: ItemData(802, False),
     ItemNames.diving_suit: ItemData(803, False),
@@ -298,7 +298,7 @@ accessories_table = {
     ItemNames.sphene_earring: ItemData(866, False),
 }
 
-character_unlock_table = { # No actual items exist for these
+character_unlock_table: dict[str, ItemData] = { # No actual items exist for these
     ItemNames.lailaps_unlock: ItemData(1000, True),
     ItemNames.chika_unlock: ItemData(1001, True),
     ItemNames.riko_unlock: ItemData(1002, True),
@@ -310,17 +310,17 @@ character_unlock_table = { # No actual items exist for these
     ItemNames.ruby_unlock: ItemData(1008, True),
 }
 
-junk_table: typing.Set[str] = {
+junk_table: set[str] = {
     *breakable_material_table.keys(),
     *enemy_material_table.keys(),
     *consumables_table.keys(),
 }
 
-event_table: typing.Dict[str, ItemData] = {
+event_table: dict[str, ItemData] = {
     ItemNames.victory: ItemData(None, True),
 }
 
-item_table: typing.Dict[str, ItemData] = {
+item_table: dict[str, ItemData] = {
     **unique_accessories_table,
     **character_unlock_table,
     **character_upgrade_table,
@@ -332,9 +332,9 @@ item_table: typing.Dict[str, ItemData] = {
     **accessories_table,
 }
 
-lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
+lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
 
-item_groups: typing.Dict[str, set[str]] = {
+item_groups: dict[str, set[str]] = {
     "Accessories": set(unique_accessories_table.keys()),
     "Characters": set(character_unlock_table.keys()),
     "Upgrades": set(character_upgrade_table.keys()),
