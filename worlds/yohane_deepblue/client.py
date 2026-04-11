@@ -1,0 +1,137 @@
+import asyncio
+import enum
+from argparse import Namespace
+from typing import TYPE_CHECKING, Any
+from collections.abc import Sequence
+
+from pymem import pymem
+import colorama
+from CommonClient import ClientCommandProcessor, CommonContext, logger, get_base_parser, handle_url_arg, server_loop
+from Utils import gui_enabled
+
+if TYPE_CHECKING:
+    import kvui
+
+
+class ConnectionStatus(enum.IntEnum):
+    NOT_CONNECTED = 1
+    CONNECTED = 2
+
+class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
+    ctx: "YohaneDeepblueContext"
+
+class YohaneDeepblueContext(CommonContext):
+    game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
+    items_handling = 0b111  # full remote
+
+    client_loop: asyncio.Task[None]
+
+    last_connected_slot: int | None = None
+
+    slot_data: dict[str, Any]
+
+    connection_status: ConnectionStatus = ConnectionStatus.NOT_CONNECTED
+    game_connected = False
+    game_process: pymem.Pymem | None = None
+
+    highest_processed_item_index: int = 0
+    queued_locations: list[int]
+
+    command_processor = YohaneDeepblueCommandProcessor
+
+    def __init__(self, server_address: str | None = None, password: str | None = None) -> None:
+        super().__init__(server_address, password)
+
+        self.queued_locations = []
+        self.slot_data = {}
+
+    async def server_auth(self, password_requested: bool = False) -> None:
+        await super().server_auth(password_requested)
+        await self.get_username()
+        await self.send_connect(game=self.game)
+
+    async def game_watcher(self):
+        while not self.exit_event.is_set():
+            if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED:
+                try:
+                    while self.queued_locations:
+                        location = self.queued_locations.pop(0)
+                        self.locations_checked.add(location)
+                        await self.check_locations({location})
+
+                    new_items = self.items_received[self.highest_processed_item_index :]
+                    for item in new_items:
+                        self.highest_processed_item_index += 1
+                        # receive item
+
+                    for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
+                        # other game collected item, clear location
+                        pass
+                except Exception as e:
+                    logger.exception(e)
+                pass # game specific logic
+            elif not self.game_connected:
+                # connect game
+                pass
+            else:
+                # server disconnected?
+                pass
+
+            await asyncio.sleep(0.1)
+
+    def on_package(self, cmd: str, args: dict) -> None:
+        if cmd == "Connected":
+            self.last_connected_slot = self.slot
+
+            self.connection_status = ConnectionStatus.NOT_CONNECTED
+
+            self.slot_data = args["slot_data"]
+            self.highest_processed_item_index = 0
+
+            self.connection_status = ConnectionStatus.CONNECTED
+            self.connect_to_game()
+
+    async def disconnect(self, *args: Any, **kwargs: Any) -> None:
+        self.finished_game = False
+        self.locations_checked = set()
+        self.connection_status = ConnectionStatus.NOT_CONNECTED
+        await super().disconnect(*args, **kwargs)
+    
+    def connect_to_game(self) -> None:
+        try:
+            self.game_process = pymem.Pymem("game.exe")
+            if self.game_process is not None:
+                self.game_connected = True
+                logger.info("Successfully connected to %s.", self.game)
+        except Exception as e:
+            if self.game_connected:
+                self.game_connected = False
+            logger.info("%s is not open. If it is open run the launcher/client as admin.", self.game)
+        pass
+
+def launch_client(*args: Sequence[str]) -> None:
+    parser = get_base_parser()
+    parser.add_argument("--name", default=None, help="Slot Name to connect as.")
+    parser.add_argument("url", nargs="?", help="Archipelago connection url")
+
+    launch_args = handle_url_arg(parser.parse_args(args))
+
+    colorama.just_fix_windows_console()
+
+    asyncio.run(main(launch_args))
+    colorama.deinit()
+    
+
+async def main(args: Namespace) -> None:
+    ctx = YohaneDeepblueContext(args.connect, args.password)
+    ctx.auth = args.name
+    ctx.server_task = asyncio.create_task(server_loop(ctx), name="server loop")
+    if gui_enabled:
+        ctx.run_gui()
+    ctx.run_cli()
+
+    ctx.client_loop = asyncio.create_task(ctx.game_watcher(), name="Client Loop")
+
+    await ctx.exit_event.wait()
+    await ctx.shutdown()
+    pass

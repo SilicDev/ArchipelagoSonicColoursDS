@@ -5,6 +5,7 @@ import typing
 
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
+from worlds.LauncherComponents import Component, Type, components, launch
 
 from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table
 from .locations import YohaneDeepblueLocation, location_groups, location_table, setup_locations
@@ -12,6 +13,20 @@ from .regions import create_regions, connect_regions
 from .rules import set_rules
 from .options import YohaneDeepblueOptions, yohane_deepblue_option_groups
 from .data import ItemNames, LocationNames
+
+def run_client(*args: str) -> None:
+    from .client import launch_client
+    launch(launch_client, name="YOHANE THE PARHELION -BLAZE in the DEEPBLUE- Client", args=args)
+
+components.append(
+    Component(
+        "YOHANE THE PARHELION -BLAZE in the DEEPBLUE- Client",
+        func=run_client,
+        game_name="YOHANE THE PARHELION -BLAZE in the DEEPBLUE-",
+        component_type=Type.CLIENT,
+        supports_uri=True,
+    )
+)
 
 class YohaneDeepblueWebWorld(WebWorld):
     """
