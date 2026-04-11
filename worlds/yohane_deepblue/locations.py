@@ -115,6 +115,133 @@ chest_locations = {
     LocationNames.dark_room_chest: 124,
 }
 
+menu_region_locations = {
+    LocationNames.chika_rescue,
+    LocationNames.kanan_rescue,
+    LocationNames.dia_rescue,
+    LocationNames.ruby_rescue,
+    LocationNames.you_rescue,
+    LocationNames.mari_rescue,
+    LocationNames.riko_rescue,
+    LocationNames.hanamaru_rescue,
+    LocationNames.chika_upgrade_quest,
+    LocationNames.riko_upgrade_quest,
+    LocationNames.kanan_upgrade_quest,
+    LocationNames.hanamaru_upgrade_quest,
+    LocationNames.ruby_upgrade_quest,
+    LocationNames.you_upgrade_quest,
+    LocationNames.dia_upgrade_quest,
+    LocationNames.mari_upgrade_quest,
+}
+
+sunken_temple_region_locations = {
+    LocationNames.sunken_temple_boss_defeated,
+
+    LocationNames.cast_tutorial_left_chest,
+    LocationNames.case_tutorial_right_chest,
+    LocationNames.fishy_archery_chest,
+    LocationNames.pathway_to_infernal_altar_chest,
+    LocationNames.katys_mask_room_chest,
+    LocationNames.chika_testin_grounds_chest,
+}
+
+ruins_region_locations = {
+    LocationNames.ruins_boss_defeated_1,
+    LocationNames.ruins_boss_defeated_2,
+    LocationNames.ruins_boss_defeated_3,
+
+    LocationNames.sandy_trap_room_chest,
+    LocationNames.vertical_poison_room_chest,
+    LocationNames.rolling_rocks_room_chest,
+    LocationNames.laptop_room_chest,
+    LocationNames.hall_of_shame_chest,
+}
+
+grotto_region_locations = {
+    LocationNames.grotto_boss_defeated,
+
+    LocationNames.grotto_next_to_first_save_room_chest,
+    LocationNames.first_waterfall_room_chest,
+    LocationNames.first_lake_room_chest,
+    LocationNames.second_lake_room_chest,
+    LocationNames.spellbook_room_chest,
+    LocationNames.long_waterfall_room_chest,
+    LocationNames.isolated_climb_room_chest,
+    LocationNames.small_cave_climb_room_chest,
+}
+
+coral_hill_region_locations = {
+    LocationNames.coral_hill_boss_defeated,
+
+    LocationNames.soarshoesnt_chest_room_chest,
+    LocationNames.annoying_teleporting_fish_room_chest,
+    LocationNames.wallcrab_chest_room_chest,
+    LocationNames.dumb_block_room_chest,
+    LocationNames.lost_monstie_room_chest,
+}
+
+sea_of_trees_region_locations = {
+    LocationNames.sea_of_trees_boss_defeated,
+
+    LocationNames.giant_poison_enemy_crab_room_chest,
+    LocationNames.scarlet_delta_suit_room_chest,
+    LocationNames.golden_snail_room_chest,
+    LocationNames.you_testing_grounds_chest,
+}
+
+crystalline_grotto_region_locations = {
+    LocationNames.crystalline_grotto_boss_defeated,
+
+    LocationNames.one_way_slide_room_chest,
+    LocationNames.giant_sliding_crystals_room_chest,
+    LocationNames.isolated_chest_room_chest,
+    LocationNames.looong_slide_room_chest,
+    LocationNames.mari_issue_room_chest,
+}
+
+sunken_volcano_left_region_locations = set() # Left empty for now
+
+sunken_volcano_right_region_locations = {
+    LocationNames.sunken_volcano_boss_defeated,
+
+    LocationNames.sunken_volcano_next_to_first_save_room_chest,
+    LocationNames.hotspring_room_chest,
+    LocationNames.soarshoes_room_chest,
+    LocationNames.soarshoes_obligatory_issue_room_chest,
+    LocationNames.tonosamas_parts_room_chest,
+}
+
+shipwreck_region_locations = {
+    LocationNames.shipwreck_boss_defeated,
+
+    LocationNames.really_sealed_off_chest_room_chest,
+    LocationNames.spikey_ball_fish_room_chest,
+    LocationNames.final_guard_room_chest,
+    LocationNames.gloves_of_might_room_chest,
+    LocationNames.postal_guild_bag_room,
+}
+
+infernal_altar_region_locations = {
+    LocationNames.infernal_altar_boss_defeated,
+
+    LocationNames.purple_goo_room_chest,
+    LocationNames.dark_room_chest,
+}
+
+aqours_memoria_region_locations = {
+    LocationNames.aquors_memoria_boss_defeated,
+
+    LocationNames.sunken_temple_boss_refight,
+    LocationNames.ruins_boss_refight,
+    LocationNames.grotto_boss_refight,
+    LocationNames.coral_hill_boss_refight,
+    LocationNames.sea_of_trees_boss_refight,
+    LocationNames.crystalline_grotto_boss_refight,
+    LocationNames.sunken_volcano_boss_refight,
+    LocationNames.shipwreck_boss_refight,
+    LocationNames.infernal_altar_boss_refight,
+}
+
 location_table: dict[str, int] = {
     **character_rescue_locations,
     **character_upgrade_locations,

@@ -1,23 +1,23 @@
 import typing
 
-from BaseClasses import CollectionState, Region, Entrance, ItemClassification
+from BaseClasses import CollectionState, Region, Entrance, EntranceType, ItemClassification
 from worlds.AutoWorld import World
 from .locations import *
 from .data import LocationNames, ItemNames
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
-    menu_region = create_region(world, "Menu", active_locations, set(location_table.keys()))
-    sunken_temple_region = create_region(world, LocationNames.sunken_temple_region, active_locations, set())
-    ruins_region = create_region(world, LocationNames.ruins_region, active_locations, set())
-    grotto_region = create_region(world, LocationNames.grotto_region, active_locations, set())
-    coral_hill_region = create_region(world, LocationNames.coral_hill_region, active_locations, set())
-    sea_of_trees_region = create_region(world, LocationNames.sea_of_trees_region, active_locations, set())
-    crystalline_grotto_region = create_region(world, LocationNames.crystalline_grotto_region, active_locations, set())
-    sunken_volcano_left_region = create_region(world, LocationNames.sunken_volcano_left_region, active_locations, set())
-    sunken_volcano_right_region = create_region(world, LocationNames.sunken_volcano_right_region, active_locations, set())
-    shipwreck_region = create_region(world, LocationNames.shipwreck_region, active_locations, set())
-    infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, set())
-    aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, set())
+    menu_region = create_region(world, "Menu", active_locations, menu_region_locations)
+    sunken_temple_region = create_region(world, LocationNames.sunken_temple_region, active_locations, sunken_temple_region_locations)
+    ruins_region = create_region(world, LocationNames.ruins_region, active_locations, ruins_region_locations)
+    grotto_region = create_region(world, LocationNames.grotto_region, active_locations, grotto_region_locations)
+    coral_hill_region = create_region(world, LocationNames.coral_hill_region, active_locations, coral_hill_region_locations)
+    sea_of_trees_region = create_region(world, LocationNames.sea_of_trees_region, active_locations, sea_of_trees_region_locations)
+    crystalline_grotto_region = create_region(world, LocationNames.crystalline_grotto_region, active_locations, crystalline_grotto_region_locations)
+    sunken_volcano_left_region = create_region(world, LocationNames.sunken_volcano_left_region, active_locations, sunken_volcano_left_region_locations)
+    sunken_volcano_right_region = create_region(world, LocationNames.sunken_volcano_right_region, active_locations, sunken_volcano_right_region_locations)
+    shipwreck_region = create_region(world, LocationNames.shipwreck_region, active_locations, shipwreck_region_locations)
+    infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, infernal_altar_region_locations)
+    aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, aqours_memoria_region_locations)
 
     world.multiworld.regions += [
         menu_region,
@@ -87,12 +87,13 @@ def connect(world: World, source: str, destination: str, rule: typing.Optional[t
     dest_region = world.multiworld.get_region(destination, world.player)
 
     entrance_name = source
+    randomization_type = EntranceType.ONE_WAY
     if one_way:
         entrance_name += " -> "
     else:
         entrance_name += " <-> "
     entrance_name += destination 
-    entrance = Entrance(world.player, entrance_name, source_region)
+    entrance = Entrance(world.player, entrance_name, source_region, randomization_type=randomization_type)
 
     if rule:
         entrance.access_rule = rule
