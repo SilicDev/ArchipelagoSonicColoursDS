@@ -51,12 +51,9 @@ class YohaneDeepblueWorld(World):
         active_locations = setup_locations(self, self.player)
         create_regions(self, active_locations)
         connect_regions(self)
-        pass
-
-    def pre_fill(self) -> None:
-        self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
 
     def create_items(self) -> None:
+        self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []
         for item in unique_accessories_table.keys():
@@ -66,7 +63,7 @@ class YohaneDeepblueWorld(World):
             itempool.append(self.create_item(item))
         for item in character_upgrade_table.keys():
             itempool.append(self.create_item(item))
-        surplus_checks = num_locations_to_fill - len(itempool) - 1
+        surplus_checks = num_locations_to_fill - len(itempool)
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
 
