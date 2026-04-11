@@ -3,7 +3,7 @@ Archipelago World definition for YOHANE THE PARHELION -BLAZE in the DEEPBLUE-
 """
 import typing
 
-from BaseClasses import Item, ItemClassification, Region, Tutorial
+from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 
 from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table
@@ -47,17 +47,16 @@ class YohaneDeepblueWorld(World):
 
     required_client_version = (0, 6, 6)
 
-
-    def create_regions(self):
+    def create_regions(self) -> None:
         active_locations = setup_locations(self, self.player)
         create_regions(self, active_locations)
         connect_regions(self)
         pass
 
-    def pre_fill(self):
+    def pre_fill(self) -> None:
         self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
 
-    def create_items(self):
+    def create_items(self) -> None:
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []
         for item in unique_accessories_table.keys():
@@ -83,7 +82,7 @@ class YohaneDeepblueWorld(World):
         item = YohaneDeepblueItem(name, classification, data.code, self.player)
         return item
 
-    def set_rules(self):
+    def set_rules(self) -> None:
         set_rules(self)
         self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemNames.victory, self.player)
     
