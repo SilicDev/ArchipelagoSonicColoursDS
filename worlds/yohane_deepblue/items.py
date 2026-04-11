@@ -202,9 +202,9 @@ item_table: typing.Dict[str, ItemData] = {
 
 lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
 
-item_groups: typing.Dict[str, str] = {
-    "Accessories": list(unique_accessories_table.keys()),
-    "Characters": list(character_unlock_table.keys()),
-    "Upgrades": list(character_upgrade_table.keys()),
-    "Rare Materials": list(rare_material_table.keys()),
+item_groups: typing.Dict[str, set[str]] = {
+    "Accessories": set(unique_accessories_table.keys()),
+    "Characters": set(character_unlock_table.keys()),
+    "Upgrades": set(character_upgrade_table.keys()),
+    "Rare Materials": set(rare_material_table.keys()),
 }

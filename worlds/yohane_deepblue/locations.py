@@ -128,7 +128,7 @@ def setup_locations(world: World, player: int):
     locations = location_table
     return locations
 
-lookup_id_to_name: typing.Dict[int, str] = {id: name for name, _ in location_table.items()}
+lookup_id_to_name: typing.Dict[int, str] = {idx: name for name, idx in location_table.items()}
 
-location_groups: typing.Dict[str, str] = {
+location_groups: typing.Dict[str, set[str]] = {
 }

@@ -59,7 +59,7 @@ class YohaneDeepblueWorld(World):
 
     def create_items(self):
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
-        itempool: list[YohaneDeepblueItem] = []
+        itempool: list[Item] = []
         for item in unique_accessories_table.keys():
             for i in range(unique_accessories_table[item].quantity):
                 itempool.append(self.create_item(item))
