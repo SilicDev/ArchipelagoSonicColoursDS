@@ -1,17 +1,23 @@
 import asyncio
 import enum
 from argparse import Namespace
-from typing import TYPE_CHECKING, Any
+import time
+from typing import TYPE_CHECKING, Any, Dict
 from collections.abc import Sequence
 
 from pymem import pymem
 import colorama
 from CommonClient import ClientCommandProcessor, CommonContext, logger, get_base_parser, handle_url_arg, server_loop
+from NetUtils import ClientStatus
 from Utils import gui_enabled
 
 if TYPE_CHECKING:
     import kvui
 
+PTR_FLAGS_STRUCT = [0x28, 0x8, 0x8]
+OFFSET_IS_DEAD = 0x360
+OFFSET_AREA_RELOAD = 0xCD
+OFFSET_IN_CREDITS = 0xCE
 
 class ConnectionStatus(enum.IntEnum):
     NOT_CONNECTED = 1
@@ -19,6 +25,13 @@ class ConnectionStatus(enum.IntEnum):
 
 class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
     ctx: "YohaneDeepblueContext"
+
+    def _cmd_kaboom(self) -> None:
+        self.ctx.on_deathlink({
+            "time": time.time(),
+            "source": self.ctx.player_names[self.ctx.slot],
+            "cause": ""
+        })
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -37,6 +50,9 @@ class YohaneDeepblueContext(CommonContext):
     highest_processed_item_index: int = 0
     queued_locations: list[int]
 
+    deathlink_enabled = False
+    can_send_deathlink = False
+
     command_processor = YohaneDeepblueCommandProcessor
 
     def __init__(self, server_address: str | None = None, password: str | None = None) -> None:
@@ -52,8 +68,21 @@ class YohaneDeepblueContext(CommonContext):
 
     async def game_watcher(self):
         while not self.exit_event.is_set():
-            if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED:
+            if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED and self.game_process is not None:
+                if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
+                    await self.update_death_link(self.deathlink_enabled)
                 try:
+                    flags_struct = _resolve_pointer(self, self.game_process.base_address, PTR_FLAGS_STRUCT)
+                    
+                    is_dead = self.game_process.read_uchar(flags_struct + OFFSET_IS_DEAD)
+                    if self.deathlink_enabled:
+                        if not is_dead and not self.can_send_deathlink:
+                            self.can_send_deathlink = True
+                        elif is_dead and self.can_send_deathlink:
+                            await self.send_death()
+                            self.can_send_deathlink = False
+
+
                     while self.queued_locations:
                         location = self.queued_locations.pop(0)
                         self.locations_checked.add(location)
@@ -67,6 +96,11 @@ class YohaneDeepblueContext(CommonContext):
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
                         # other game collected item, clear location
                         pass
+
+                    in_credits = self.game_process.read_uchar(flags_struct + OFFSET_IN_CREDITS)
+                    if in_credits != 0 and not self.finished_game:
+                        await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+                        self.finished_game = True
                 except Exception as e:
                     logger.exception(e)
                 pass # game specific logic
@@ -90,6 +124,15 @@ class YohaneDeepblueContext(CommonContext):
 
             self.connection_status = ConnectionStatus.CONNECTED
             self.connect_to_game()
+    
+    def on_deathlink(self, data: Dict[str, Any]) -> None:
+        if self.game_process is not None:
+            text = data.get("cause", "") # for ingame display
+            flags_struct = _resolve_pointer(self, self.game_process.base_address, PTR_FLAGS_STRUCT)
+            self.game_process.write_uchar(flags_struct + OFFSET_IS_DEAD, 1)
+            self.game_process.write_uchar(flags_struct + OFFSET_AREA_RELOAD, 1)
+            self.can_send_deathlink = False
+        return super().on_deathlink(data)
 
     async def disconnect(self, *args: Any, **kwargs: Any) -> None:
         self.finished_game = False
@@ -134,4 +177,14 @@ async def main(args: Namespace) -> None:
 
     await ctx.exit_event.wait()
     await ctx.shutdown()
-    pass
+
+def _resolve_pointer(ctx: YohaneDeepblueContext, base_address: int, pointer: list[int]) -> int:
+    if not ctx.game_connected or ctx.game_process is None:
+        return -1
+    address = base_address
+    for offset in pointer:
+        try:
+            address = int(ctx.game_process.read_long(address + offset))
+        except Exception as e:
+            return -1
+    return address
