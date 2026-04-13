@@ -72,8 +72,11 @@ class YohaneDeepblueContext(CommonContext):
                 if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
                     await self.update_death_link(self.deathlink_enabled)
                 try:
-                    flags_struct = _resolve_pointer(self, self.game_process.base_address, PTR_FLAGS_STRUCT)
-                    
+                    flags_struct = _resolve_pointer(self, self.get_base_address(), PTR_FLAGS_STRUCT)
+                    if flags_struct == -1:
+                        logger.info("ERROR: Couldn't find flags struct!")
+                        await asyncio.sleep(1)
+                        continue
                     is_dead = self.game_process.read_uchar(flags_struct + OFFSET_IS_DEAD)
                     if self.deathlink_enabled:
                         if not is_dead and not self.can_send_deathlink:
@@ -121,6 +124,8 @@ class YohaneDeepblueContext(CommonContext):
 
             self.slot_data = args["slot_data"]
             self.highest_processed_item_index = 0
+            self.locations_checked = set(args["checked_locations"])
+            self.deathlink_enabled = self.slot_data.get("death_link", False)
 
             self.connection_status = ConnectionStatus.CONNECTED
             self.connect_to_game()
@@ -128,7 +133,7 @@ class YohaneDeepblueContext(CommonContext):
     def on_deathlink(self, data: Dict[str, Any]) -> None:
         if self.game_process is not None:
             text = data.get("cause", "") # for ingame display
-            flags_struct = _resolve_pointer(self, self.game_process.base_address, PTR_FLAGS_STRUCT)
+            flags_struct = _resolve_pointer(self, self.get_base_address(), PTR_FLAGS_STRUCT)
             self.game_process.write_uchar(flags_struct + OFFSET_IS_DEAD, 1)
             self.game_process.write_uchar(flags_struct + OFFSET_AREA_RELOAD, 1)
             self.can_send_deathlink = False
@@ -151,6 +156,12 @@ class YohaneDeepblueContext(CommonContext):
                 self.game_connected = False
             logger.info("%s is not open. If it is open run the launcher/client as admin.", self.game)
         pass
+
+    def get_base_address(self) -> int:
+        if not self.game_connected or self.game_process is None:
+            raise Exception("Must be connected to the game!")
+        return _read_address(self, self.game_process.base_address + 0x0115B498)
+
 
 def launch_client(*args: Sequence[str]) -> None:
     parser = get_base_parser()
@@ -178,13 +189,22 @@ async def main(args: Namespace) -> None:
     await ctx.exit_event.wait()
     await ctx.shutdown()
 
+def _read_address(ctx: YohaneDeepblueContext, address: int) -> int:
+    if not ctx.game_connected or ctx.game_process is None:
+        raise Exception("Must be connected to the game!")
+    if ctx.game_process.is_64_bit:
+        return int(ctx.game_process.read_longlong(address))
+    else:
+        return int(ctx.game_process.read_long(address))
+
 def _resolve_pointer(ctx: YohaneDeepblueContext, base_address: int, pointer: list[int]) -> int:
     if not ctx.game_connected or ctx.game_process is None:
-        return -1
+        raise Exception("Must be connected to the game!")
     address = base_address
     for offset in pointer:
         try:
-            address = int(ctx.game_process.read_long(address + offset))
+            address = _read_address(ctx, address + offset)
         except Exception as e:
+            logger.info("Failed to read value at address %x + %x", address, offset)
             return -1
     return address
