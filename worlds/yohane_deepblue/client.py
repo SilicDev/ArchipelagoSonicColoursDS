@@ -14,6 +14,9 @@ from Utils import gui_enabled
 if TYPE_CHECKING:
     import kvui
 
+FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
+MAIN_BASE_OFFSET = 0x0166B418
+
 PTR_FLAGS_STRUCT = [0x28, 0x8, 0x8]
 OFFSET_IS_DEAD = 0x360
 OFFSET_AREA_RELOAD = 0xCD
@@ -72,7 +75,7 @@ class YohaneDeepblueContext(CommonContext):
                 if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
                     await self.update_death_link(self.deathlink_enabled)
                 try:
-                    flags_struct = _resolve_pointer(self, self.get_base_address(), PTR_FLAGS_STRUCT)
+                    flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
                         logger.info("ERROR: Couldn't find flags struct!")
                         await asyncio.sleep(1)
@@ -133,7 +136,7 @@ class YohaneDeepblueContext(CommonContext):
     def on_deathlink(self, data: Dict[str, Any]) -> None:
         if self.game_process is not None:
             text = data.get("cause", "") # for ingame display
-            flags_struct = _resolve_pointer(self, self.get_base_address(), PTR_FLAGS_STRUCT)
+            flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
             self.game_process.write_uchar(flags_struct + OFFSET_IS_DEAD, 1)
             self.game_process.write_uchar(flags_struct + OFFSET_AREA_RELOAD, 1)
             self.can_send_deathlink = False
@@ -157,10 +160,10 @@ class YohaneDeepblueContext(CommonContext):
             logger.info("%s is not open. If it is open run the launcher/client as admin.", self.game)
         pass
 
-    def get_base_address(self) -> int:
+    def get_base_address(self, base_offset: int) -> int:
         if not self.game_connected or self.game_process is None:
             raise Exception("Must be connected to the game!")
-        return _read_address(self, self.game_process.base_address + 0x0115B498)
+        return _read_address(self, self.game_process.base_address + base_offset)
 
 
 def launch_client(*args: Sequence[str]) -> None:
