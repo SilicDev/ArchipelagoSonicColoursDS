@@ -168,9 +168,10 @@ class SonicColoursDSClient(BizHawkClient):
                         "mapId": self.last_area,
                     },
                 }])
+            checked_locations = ctx.checked_locations.copy()
             if ctx.slot_data["redringsanity"] == Toggle.option_true:
                 red_ring_storage = 0
-                for location in ctx.checked_locations:
+                for location in checked_locations:
                     location_name = ctx.location_names.lookup_in_game(location)
                     if location_name in red_rings_table.keys():
                         red_ring_storage |= 1 << (location_table[location_name] - location_table[LocationNames.tropical_resort_act_1_red_ring_1])
@@ -281,7 +282,7 @@ class SonicColoursDSClient(BizHawkClient):
                         if read_result[0][ring] == 1:
                             local_checked_locations.add(location_table[location_prefix + " - Red Star Ring " + str(ring + 1)])
             
-            for location in ctx.checked_locations:
+            for location in checked_locations:
                 location_name = ctx.location_names.lookup_in_game(location)
                 if (location >= location_table[LocationNames.tropical_resort_act_1] 
                         and location <= location_table[LocationNames.asteroid_coaster_mission_3] 
