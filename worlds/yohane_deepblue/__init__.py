@@ -76,7 +76,6 @@ class YohaneDeepblueWorld(World):
         self.multiworld.get_location(LocationNames.crystalline_grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
         self.multiworld.get_location(LocationNames.sunken_volcano_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
         self.multiworld.get_location(LocationNames.shipwreck_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.infernal_altar_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
         self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []
