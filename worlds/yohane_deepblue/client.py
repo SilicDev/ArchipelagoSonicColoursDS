@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
 MAIN_BASE_OFFSET = 0x0166B418
 
+GAME_FLAGS_OFFSET = 0x51058
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
 
@@ -74,6 +75,7 @@ class YohaneDeepblueContext(CommonContext):
 
     last_map_area = -1
     last_map_room = -1
+    in_parlor = False
 
     debug_log = True
 
@@ -111,6 +113,12 @@ class YohaneDeepblueContext(CommonContext):
                             logger.info("Entering room %d in area %d", map_room, map_area)
                         self.last_map_area = map_area
                         self.last_map_room = map_room
+                    game_flags = int(self.game_process.read_uchar(main_struct + GAME_FLAGS_OFFSET))
+                    in_parlor = game_flags & 0x8 != 0
+                    if in_parlor != self.in_parlor:
+                        if in_parlor:
+                            logger.info("Yohane safely arrived in her Fortune Parlor")
+                        self.in_parlor = in_parlor
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
                         logger.info("ERROR: Couldn't find flags struct!")
@@ -140,7 +148,7 @@ class YohaneDeepblueContext(CommonContext):
                         pass
 
                     in_credits = self.game_process.read_uchar(flags_struct + OFFSET_IN_CREDITS)
-                    if in_credits != 0 and not self.finished_game:
+                    if (in_credits != 0 or game_flags & 0x1 != 0) and not self.finished_game:
                         await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                         self.finished_game = True
                 except Exception as e:
