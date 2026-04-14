@@ -17,10 +17,14 @@ if TYPE_CHECKING:
 FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
 MAIN_BASE_OFFSET = 0x0166B418
 
+MAP_AREA_OFFSET = 0x585EC
+MAP_ROOM_OFFSET = 0x585EF
+
 PTR_FLAGS_STRUCT = [0x28, 0x8, 0x8]
-OFFSET_IS_DEAD = 0x360
+OFFSET_AREA = 0xA0
 OFFSET_AREA_RELOAD = 0xCD
 OFFSET_IN_CREDITS = 0xCE
+OFFSET_IS_DEAD = 0x360
 
 class ConnectionStatus(enum.IntEnum):
     NOT_CONNECTED = 1
@@ -37,6 +41,19 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
             "source": self.ctx.player_names[self.ctx.slot],
             "cause": ""
         })
+    
+    def _cmd_debug(self, toggle: bool | None = None) -> None:
+        """Toggle debug logging.
+        toggle: use this to set the debug logging setting
+        """
+        if toggle is None:
+            self.ctx.debug_log = not self.ctx.debug_log
+        else:
+            self.ctx.debug_log = toggle
+        if self.ctx.debug_log:
+            logger.info("Enabled debug logging")
+        else:
+            logger.info("Disabled debug logging")
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -54,6 +71,11 @@ class YohaneDeepblueContext(CommonContext):
 
     highest_processed_item_index: int = 0
     queued_locations: list[int]
+
+    last_map_area = -1
+    last_map_room = -1
+
+    debug_log = True
 
     deathlink_enabled = False
     can_send_deathlink = False
@@ -77,6 +99,18 @@ class YohaneDeepblueContext(CommonContext):
                 if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
                     await self.update_death_link(self.deathlink_enabled)
                 try:
+                    main_struct = self.get_base_address(MAIN_BASE_OFFSET)
+                    if main_struct == -1:
+                        logger.info("ERROR: Couldn't find main data struct!")
+                        await asyncio.sleep(1)
+                        continue
+                    map_area = self.game_process.read_uchar(main_struct + MAP_AREA_OFFSET)
+                    map_room = self.game_process.read_uchar(main_struct + MAP_ROOM_OFFSET)
+                    if self.last_map_area != map_area or self.last_map_room != map_room:
+                        if self.debug_log:
+                            logger.info("Entering room %d in area %d", map_room, map_area)
+                        self.last_map_area = map_area
+                        self.last_map_room = map_room
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
                         logger.info("ERROR: Couldn't find flags struct!")
