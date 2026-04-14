@@ -64,6 +64,7 @@ class SonicColoursDSClient(BizHawkClient):
     local_emeralds: int
     local_junk_items: list[str]
     last_level: int
+    last_area: int
     num_items_received: int
 
     def initialize_client(self) -> None:
@@ -71,6 +72,7 @@ class SonicColoursDSClient(BizHawkClient):
         self.local_access_items = set()
         self.local_junk_items = []
         self.last_level = -1
+        self.last_area = -1
         self.local_active_wisps = 0
         self.local_red_rings = 0
         self.local_emeralds = 0
@@ -156,6 +158,16 @@ class SonicColoursDSClient(BizHawkClient):
                                             (SCDS_LEVEL_SELECT_PREVIEW, i.to_bytes(2, "little"), "Main RAM")
                                     ], [guards["SONIC"], guards["AREA"]])
                                     break
+            if area_id != self.last_area:
+                self.last_area = area_id
+                await ctx.send_msgs([{
+                    "cmd": "Bounce",
+                    "slots": [ctx.slot],
+                    "data": {
+                        "type": "MapUpdate",
+                        "mapId": self.last_area,
+                    },
+                }])
             if ctx.slot_data["redringsanity"] == Toggle.option_true:
                 red_ring_storage = 0
                 for location in ctx.checked_locations:
