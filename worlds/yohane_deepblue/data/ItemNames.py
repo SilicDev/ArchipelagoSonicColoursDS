@@ -287,3 +287,4 @@ goddesss_bracelet = "Goddess's Bracelet"
 sphene_earring = "Sphene Earring"
 
 victory = "Victory"
+aquors_member = "Aquors Member" # boss check item

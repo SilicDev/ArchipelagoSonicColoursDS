@@ -65,7 +65,7 @@ chest_locations = {
     LocationNames.fishy_archery_chest: 82,
     LocationNames.pathway_to_infernal_altar_chest: 83,
     LocationNames.katys_mask_room_chest: 84,
-    LocationNames.chika_testin_grounds_chest: 85,
+    LocationNames.chika_testing_grounds_chest: 85,
 
     LocationNames.grotto_next_to_first_save_room_chest: 86,
     LocationNames.first_waterfall_room_chest: 87,
@@ -142,7 +142,7 @@ sunken_temple_region_locations = {
     LocationNames.fishy_archery_chest,
     LocationNames.pathway_to_infernal_altar_chest,
     LocationNames.katys_mask_room_chest,
-    LocationNames.chika_testin_grounds_chest,
+    LocationNames.chika_testing_grounds_chest,
 }
 
 ruins_region_locations = {

@@ -310,6 +310,10 @@ character_unlock_table: dict[str, ItemData] = { # No actual items exist for thes
     ItemNames.ruby_unlock: ItemData(1008, True),
 }
 
+token_items = {
+    ItemNames.aquors_member: ItemData(2000, True),
+}
+
 junk_table: set[str] = {
     *breakable_material_table.keys(),
     *enemy_material_table.keys(),
@@ -330,6 +334,7 @@ item_table: dict[str, ItemData] = {
     **consumables_table,
     **weapons_table,
     **accessories_table,
+    **token_items
 }
 
 lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}

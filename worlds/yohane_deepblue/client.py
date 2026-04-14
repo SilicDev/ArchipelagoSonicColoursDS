@@ -30,6 +30,8 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
     ctx: "YohaneDeepblueContext"
 
     def _cmd_kaboom(self) -> None:
+        """Trigger a death.
+        """
         self.ctx.on_deathlink({
             "time": time.time(),
             "source": self.ctx.player_names[self.ctx.slot],

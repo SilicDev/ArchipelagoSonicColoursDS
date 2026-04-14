@@ -66,7 +66,7 @@ def connect_regions(world: World) -> None:
             lambda state: state.has(ItemNames.sea_deitys_charm, world.player))
     connect(world, LocationNames.sea_of_trees_region, LocationNames.shipwreck_region, None)
     connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, 
-            lambda state: state.has_all([
+            lambda state: state.has(ItemNames.aquors_member, world.player, 9) and state.has_all([
                     ItemNames.riko_unlock,
                     ItemNames.kanan_unlock,
                     ItemNames.gloves_of_might
