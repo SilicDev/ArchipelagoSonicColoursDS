@@ -41,6 +41,7 @@ SCDS_STORY_COMPLETION = 0x119B64
 SCDS_PLANET_AREA_FLAGS = 0x119B68
 SCDS_MISSION_UNLOCK_FLAGS = 0x119B6B
 SCDS_SPECIAL_STAGE_UNLOCKED = 0x119B8C
+SCDS_WISP_ARMOR_DEFEATED_FLAG_MAYBE = 0x137DD8
 
 SCDS_LEVEL_SELECT_TARGET = 0x19BF34
 SCDS_TV_BOSS_WISPS = 0x1A00B4 # five 4 byte values
@@ -96,7 +97,7 @@ class SonicColoursDSClient(BizHawkClient):
         ctx.game = self.game
         ctx.items_handling = 0b111
         ctx.want_slot_data = True
-        ctx.watcher_timeout = 0.010
+        ctx.watcher_timeout = 0.005
 
         self.initialize_client()
         return True
@@ -107,35 +108,44 @@ class SonicColoursDSClient(BizHawkClient):
             return
         try:
             guards: Dict[str, Tuple[int, bytes, str]] = {}
+
+            local_checked_locations: set[int] = set()
             
             read_result = await bizhawk.read(
                 ctx.bizhawk_ctx, 
                 [
                     (SCDS_SONIC_POINTER, 4, "Main RAM"),
-                    (SCDS_COUNTER_POINTER, 4, "Main RAM")
+                    (SCDS_COUNTER_POINTER, 4, "Main RAM"),
+                    (SCDS_AREA_ID, 2, "Main RAM"),
+                    (SCDS_LEVEL_ID, 2, "Main RAM"),
+                    (SCDS_WISP_ARMOR_DEFEATED_FLAG_MAYBE, 4, "Main RAM")
                 ])
             
             guards["SONIC"] = (SCDS_SONIC_POINTER, read_result[0], "Main RAM")
             guards["COUNTERS"] = (SCDS_COUNTER_POINTER, read_result[1], "Main RAM")
 
+            guards["AREA"] = (SCDS_AREA_ID, read_result[2], "Main RAM")
+            guards["LEVEL"] = (SCDS_LEVEL_ID, read_result[3], "Main RAM")
+
             sonic = int.from_bytes(guards["SONIC"][1], "little")
             counters = int.from_bytes(guards["COUNTERS"][1], "little")
+            area_id = int.from_bytes(guards["AREA"][1], "little")
+            level_id = int.from_bytes(guards["LEVEL"][1], "little")
+            wisp_armor_defeated_flag = int.from_bytes(read_result[4], "little")
+            if level_id == 6 and wisp_armor_defeated_flag == 0x701:
+                if ctx.slot_data["goal"] == Goal.option_wisp_armor:
+                    if not ctx.finished_game:
+                        ctx.finished_game = True
+                        await ctx.send_msgs([{
+                            "cmd": "StatusUpdate",
+                            "status": ClientStatus.CLIENT_GOAL,
+                        }])
+                elif ctx.slot_data["goal"] == Goal.option_mother_wisp:
+                    local_checked_locations.add(location_table[LocationNames.nega_wisp_armor]) # Nega-Wisp Armor
 
             if counters > (SCDS_RAM_START + SCDS_RAM_SIZE):
                 return # assume invalid
-            
-            read_result = await bizhawk.read(
-                ctx.bizhawk_ctx, 
-                [
-                    (SCDS_AREA_ID, 2, "Main RAM"),
-                    (SCDS_LEVEL_ID, 2, "Main RAM")
-                ])
 
-            guards["AREA"] = (SCDS_AREA_ID, read_result[0], "Main RAM")
-            guards["LEVEL"] = (SCDS_LEVEL_ID, read_result[1], "Main RAM")
-
-            area_id = int.from_bytes(guards["AREA"][1], "little")
-            level_id = int.from_bytes(guards["LEVEL"][1], "little")
             location_prefix = DataMaps.level_id_to_location[level_id]
 
             if area_id == 0 and counters < SCDS_RAM_START: # Planet Map
@@ -185,8 +195,6 @@ class SonicColoursDSClient(BizHawkClient):
 
             await self.handle_received_items(ctx, guards)
             await self.handle_junk_items(ctx, guards)
-
-            local_checked_locations: set[int] = set()
 
             read_result = await bizhawk.guarded_read(
                 ctx.bizhawk_ctx,
@@ -357,26 +365,30 @@ class SonicColoursDSClient(BizHawkClient):
                                 [guards["SONIC"], guards["COUNTERS"]]
                             )
                         local_checked_locations.add(location_table[LocationNames.terminal_velocity_chase])
-
-
-
-            location_prefix = DataMaps.level_id_to_location[level_id]
-            read_result = await bizhawk.guarded_read(
-                ctx.bizhawk_ctx,
-                [
-                    (SCDS_ACTIVE_WISPS, 5, "Main RAM")
-                ],
-                [guards["SONIC"], guards["LEVEL"]])
-            if read_result is not None:
-                wisps = int.from_bytes(read_result[0])
-                if self.local_active_wisps != wisps:
-                    await bizhawk.guarded_write(
-                        ctx.bizhawk_ctx,
-                        [
-                            (SCDS_ACTIVE_WISPS, [self.local_active_wisps], "Main RAM")
-                        ], [guards["SONIC"]])
-            
-
+            if level_id in DataMaps.boss_level_wisps.keys():
+                if self.local_active_wisps & DataMaps.boss_level_wisps[level_id] == 0:
+                    if level_id == 30:
+                        await bizhawk.guarded_write(
+                            ctx.bizhawk_ctx,
+                            [
+                                (SCDS_ACTIVE_WISPS, (0).to_bytes(1, "little"), "Main RAM")
+                            ],
+                            [guards["SONIC"], guards["COUNTERS"]]
+                        )
+                    else:
+                        await bizhawk.guarded_write(
+                            ctx.bizhawk_ctx,
+                            [
+                                ((counters + SCDS_COUNTER_STORED_WISP), (-1).to_bytes(4, "little", signed=True), "Main RAM")
+                            ],
+                            [guards["SONIC"], guards["COUNTERS"]]
+                        )
+            else:
+                await bizhawk.guarded_write(
+                    ctx.bizhawk_ctx,
+                    [
+                        (SCDS_ACTIVE_WISPS, [self.local_active_wisps], "Main RAM")
+                    ], [guards["SONIC"]])
             
             # Send locations
             if local_checked_locations != self.local_checked_locations:
@@ -439,6 +451,7 @@ class SonicColoursDSClient(BizHawkClient):
                             [
                                 (counters + SCDS_COUNTER_BOOST_OFFSET, (boost + 800).to_bytes(2, "little"), "Main RAM")
                             ], [guards["COUNTERS"]])
+                        await bizhawk.display_message(ctx.bizhawk_ctx, "You received a White Wisp")
                         return
                 elif item in DataMaps.level_id_to_wisps[level_id]:
                     await bizhawk.guarded_write(
@@ -447,6 +460,7 @@ class SonicColoursDSClient(BizHawkClient):
                             (counters + SCDS_COUNTER_STORED_WISP, (item_table[item].code - item_table[ItemNames.red_wisp].code).to_bytes(2, "little"), "Main RAM"),
                             (counters + SCDS_COUNTER_HAS_STORED_WISP, (1).to_bytes(2, "little"), "Main RAM")
                         ], [guards["COUNTERS"]])
+                    await bizhawk.display_message(ctx.bizhawk_ctx, f"You received a {item}")
                     return
             elif item == ItemNames.extra_life:
                 read_result = await bizhawk.guarded_read(
@@ -473,13 +487,13 @@ class SonicColoursDSClient(BizHawkClient):
                 if read_result is not None:
                     rings = int.from_bytes(read_result[0], "little")
                     total_rings = int.from_bytes(read_result[1], "little")
-                    print(counters + SCDS_COUNTER_RINGS_OFFSET)
                     await bizhawk.guarded_write(
                         ctx.bizhawk_ctx,
                         [
                             (counters + SCDS_COUNTER_RINGS_OFFSET, (rings + rings_added).to_bytes(2, "little"), "Main RAM"),
                             (counters + SCDS_COUNTER_TOTAL_RINGS_OFFSET, (total_rings + rings_added).to_bytes(2, "little"), "Main RAM")
                         ], [guards["COUNTERS"]])
+                    await bizhawk.display_message(ctx.bizhawk_ctx, f"You received {item}")
                     return
 
             # failed to activate, requeue it

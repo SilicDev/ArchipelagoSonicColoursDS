@@ -115,6 +115,15 @@ level_id_to_wisps = {
     45: [ItemNames.cyan_wisp, ItemNames.violet_wisp],
 }
 
+boss_level_wisps = {
+    11: 0x02,
+    18: 0x02,
+    24: 0x04,
+    30: 0x08,
+    36: 0x10,
+    42: 0x20,
+}
+
 level_id_to_emeralds = {
     8: 0x3F, 
     9: 0x00, 
