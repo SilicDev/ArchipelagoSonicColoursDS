@@ -12,6 +12,9 @@ from NetUtils import ClientStatus
 from Utils import gui_enabled
 from Options import Toggle
 
+from .data import DataMaps
+from .locations import location_table
+
 if TYPE_CHECKING:
     import kvui
 
@@ -108,6 +111,7 @@ class YohaneDeepblueContext(CommonContext):
                         logger.info("ERROR: Couldn't find main data struct!")
                         await asyncio.sleep(1)
                         continue
+                    
                     map_area = self.game_process.read_uchar(main_struct + MAP_AREA_OFFSET)
                     map_room = self.game_process.read_uchar(main_struct + MAP_ROOM_OFFSET)
                     if self.last_map_area != map_area or self.last_map_room != map_room:
@@ -126,11 +130,30 @@ class YohaneDeepblueContext(CommonContext):
                     if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x3 != 0x3:
                         dungeon_flags |= 0x3
                         self.game_process.write_uchar(main_struct + DUNGEON_FLAGS_OFFSET, dungeon_flags)
+
+                    cache: dict[int, int] = {}
+                    for location in DataMaps.chest_location_map:
+                        if location in self.checked_locations:
+                            continue
+                        data = DataMaps.chest_location_map[location]
+                        offset = data[0]
+                        mask = data[1]
+                        value = 0
+                        if offset in cache:
+                            value = cache[offset]
+                        else:
+                            value = int(self.game_process.read_uchar(main_struct + offset))
+                            cache[offset] = value
+                        if value & mask != 0:
+                            logger.info("New check: %s", location)
+                            self.queued_locations.append(location_table[location])
+
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
                         logger.info("ERROR: Couldn't find flags struct!")
                         await asyncio.sleep(1)
                         continue
+
                     is_dead = self.game_process.read_uchar(flags_struct + OFFSET_IS_DEAD)
                     if self.deathlink_enabled:
                         if not is_dead and not self.can_send_deathlink:
