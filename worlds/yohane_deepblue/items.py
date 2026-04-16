@@ -223,7 +223,7 @@ weapons_table: dict[str, ItemData] = {
     ItemNames.balmung: ItemData(621, False),
     ItemNames.katana: ItemData(622, False),
     ItemNames.gekisei: ItemData(623, False),
-    ItemNames.threded_blade: ItemData(624, False),
+    ItemNames.threaded_blade: ItemData(624, False),
     ItemNames.shamrock: ItemData(625, False),
     ItemNames.demon_slayer: ItemData(626, False),
     ItemNames.claiomh_solais: ItemData(627, False),

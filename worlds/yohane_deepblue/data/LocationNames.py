@@ -48,6 +48,7 @@ mari_issue_room_chest = "Crystalline Grotto - Mari Issue Room - Chest" # room 41
 giant_poison_enemy_crab_room_chest = "Sea of Trees - Giant Poison Enemy Crab Room - Chest"
 scarlet_delta_suit_room_chest = "Sea of Trees - Scarlet Delta Suit Room - Chest" # room 23
 golden_snail_room_chest = "Sea of Trees - Golden Snail Room - Chest"
+slope_room_chest = "Sea of Trees - Slope Room - Chest"
 you_testing_grounds_chest = "Sea of Trees - You Testing Grounds - Chest" # room 51
 
 purple_goo_room_chest = "Infernal Altar - Purple Goo Room - Chest" # room 4

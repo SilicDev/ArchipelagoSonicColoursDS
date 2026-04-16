@@ -109,10 +109,11 @@ chest_locations = {
     LocationNames.giant_poison_enemy_crab_room_chest: 119,
     LocationNames.scarlet_delta_suit_room_chest: 120,
     LocationNames.golden_snail_room_chest: 121,
-    LocationNames.you_testing_grounds_chest: 122,
+    LocationNames.slope_room_chest: 122,
+    LocationNames.you_testing_grounds_chest: 123,
 
-    LocationNames.purple_goo_room_chest: 123,
-    LocationNames.dark_room_chest: 124,
+    LocationNames.purple_goo_room_chest: 124,
+    LocationNames.dark_room_chest: 125,
 }
 
 menu_region_locations = {
@@ -186,6 +187,7 @@ sea_of_trees_region_locations = {
     LocationNames.giant_poison_enemy_crab_room_chest,
     LocationNames.scarlet_delta_suit_room_chest,
     LocationNames.golden_snail_room_chest,
+    LocationNames.slope_room_chest,
     LocationNames.you_testing_grounds_chest,
 }
 
