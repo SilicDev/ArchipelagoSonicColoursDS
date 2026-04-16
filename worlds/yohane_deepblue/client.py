@@ -10,6 +10,7 @@ import colorama
 from CommonClient import ClientCommandProcessor, CommonContext, logger, get_base_parser, handle_url_arg, server_loop
 from NetUtils import ClientStatus
 from Utils import gui_enabled
+from Options import Toggle
 
 if TYPE_CHECKING:
     import kvui
@@ -18,6 +19,7 @@ FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
 MAIN_BASE_OFFSET = 0x0166B418
 
 GAME_FLAGS_OFFSET = 0x51058
+DUNGEON_FLAGS_OFFSET = 0x5124D
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
 
@@ -119,6 +121,11 @@ class YohaneDeepblueContext(CommonContext):
                         if in_parlor:
                             logger.info("Yohane safely arrived in her Fortune Parlor")
                         self.in_parlor = in_parlor
+                    
+                    dungeon_flags = int(self.game_process.read_uchar(main_struct + DUNGEON_FLAGS_OFFSET))
+                    if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x3 != 0x3:
+                        dungeon_flags |= 0x3
+                        self.game_process.write_uchar(main_struct + DUNGEON_FLAGS_OFFSET, dungeon_flags)
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
                         logger.info("ERROR: Couldn't find flags struct!")

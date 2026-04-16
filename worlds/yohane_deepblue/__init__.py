@@ -112,6 +112,8 @@ class YohaneDeepblueWorld(World):
     
     def fill_slot_data(self) -> dict[str, typing.Any]:
         slot_data = self.options.as_dict(
-            "deathlink"
+            "deathlink",
+            "earlychikablocksmoved",
+            "enableyouskips"
         )
         return slot_data

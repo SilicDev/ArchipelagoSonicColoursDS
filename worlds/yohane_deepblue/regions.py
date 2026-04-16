@@ -2,6 +2,7 @@ import typing
 
 from BaseClasses import CollectionState, Region, Entrance, EntranceType, ItemClassification
 from worlds.AutoWorld import World
+from Options import Toggle
 from .locations import *
 from .data import LocationNames, ItemNames
 
@@ -37,12 +38,15 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
 def connect_regions(world: World) -> None:
     connect(world, "Menu", LocationNames.sunken_temple_region, None)
     connect(world, LocationNames.grotto_region, LocationNames.ruins_region, None)
-    connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
-            lambda state: state.has(ItemNames.chika_unlock, world.player) or 
-                state.has_all([
-                    ItemNames.ruby_unlock,
-                    ItemNames.ruby_upgrade
-                ], world.player))
+    if world.options.earlychikablocksmoved == Toggle.option_true:
+        connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, None)
+    else:
+        connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
+                lambda state: state.has(ItemNames.chika_unlock, world.player) or 
+                    state.has_all([
+                        ItemNames.ruby_unlock,
+                        ItemNames.ruby_upgrade
+                    ], world.player))
     connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, 
             lambda state: _coral_hill_access_rule(world, state))
     connect(world, LocationNames.shipwreck_region, LocationNames.coral_hill_region,  
