@@ -311,7 +311,7 @@ character_unlock_table: dict[str, ItemData] = { # No actual items exist for thes
 }
 
 token_items = {
-    ItemNames.aquors_member: ItemData(2000, True),
+    ItemNames.boss_token: ItemData(2000, True),
 }
 
 junk_table: set[str] = {

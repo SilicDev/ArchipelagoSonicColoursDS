@@ -68,14 +68,14 @@ class YohaneDeepblueWorld(World):
         connect_regions(self)
 
     def create_items(self) -> None:
-        self.multiworld.get_location(LocationNames.sunken_temple_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.ruins_boss_defeated_3, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.coral_hill_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.sea_of_trees_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.crystalline_grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.sunken_volcano_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
-        self.multiworld.get_location(LocationNames.shipwreck_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.aquors_member))
+        self.multiworld.get_location(LocationNames.sunken_temple_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.ruins_boss_defeated_3, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.coral_hill_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.sea_of_trees_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.crystalline_grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.sunken_volcano_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
+        self.multiworld.get_location(LocationNames.shipwreck_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
         self.multiworld.get_location(LocationNames.aquors_memoria_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.victory))
         num_locations_to_fill = len(self.multiworld.get_unfilled_locations(self.player))
         itempool: list[Item] = []

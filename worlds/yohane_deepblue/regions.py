@@ -1,6 +1,7 @@
 import typing
 
 from BaseClasses import CollectionState, Region, Entrance, EntranceType, ItemClassification
+from rule_builder.rules import *
 from worlds.AutoWorld import World
 from Options import Toggle
 from .locations import *
@@ -70,7 +71,7 @@ def connect_regions(world: World) -> None:
             lambda state: state.has(ItemNames.sea_deitys_charm, world.player))
     connect(world, LocationNames.sea_of_trees_region, LocationNames.shipwreck_region, None)
     connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, 
-            lambda state: state.has(ItemNames.aquors_member, world.player, 8) and state.has_all([
+            lambda state: state.has(ItemNames.boss_token, world.player, 8) and state.has_all([
                     ItemNames.riko_unlock,
                     ItemNames.kanan_unlock,
                     ItemNames.gloves_of_might
@@ -86,7 +87,7 @@ def create_region(world: World, name: str, active_locations: dict[str, int], loc
             region.locations.append(YohaneDeepblueLocation(world.player, location, code, region))
     return region
 
-def connect(world: World, source: str, destination: str, rule: typing.Optional[typing.Callable[[CollectionState],bool]], one_way: bool = False) -> None:
+def connect(world: World, source: str, destination: str, rule: typing.Optional[Rule | typing.Callable[[CollectionState],bool]], one_way: bool = False) -> None:
     source_region = world.multiworld.get_region(source, world.player)
     dest_region = world.multiworld.get_region(destination, world.player)
 
@@ -95,12 +96,13 @@ def connect(world: World, source: str, destination: str, rule: typing.Optional[t
     if one_way:
         entrance_name += " -> "
     else:
+        randomization_type = EntranceType.TWO_WAY
         entrance_name += " <-> "
     entrance_name += destination 
     entrance = Entrance(world.player, entrance_name, source_region, randomization_type=randomization_type)
 
-    if rule:
-        entrance.access_rule = rule
+    if rule is not None:
+        world.set_rule(entrance, rule)
     
     source_region.exits.append(entrance)
     entrance.connect(dest_region)
