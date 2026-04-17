@@ -40,7 +40,8 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
     ctx: "YohaneDeepblueContext"
 
     def _cmd_kaboom(self) -> None:
-        """Trigger a death.
+        """
+        Trigger a death.
         """
         self.ctx.on_deathlink({
             "time": time.time(),
@@ -48,14 +49,11 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
             "cause": ""
         })
     
-    def _cmd_debug(self, toggle: bool | None = None) -> None:
-        """Toggle debug logging.
-        toggle: use this to set the debug logging setting
+    def _cmd_debug(self) -> None:
         """
-        if toggle is None:
-            self.ctx.debug_log = not self.ctx.debug_log
-        else:
-            self.ctx.debug_log = toggle
+        Toggle debug logging.
+        """
+        self.ctx.debug_log = not self.ctx.debug_log
         if self.ctx.debug_log:
             logger.info("Enabled debug logging")
         else:
@@ -145,7 +143,6 @@ class YohaneDeepblueContext(CommonContext):
                             value = int(self.game_process.read_uchar(main_struct + offset))
                             cache[offset] = value
                         if value & mask != 0:
-                            logger.info("New check: %s", location)
                             self.queued_locations.append(location_table[location])
 
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
