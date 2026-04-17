@@ -126,6 +126,8 @@ class YohaneDeepblueContext(CommonContext):
                     
                     dungeon_flags = int(self.game_process.read_uchar(main_struct + DUNGEON_FLAGS_OFFSET))
                     if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x3 != 0x3:
+                        if self.debug_log:
+                            logger.info("Setting Chika Block flags")
                         dungeon_flags |= 0x3
                         self.game_process.write_uchar(main_struct + DUNGEON_FLAGS_OFFSET, dungeon_flags)
 

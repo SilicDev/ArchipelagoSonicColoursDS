@@ -39,7 +39,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
 def connect_regions(world: World) -> None:
     connect(world, "Menu", LocationNames.sunken_temple_region, None)
     connect(world, LocationNames.grotto_region, LocationNames.ruins_region, None)
-    if world.options.earlychikablocksmoved == Toggle.option_true:
+    if False and world.options.earlychikablocksmoved == Toggle.option_true:
         connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, None)
     else:
         connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
