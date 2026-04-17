@@ -145,6 +145,10 @@ class YohaneDeepblueContext(CommonContext):
                             continue
                         if game_progression_flags & DataMaps.character_rescue_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
+                    game_progression_flags &= 0x7F
+                    if self.local_received_items[ItemNames.boss_token] == 8:
+                        game_progression_flags |= 0x80 # Spawns Infernal Altar cutscene
+                    self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
                     
                     character_quest_flags = int(self.game_process.read_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET))
                     for location in DataMaps.character_quest_flag_map:
