@@ -324,6 +324,15 @@ event_table: dict[str, ItemData] = {
     ItemNames.victory: ItemData(None, True),
 }
 
+stackables_set = {
+    *breakable_material_table.keys(),
+    *enemy_material_table.keys(),
+    *rare_material_table.keys(),
+    *consumables_table.keys(),
+    *weapons_table.keys(),
+    *accessories_table.keys(),
+}
+
 item_table: dict[str, ItemData] = {
     **unique_accessories_table,
     **character_unlock_table,

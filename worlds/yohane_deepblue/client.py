@@ -14,7 +14,7 @@ from Options import Toggle
 
 from .data import DataMaps, ItemNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
-from .items import item_table, unique_accessories_table, character_upgrade_table, lookup_id_to_name as item_id_to_name
+from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, lookup_id_to_name as item_id_to_name
 
 if TYPE_CHECKING:
     import kvui
@@ -242,7 +242,7 @@ class YohaneDeepblueContext(CommonContext):
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
-                        if item.item < 1000 and item.item > 200:
+                        if item_name in stackables_set:
                             offset = INVENTORY_OFFSET + (0x18 * item.item)
                             value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
                             self.game_process.write_uchar(main_struct + offset, value)
