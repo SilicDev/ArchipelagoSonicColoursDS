@@ -246,7 +246,7 @@ aqours_memoria_region_locations = {
 
 location_table: dict[str, int] = {
     **character_rescue_locations,
-    **character_upgrade_locations,
+    #**character_upgrade_locations,
     **boss_fight_locations,
     **boss_refight_locations,
     **chest_locations,

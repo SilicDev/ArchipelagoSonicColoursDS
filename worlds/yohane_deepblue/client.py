@@ -13,7 +13,8 @@ from Utils import gui_enabled
 from Options import Toggle
 
 from .data import DataMaps
-from .locations import location_table
+from .locations import location_table, lookup_id_to_name as location_id_to_name
+from .items import lookup_id_to_name as item_id_to_name
 
 if TYPE_CHECKING:
     import kvui
@@ -22,6 +23,10 @@ FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
 MAIN_BASE_OFFSET = 0x0166B418
 
 GAME_FLAGS_OFFSET = 0x51058
+CHARACTER_UNLOCK_FLAGS_OFFSET = 0x51064
+GAME_PROGRESSION_FLAGS_OFFSET = 0x51071
+CHARACTER_QUEST_FLAGS_OFFSET = 0x51073
+BOSS_DEFEATED_FLAGS = 0x5107D
 DUNGEON_FLAGS_OFFSET = 0x5124D
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
@@ -75,6 +80,7 @@ class YohaneDeepblueContext(CommonContext):
 
     highest_processed_item_index: int = 0
     queued_locations: list[int]
+    local_received_items: dict[str, int]
 
     last_map_area = -1
     last_map_room = -1
@@ -91,6 +97,7 @@ class YohaneDeepblueContext(CommonContext):
         super().__init__(server_address, password)
 
         self.queued_locations = []
+        self.local_received_items = {}
         self.slot_data = {}
 
     async def server_auth(self, password_requested: bool = False) -> None:
@@ -130,6 +137,28 @@ class YohaneDeepblueContext(CommonContext):
                             logger.info("Setting Chika Block flags")
                         dungeon_flags |= 0x3
                         self.game_process.write_uchar(main_struct + DUNGEON_FLAGS_OFFSET, dungeon_flags)
+                    
+                    game_progression_flags = int(self.game_process.read_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET))
+                    for location in DataMaps.character_rescue_flag_map:
+                        if location in self.checked_locations:
+                            continue
+                        if game_progression_flags & DataMaps.character_rescue_flag_map[location] != 0:
+                            self.queued_locations.append(location_table[location])
+                    
+                    character_quest_flags = int(self.game_process.read_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET))
+                    for location in DataMaps.character_quest_flag_map:
+                        if location in self.checked_locations:
+                            continue
+                        flag = DataMaps.character_quest_flag_map[location]
+                        if character_quest_flags & flag != 0:
+                            await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
+
+                    boss_defeated_flags = int(self.game_process.read_uint(main_struct + BOSS_DEFEATED_FLAGS))
+                    for location in DataMaps.boss_defeated_flag_map:
+                        if location in self.checked_locations:
+                            continue
+                        if boss_defeated_flags & DataMaps.boss_defeated_flag_map[location] != 0:
+                            self.queued_locations.append(location_table[location])
 
                     cache: dict[int, int] = {}
                     for location in DataMaps.chest_location_map:
@@ -170,9 +199,30 @@ class YohaneDeepblueContext(CommonContext):
                     new_items = self.items_received[self.highest_processed_item_index :]
                     for item in new_items:
                         self.highest_processed_item_index += 1
+                        item_name = item_id_to_name[item.item]
+                        if not item_name in self.local_received_items.keys():
+                            self.local_received_items[item_name] = 1
+                        else:
+                            self.local_received_items[item_name] += 1
                         # receive item
 
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
+                        location_name = location_id_to_name[new_remotely_cleared_location]
+                        if location_name in DataMaps.chest_location_map.keys():
+                            data = DataMaps.chest_location_map[location_name]
+                            offset = data[0]
+                            mask = data[1]
+                            value = int(self.game_process.read_uchar(main_struct + offset))
+                            value |= mask
+                            self.game_process.write_uchar(main_struct + offset, value)
+                        elif location_name in DataMaps.character_rescue_flag_map.keys():
+                            flag = DataMaps.character_rescue_flag_map[location_name]
+                            game_progression_flags |= flag
+                            self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
+                        elif location_name in DataMaps.boss_defeated_flag_map.keys():
+                            flag = DataMaps.boss_defeated_flag_map[location_name]
+                            boss_defeated_flags |= flag
+                            self.game_process.write_uint(main_struct + BOSS_DEFEATED_FLAGS, boss_defeated_flags)
                         # other game collected item, clear location
                         pass
 

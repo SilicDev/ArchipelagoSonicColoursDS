@@ -56,3 +56,49 @@ chest_location_map = { # locations marked with ! are guesses and need to be conf
     LocationNames.purple_goo_room_chest: (0x512BF, 0x40),
     LocationNames.dark_room_chest: (0x512BF, 0x20),
 }
+
+character_rescue_flag_map = {
+    LocationNames.chika_rescue: 0x80,
+    LocationNames.kanan_rescue: 0x0100,
+    LocationNames.dia_rescue: 0x0200,
+    LocationNames.ruby_rescue: 0x0400,
+    LocationNames.you_rescue: 0x0800,
+    LocationNames.mari_rescue: 0x1000,
+    LocationNames.riko_rescue: 0x2000,
+    LocationNames.hanamaru_rescue: 0x4000,
+}
+
+character_quest_flag_map = {
+    LocationNames.katys_mask_room_chest: 0x80,
+    LocationNames.spellbook_room_chest: 0x0400,
+    LocationNames.tonosamas_parts_room_chest: 0x2000,
+    LocationNames.laptop_room_chest: 0x010000,
+    LocationNames.mari_issue_room_chest: 0x080000,
+    LocationNames.postal_guild_bag_room: 0x400000,
+    LocationNames.scarlet_delta_suit_room_chest: 0x02000000,
+    LocationNames.lost_monstie_room_chest: 0x10000000,
+}
+
+boss_defeated_flag_map = {
+    LocationNames.sunken_temple_boss_defeated: 0x20,
+    LocationNames.ruins_boss_defeated_1: 0x40,
+    LocationNames.ruins_boss_defeated_2: 0x80,
+    LocationNames.ruins_boss_defeated_3: 0x0100,
+    LocationNames.grotto_boss_defeated: 0x0200,
+    LocationNames.coral_hill_boss_defeated: 0x0400,
+    LocationNames.sea_of_trees_boss_defeated: 0x0800,
+    LocationNames.crystalline_grotto_boss_defeated: 0x1000,
+    LocationNames.sunken_volcano_boss_defeated: 0x2000,
+    LocationNames.shipwreck_boss_defeated: 0x4000,
+    LocationNames.infernal_altar_boss_defeated: 0x8000,
+
+    LocationNames.sunken_temple_boss_refight: 0x010000,
+    LocationNames.ruins_boss_refight: 0x020000,
+    LocationNames.grotto_boss_refight: 0x040000,
+    LocationNames.coral_hill_boss_refight: 0x080000,
+    LocationNames.sea_of_trees_boss_refight: 0x100000,
+    LocationNames.crystalline_grotto_boss_refight: 0x200000,
+    LocationNames.sunken_volcano_boss_refight: 0x400000,
+    LocationNames.shipwreck_boss_refight: 0x800000,
+    LocationNames.infernal_altar_boss_refight: 0x01000000,
+}
