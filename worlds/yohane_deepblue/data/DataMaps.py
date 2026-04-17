@@ -102,3 +102,24 @@ boss_defeated_flag_map = {
     LocationNames.shipwreck_boss_refight: 0x800000,
     LocationNames.infernal_altar_boss_refight: 0x01000000,
 }
+
+character_item_flags_map = {
+    ItemNames.lailaps_unlock: 0x20,
+    #ItemNames.lailaps_upgrade: 0x40,
+    ItemNames.chika_unlock: 0x80,
+    #ItemNames.chika_upgrade: 0x0100,
+    ItemNames.riko_unlock: 0x0200,
+    #ItemNames.riko_upgrade: 0x0400,
+    ItemNames.kanan_unlock: 0x0800,
+    #ItemNames.kanan_upgrade: 0x1000,
+    ItemNames.dia_unlock: 0x2000,
+    #ItemNames.dia_upgrade: 0x4000,
+    ItemNames.you_unlock: 0x8000,
+    #ItemNames.you_upgrade: 0x010000,
+    ItemNames.mari_unlock: 0x020000,
+    #ItemNames.mari_upgrade: 0x040000,
+    ItemNames.hanamaru_unlock: 0x080000,
+    #ItemNames.hanamaru_upgrade: 0x100000,
+    ItemNames.ruby_unlock: 0x200000,
+    #ItemNames.ruby_upgrade: 0x400000,
+}

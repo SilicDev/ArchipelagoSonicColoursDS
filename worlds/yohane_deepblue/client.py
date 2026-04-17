@@ -12,9 +12,9 @@ from NetUtils import ClientStatus
 from Utils import gui_enabled
 from Options import Toggle
 
-from .data import DataMaps
+from .data import DataMaps, ItemNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
-from .items import lookup_id_to_name as item_id_to_name
+from .items import item_table, unique_accessories_table, character_upgrade_table, lookup_id_to_name as item_id_to_name
 
 if TYPE_CHECKING:
     import kvui
@@ -28,6 +28,7 @@ GAME_PROGRESSION_FLAGS_OFFSET = 0x51071
 CHARACTER_QUEST_FLAGS_OFFSET = 0x51073
 BOSS_DEFEATED_FLAGS = 0x5107D
 DUNGEON_FLAGS_OFFSET = 0x5124D
+INVENTORY_OFFSET = 0x52570
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
 
@@ -160,6 +161,38 @@ class YohaneDeepblueContext(CommonContext):
                         if boss_defeated_flags & DataMaps.boss_defeated_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
 
+                    character_unlock_flags = int(self.game_process.read_uint(main_struct + CHARACTER_UNLOCK_FLAGS_OFFSET))
+                    character_unlock_flags &= 0xFFD5555F
+                    for item in DataMaps.character_item_flags_map:
+                        if item in self.local_received_items:
+                            character_unlock_flags |= DataMaps.character_item_flags_map[item]
+                    self.game_process.write_uint(main_struct + CHARACTER_UNLOCK_FLAGS_OFFSET, character_unlock_flags)
+
+                    for item in character_upgrade_table.keys():
+                        item_data = character_upgrade_table[item]
+                        if item_data.code is not None: # events aren't real
+                            offset = INVENTORY_OFFSET + (0x18 * item_data.code)
+                            if item in self.local_received_items:
+                                self.game_process.write_uchar(main_struct + offset, 1)
+                            else:
+                                self.game_process.write_uchar(main_struct + offset, 0)
+
+                    for item in unique_accessories_table.keys():
+                        item_data = unique_accessories_table[item]
+                        if item_data.code is not None: # events aren't real
+                            offset = INVENTORY_OFFSET + (0x18 * item_data.code)
+                            if item in self.local_received_items:
+                                self.game_process.write_uchar(main_struct + offset, 1)
+                                if item == ItemNames.extra_accessory_slot:
+                                    if self.local_received_items[item] > 1:
+                                        self.game_process.write_uchar(main_struct + offset + 0x18, 1)
+                                    else:
+                                        self.game_process.write_uchar(main_struct + offset + 0x18, 0)
+                            else:
+                                self.game_process.write_uchar(main_struct + offset, 0)
+                        
+
+
                     cache: dict[int, int] = {}
                     for location in DataMaps.chest_location_map:
                         if location in self.checked_locations:
@@ -205,6 +238,11 @@ class YohaneDeepblueContext(CommonContext):
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
+                        if item.item < 1000 and item.item > 200:
+                            offset = INVENTORY_OFFSET + (0x18 * item.item)
+                            value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
+                            self.game_process.write_uchar(main_struct + offset, value)
+
 
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
                         location_name = location_id_to_name[new_remotely_cleared_location]
