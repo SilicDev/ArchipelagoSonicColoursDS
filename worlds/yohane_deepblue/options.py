@@ -4,7 +4,7 @@ Option definitions for YOHANE THE PARHELION -BLAZE in the DEEPBLUE-
 from dataclasses import dataclass
 
 from Options import (Choice, DeathLink, DefaultOnToggle, OptionSet, NamedRange, Range, Toggle, FreeText,
-                     PerGameCommonOptions, OptionGroup, StartInventory, OptionList)
+                     PerGameCommonOptions, OptionGroup, StartInventory, StartInventoryPool, OptionList)
 
 class EarlyChikaBlockMoved(DefaultOnToggle):
     """
@@ -27,6 +27,7 @@ yohane_deepblue_option_groups = [
 @dataclass
 class YohaneDeepblueOptions(PerGameCommonOptions):
     deathlink: DeathLink
+    start_inventory_from_pool: StartInventoryPool
 
     earlychikablocksmoved: EarlyChikaBlockMoved
     enableyouskips: EnableYouSkips
