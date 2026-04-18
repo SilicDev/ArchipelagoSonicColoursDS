@@ -39,9 +39,9 @@ wallcrab_chest_room_chest = "Coral Hill - Wallcrab Chest Room - Chest" # room 37
 dumb_block_room_chest = "Coral Hill - Dumb Block Room - Chest"
 lost_monstie_room_chest = "Coral Hill - Lost Monstie Room - Chest" # room 9
 
-one_way_slide_room_chest = "Crystalline Grotto - One Way Slide Room - Chest" # room 41
+one_way_slide_room_chest = "Crystalline Grotto - One Way Slide Room - Chest" 
 giant_sliding_crystals_room_chest = "Crystalline Grotto - Giant Sliding Crystals Room - Chest"
-isolated_chest_room_chest = "Crystalline Grotto - Isolated Chest Room - Chest"
+isolated_chest_room_chest = "Crystalline Grotto - Isolated Chest Room - Chest" # room 41
 looong_slide_room_chest = "Crystalline Grotto - Looong Slide Room - Chest" # room 40
 mari_issue_room_chest = "Crystalline Grotto - Mari Issue Room - Chest" # room 27
 

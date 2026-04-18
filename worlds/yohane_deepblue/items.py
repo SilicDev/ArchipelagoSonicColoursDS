@@ -156,7 +156,7 @@ enemy_material_table: dict[str, ItemData] = {
 
 rare_material_table: dict[str, ItemData] = {
     ItemNames.whale_harp: ItemData(226, False, 2),
-    ItemNames.shark_rip: ItemData(270, False),
+    ItemNames.shark_rib: ItemData(270, False),
     ItemNames.ichimonji_scabbard: ItemData(284, False),
     ItemNames.ripple_shell: ItemData(311, False),
     ItemNames.world_pinetree_lumber: ItemData(320, False),
@@ -258,10 +258,10 @@ accessories_table: dict[str, ItemData] = {
     ItemNames.gold_ring: ItemData(826, False),
     ItemNames.platinum_ring: ItemData(827, False),
     ItemNames.orichalcum_ring: ItemData(828, False),
-    ItemNames.cystal_ring: ItemData(829, False),
+    ItemNames.crystal_ring: ItemData(829, False),
     ItemNames.ruby_ring: ItemData(830, False),
     ItemNames.diamond_ring: ItemData(831, False),
-    ItemNames.alexanderite_ring: ItemData(832, False),
+    ItemNames.alexandrite_ring: ItemData(832, False),
     ItemNames.karkinos_pincer: ItemData(833, False),
     ItemNames.lovecadite: ItemData(834, False),
     ItemNames.medallion_of_numazu: ItemData(835, False),
