@@ -146,7 +146,7 @@ class YohaneDeepblueContext(CommonContext):
                         if game_progression_flags & DataMaps.character_rescue_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
                     game_progression_flags &= 0x7F
-                    if self.local_received_items[ItemNames.boss_token] == 8:
+                    if ItemNames.boss_token in self.local_received_items and self.local_received_items[ItemNames.boss_token] == 8:
                         game_progression_flags |= 0x80 # Spawns Infernal Altar cutscene
                     self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
                     
