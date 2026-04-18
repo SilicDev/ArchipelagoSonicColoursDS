@@ -12,7 +12,7 @@ from NetUtils import ClientStatus
 from Utils import gui_enabled
 from Options import Toggle
 
-from .data import DataMaps, ItemNames
+from .data import DataMaps, ItemNames, LocationNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
 from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, lookup_id_to_name as item_id_to_name
 
@@ -83,6 +83,7 @@ class YohaneDeepblueContext(CommonContext):
     highest_processed_item_index: int = 0
     queued_locations: list[int]
     local_received_items: dict[str, int]
+    local_accessories_enabled: int = 0
 
     last_map_area = -1
     last_map_room = -1
@@ -217,6 +218,10 @@ class YohaneDeepblueContext(CommonContext):
                             cache[offset] = value
                         if value & mask != 0:
                             self.queued_locations.append(location_table[location])
+                        if location in [LocationNames.sandy_trap_room_chest, LocationNames.soarshoes_room_chest, LocationNames.gloves_of_might_room_chest]:
+                            accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
+                            accessories_enabled &= (0xF8 | self.local_accessories_enabled)
+                            self.game_process.write_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET, accessories_enabled)
 
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
@@ -237,8 +242,6 @@ class YohaneDeepblueContext(CommonContext):
                         self.locations_checked.add(location)
                         await self.check_locations({location})
 
-                    accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
-                    accessories_enabled &= 0xF8
                     new_items = self.items_received[self.highest_processed_item_index :]
                     for item in new_items:
                         self.highest_processed_item_index += 1
@@ -248,17 +251,22 @@ class YohaneDeepblueContext(CommonContext):
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
+                        accessories_changed = 0
                         if item_name == ItemNames.fallen_angels_soarshoes:
-                            accessories_enabled |= 0x01
+                            accessories_changed |= 0x01
                         elif item_name == ItemNames.gloves_of_might:
-                            accessories_enabled |= 0x02
+                            accessories_changed |= 0x02
                         elif item_name == ItemNames.sea_deitys_charm:
-                            accessories_enabled |= 0x04
+                            accessories_changed |= 0x04
                         if item_name in stackables_set:
                             offset = INVENTORY_OFFSET + (0x18 * item.item)
                             value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
                             self.game_process.write_uchar(main_struct + offset, value)
-                    self.game_process.write_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET, accessories_enabled)
+                        if accessories_changed != 0:
+                            accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
+                            accessories_enabled &= (0xFF - accessories_changed)
+                            self.local_accessories_enabled |= accessories_changed
+                            self.game_process.write_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET, accessories_enabled | accessories_changed)
 
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
                         location_name = location_id_to_name[new_remotely_cleared_location]
@@ -305,7 +313,7 @@ class YohaneDeepblueContext(CommonContext):
             self.slot_data = args["slot_data"]
             self.highest_processed_item_index = 0
             self.locations_checked = set(args["checked_locations"])
-            self.deathlink_enabled = self.slot_data.get("death_link", False)
+            self.deathlink_enabled = self.slot_data.get("deathlink", False)
 
             self.connection_status = ConnectionStatus.CONNECTED
             self.connect_to_game()
