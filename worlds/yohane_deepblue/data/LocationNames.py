@@ -35,15 +35,15 @@ postal_guild_bag_room = "Shipwreck - Postal Guild Bag Room - Chest" # room 17
 
 soarshoesnt_chest_room_chest = "Coral Hill - Soarshoesn't Chest Room - Chest"
 annoying_teleporting_fish_room_chest = "Coral Hill - Annoying Teleporting Fish Room - Chest"
-wallcrab_chest_room_chest = "Coral Hill - Wallcrab Chest Room - Chest"
+wallcrab_chest_room_chest = "Coral Hill - Wallcrab Chest Room - Chest" # room 37
 dumb_block_room_chest = "Coral Hill - Dumb Block Room - Chest"
 lost_monstie_room_chest = "Coral Hill - Lost Monstie Room - Chest" # room 9
 
-one_way_slide_room_chest = "Crystalline Grotto - One Way Slide Room - Chest"
+one_way_slide_room_chest = "Crystalline Grotto - One Way Slide Room - Chest" # room 41
 giant_sliding_crystals_room_chest = "Crystalline Grotto - Giant Sliding Crystals Room - Chest"
 isolated_chest_room_chest = "Crystalline Grotto - Isolated Chest Room - Chest"
 looong_slide_room_chest = "Crystalline Grotto - Looong Slide Room - Chest" # room 40
-mari_issue_room_chest = "Crystalline Grotto - Mari Issue Room - Chest" # room 41
+mari_issue_room_chest = "Crystalline Grotto - Mari Issue Room - Chest" # room 27
 
 giant_poison_enemy_crab_room_chest = "Sea of Trees - Giant Poison Enemy Crab Room - Chest"
 scarlet_delta_suit_room_chest = "Sea of Trees - Scarlet Delta Suit Room - Chest" # room 23

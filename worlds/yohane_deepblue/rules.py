@@ -41,7 +41,7 @@ def set_rules(world: World) -> None:
 def set_chest_rules(world: World) -> None:
     # Sunken Temple
     world.set_rule(world.get_location(LocationNames.fishy_archery_chest), gloves_rule | soarshoes_rule)
-    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), you_rule | (soarshoes_rule & (chika_rule | upgraded_ruby_rule)))
+    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (you_rule | (soarshoes_rule & (chika_rule | upgraded_ruby_rule))))
     world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule)
 
     # Grotto
@@ -57,7 +57,7 @@ def set_chest_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.sandy_trap_room_chest), soarshoes_rule | kanan_rule | you_rule)
     #world.set_rule(world.get_location(LocationNames.vertical_poison_room_chest), )
     #world.set_rule(world.get_location(LocationNames.rolling_rocks_room_chest), )
-    world.set_rule(world.get_location(LocationNames.laptop_room_chest), you_rule | hanamaru_rule)
+    world.set_rule(world.get_location(LocationNames.laptop_room_chest), hanamaru_rule & (you_rule | hanamaru_rule))
     world.set_rule(world.get_location(LocationNames.hall_of_shame_chest), soarshoes_rule | (gloves_rule & you_rule))
 
     # Sunken Volcano
@@ -65,7 +65,7 @@ def set_chest_rules(world: World) -> None:
     #world.set_rule(world.get_location(LocationNames.hotspring_room_chest), )
     world.set_rule(world.get_location(LocationNames.soarshoes_room_chest), kanan_rule | (soarshoes_rule & gloves_rule) | you_rule)
     #world.set_rule(world.get_location(LocationNames.soarshoes_obligatory_issue_room_chest), )
-    world.set_rule(world.get_location(LocationNames.tonosamas_parts_room_chest), riko_rule & (big_weapon_rule | dia_rule | upgraded_hanamaru_rule | upgraded_mari_rule))
+    world.set_rule(world.get_location(LocationNames.tonosamas_parts_room_chest), kanan_rule & riko_rule & (big_weapon_rule | dia_rule | upgraded_hanamaru_rule | upgraded_mari_rule))
 
     # Shipwreck
     #world.set_rule(world.get_location(LocationNames.really_sealed_off_chest_room_chest), )
@@ -77,7 +77,7 @@ def set_chest_rules(world: World) -> None:
     )
     world.set_rule(
         world.get_location(LocationNames.postal_guild_bag_room),
-        (CanReachRegion(LocationNames.coral_hill_region) | (kanan_rule | (you_rule & riko_rule))) & ((chika_rule & upgraded_mari_rule) | (kanan_rule & you_rule & gloves_rule))
+        you_rule & (CanReachRegion(LocationNames.coral_hill_region) | (kanan_rule | (you_rule & riko_rule))) & ((chika_rule & upgraded_mari_rule) | (kanan_rule & you_rule & gloves_rule))
     )
 
     # Coral Hill
@@ -85,18 +85,18 @@ def set_chest_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.annoying_teleporting_fish_room_chest), gloves_rule)
     world.set_rule(world.get_location(LocationNames.wallcrab_chest_room_chest), gloves_rule)
     world.set_rule(world.get_location(LocationNames.dumb_block_room_chest), gloves_rule)
-    world.set_rule(world.get_location(LocationNames.lost_monstie_room_chest), upgraded_ruby_rule & gloves_rule)
+    world.set_rule(world.get_location(LocationNames.lost_monstie_room_chest), mari_rule & upgraded_ruby_rule & gloves_rule)
 
     # Crystalline Grotto
     #world.set_rule(world.get_location(LocationNames.one_way_slide_room_chest), )
     #world.set_rule(world.get_location(LocationNames.giant_sliding_crystals_room_chest), )
-    #world.set_rule(world.get_location(LocationNames.isolated_chest_room_chest), )
+    world.set_rule(world.get_location(LocationNames.isolated_chest_room_chest), gloves_rule & you_rule)
     world.set_rule(world.get_location(LocationNames.looong_slide_room_chest), gloves_rule) # you_rule | soarshoes_rule for easier access
-    world.set_rule(world.get_location(LocationNames.mari_issue_room_chest), gloves_rule & you_rule)
+    world.set_rule(world.get_location(LocationNames.mari_issue_room_chest), gloves_rule & mari_rule)
 
     # Sea of Trees
     #world.set_rule(world.get_location(LocationNames.giant_poison_enemy_crab_room_chest), )
-    world.set_rule(world.get_location(LocationNames.scarlet_delta_suit_room_chest), gloves_rule & riko_rule)
+    world.set_rule(world.get_location(LocationNames.scarlet_delta_suit_room_chest), dia_rule & gloves_rule & riko_rule)
     #world.set_rule(world.get_location(LocationNames.golden_snail_room_chest), )
     #world.set_rule(world.get_location(LocationNames.slope_room_chest), )
     world.set_rule(world.get_location(LocationNames.you_testing_grounds_chest), gloves_rule & riko_rule & you_rule & (chika_rule | kanan_rule))

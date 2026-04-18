@@ -148,7 +148,9 @@ class YohaneDeepblueContext(CommonContext):
                     game_progression_flags &= 0x7F
                     if ItemNames.boss_token in self.local_received_items and self.local_received_items[ItemNames.boss_token] == 8:
                         game_progression_flags |= 0x80 # Spawns Infernal Altar cutscene
+                        game_flags |= 0x02
                     self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
+                    self.game_process.write_ushort(main_struct + GAME_FLAGS_OFFSET, game_flags)
                     
                     character_quest_flags = int(self.game_process.read_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET))
                     for location in DataMaps.character_quest_flag_map:
@@ -157,6 +159,7 @@ class YohaneDeepblueContext(CommonContext):
                         flag = DataMaps.character_quest_flag_map[location]
                         if character_quest_flags & flag != 0:
                             await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
+                    character_quest_flags &= 0xDB6DB6FF # Disable collection flags
 
                     boss_defeated_flags = int(self.game_process.read_uint(main_struct + BOSS_DEFEATED_FLAGS))
                     for location in DataMaps.boss_defeated_flag_map:
@@ -170,7 +173,10 @@ class YohaneDeepblueContext(CommonContext):
                     for item in DataMaps.character_item_flags_map:
                         if item in self.local_received_items:
                             character_unlock_flags |= DataMaps.character_item_flags_map[item]
+                            if item in DataMaps.character_item_to_quest_map.keys():
+                                character_quest_flags |= DataMaps.character_item_to_quest_map[item]
                     self.game_process.write_uint(main_struct + CHARACTER_UNLOCK_FLAGS_OFFSET, character_unlock_flags)
+                    self.game_process.write_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET, character_quest_flags)
 
                     for item in character_upgrade_table.keys():
                         item_data = character_upgrade_table[item]

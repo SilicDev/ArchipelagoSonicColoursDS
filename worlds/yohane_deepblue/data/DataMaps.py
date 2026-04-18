@@ -36,16 +36,16 @@ chest_location_map = { # locations marked with ! are guesses and need to be conf
     LocationNames.postal_guild_bag_room: (0x512BB, 0x40),
 
     LocationNames.soarshoesnt_chest_room_chest: (0x512F8, 0x01), #!
-    LocationNames.annoying_teleporting_fish_room_chest: (0x512F8, 0x08), #!
-    LocationNames.wallcrab_chest_room_chest: (0x512F8, 0x10), #!
+    LocationNames.wallcrab_chest_room_chest: (0x512F8, 0x08), #!
+    LocationNames.annoying_teleporting_fish_room_chest: (0x512F8, 0x10), #!
     LocationNames.dumb_block_room_chest: (0x512AB, 0x80), #!
     LocationNames.lost_monstie_room_chest: (0x512AB, 0x20),
 
-    LocationNames.one_way_slide_room_chest: (0x512B3, 0x10), #!
-    LocationNames.giant_sliding_crystals_room_chest: (0x512B3, 0x20), #!
-    LocationNames.isolated_chest_room_chest: (0x512B3, 0x40), #!
+    LocationNames.one_way_slide_room_chest: (0x512B3, 0x20), #!
+    LocationNames.giant_sliding_crystals_room_chest: (0x512B3, 0x40), #!
+    LocationNames.isolated_chest_room_chest: (0x51300, 0x02), #!
     LocationNames.looong_slide_room_chest: (0x51300, 0x01),
-    LocationNames.mari_issue_room_chest: (0x51300, 0x02),
+    LocationNames.mari_issue_room_chest: (0x512B3, 0x80),
 
     LocationNames.giant_poison_enemy_crab_room_chest: (0x512AF, 0x40), #!
     LocationNames.scarlet_delta_suit_room_chest: (0x512AF, 0x80),
@@ -73,7 +73,7 @@ character_quest_flag_map = {
     LocationNames.spellbook_room_chest: 0x0400,
     LocationNames.tonosamas_parts_room_chest: 0x2000,
     LocationNames.laptop_room_chest: 0x010000,
-    LocationNames.mari_issue_room_chest: 0x080000,
+    LocationNames.isolated_chest_room_chest: 0x080000,
     LocationNames.postal_guild_bag_room: 0x400000,
     LocationNames.scarlet_delta_suit_room_chest: 0x02000000,
     LocationNames.lost_monstie_room_chest: 0x10000000,
@@ -122,4 +122,15 @@ character_item_flags_map = {
     #ItemNames.hanamaru_upgrade: 0x100000,
     ItemNames.ruby_unlock: 0x200000,
     #ItemNames.ruby_upgrade: 0x400000,
+}
+
+character_item_to_quest_map = {
+    ItemNames.chika_unlock: 0x80,
+    ItemNames.riko_unlock: 0x0400,
+    ItemNames.kanan_unlock: 0x2000,
+    ItemNames.hanamaru_unlock: 0x010000,
+    ItemNames.ruby_unlock: 0x080000,
+    ItemNames.you_unlock: 0x400000,
+    ItemNames.dia_unlock: 0x02000000,
+    ItemNames.mari_unlock: 0x10000000,
 }
