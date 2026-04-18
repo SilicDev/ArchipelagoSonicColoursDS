@@ -117,14 +117,6 @@ chest_locations = {
 }
 
 menu_region_locations = {
-    LocationNames.chika_rescue,
-    LocationNames.kanan_rescue,
-    LocationNames.dia_rescue,
-    LocationNames.ruby_rescue,
-    LocationNames.you_rescue,
-    LocationNames.mari_rescue,
-    LocationNames.riko_rescue,
-    LocationNames.hanamaru_rescue,
     LocationNames.chika_upgrade_quest,
     LocationNames.riko_upgrade_quest,
     LocationNames.kanan_upgrade_quest,
@@ -144,6 +136,8 @@ sunken_temple_region_locations = {
     LocationNames.pathway_to_infernal_altar_chest,
     LocationNames.katys_mask_room_chest,
     LocationNames.chika_testing_grounds_chest,
+    
+    LocationNames.chika_rescue,
 }
 
 ruins_region_locations = {
@@ -156,6 +150,8 @@ ruins_region_locations = {
     LocationNames.rolling_rocks_room_chest,
     LocationNames.laptop_room_chest,
     LocationNames.hall_of_shame_chest,
+    
+    LocationNames.kanan_rescue,
 }
 
 grotto_region_locations = {
@@ -169,6 +165,8 @@ grotto_region_locations = {
     LocationNames.long_waterfall_room_chest,
     LocationNames.isolated_climb_room_chest,
     LocationNames.small_cave_climb_room_chest,
+    
+    LocationNames.dia_rescue,
 }
 
 coral_hill_region_locations = {
@@ -179,6 +177,8 @@ coral_hill_region_locations = {
     LocationNames.wallcrab_chest_room_chest,
     LocationNames.dumb_block_room_chest,
     LocationNames.lost_monstie_room_chest,
+    
+    LocationNames.ruby_rescue,
 }
 
 sea_of_trees_region_locations = {
@@ -189,6 +189,8 @@ sea_of_trees_region_locations = {
     LocationNames.golden_snail_room_chest,
     LocationNames.slope_room_chest,
     LocationNames.you_testing_grounds_chest,
+    
+    LocationNames.you_rescue,
 }
 
 crystalline_grotto_region_locations = {
@@ -199,6 +201,8 @@ crystalline_grotto_region_locations = {
     LocationNames.isolated_chest_room_chest,
     LocationNames.looong_slide_room_chest,
     LocationNames.mari_issue_room_chest,
+
+    LocationNames.mari_rescue,
 }
 
 sunken_volcano_left_region_locations = set() # Left empty for now
@@ -211,6 +215,8 @@ sunken_volcano_right_region_locations = {
     LocationNames.soarshoes_room_chest,
     LocationNames.soarshoes_obligatory_issue_room_chest,
     LocationNames.tonosamas_parts_room_chest,
+
+    LocationNames.riko_rescue,
 }
 
 shipwreck_region_locations = {
@@ -221,6 +227,8 @@ shipwreck_region_locations = {
     LocationNames.final_guard_room_chest,
     LocationNames.gloves_of_might_room_chest,
     LocationNames.postal_guild_bag_room,
+    
+    LocationNames.hanamaru_rescue,
 }
 
 infernal_altar_region_locations = {
