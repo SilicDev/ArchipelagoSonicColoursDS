@@ -295,10 +295,15 @@ class YohaneDeepblueContext(CommonContext):
                         await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                         self.finished_game = True
                 except Exception as e:
+                    self.game_connected = False
                     logger.exception(e)
                 pass # game specific logic
             elif not self.game_connected:
+                logger.info("Connection to the game lost!")
                 # connect game
+                self.game_process = pymem.Pymem("game.exe")
+                if self.game_process is not None:
+                    self.game_connected = True
                 pass
             else:
                 # server disconnected?
