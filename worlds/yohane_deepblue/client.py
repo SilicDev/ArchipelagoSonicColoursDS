@@ -127,6 +127,15 @@ class YohaneDeepblueContext(CommonContext):
                     if self.last_map_area != map_area or self.last_map_room != map_room:
                         if self.debug_log:
                             logger.info("Entering room %d in area %d", map_room, map_area)
+                        if self.last_map_area != map_area:
+                            await self.send_msgs([{ # Update package for trackers
+                                "cmd": "Bounce",
+                                "slots": [self.slot],
+                                "data": {
+                                    "type": "MapUpdate",
+                                    "mapId": map_area,
+                                },
+                            }])
                         self.last_map_area = map_area
                         self.last_map_room = map_room
                     game_flags = int(self.game_process.read_uchar(main_struct + GAME_FLAGS_OFFSET))
