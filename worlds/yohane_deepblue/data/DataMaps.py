@@ -134,3 +134,15 @@ character_item_to_quest_map = {
     ItemNames.dia_unlock: 0x02000000,
     ItemNames.mari_unlock: 0x10000000,
 }
+
+character_upgrade_to_area_room = {
+    #ItemNames.lailaps_upgrade: (0, [], ""),
+    ItemNames.chika_upgrade: (1, [12, 11], LocationNames.katys_mask_room_chest),
+    ItemNames.riko_upgrade: (3, [28, 25, 27], LocationNames.spellbook_room_chest),
+    ItemNames.kanan_upgrade: (7, [55, 54, 56], LocationNames.tonosamas_parts_room_chest),
+    ItemNames.dia_upgrade: (5, [23, 22], LocationNames.scarlet_delta_suit_room_chest),
+    ItemNames.you_upgrade: (8, [17, 16, 18], LocationNames.postal_guild_bag_room),
+    ItemNames.mari_upgrade: (4, [9, 8, 10], LocationNames.lost_monstie_room_chest),
+    ItemNames.hanamaru_upgrade: (2, [19, 24], LocationNames.laptop_room_chest),
+    ItemNames.ruby_upgrade: (6, [41, 40, 42], LocationNames.isolated_chest_room_chest),
+}

@@ -195,7 +195,8 @@ class YohaneDeepblueContext(CommonContext):
                         item_data = character_upgrade_table[item]
                         if item_data.code is not None: # events aren't real
                             offset = INVENTORY_OFFSET + (0x18 * item_data.code)
-                            if item in self.local_received_items:
+                            room = DataMaps.character_upgrade_to_area_room[item]
+                            if item in self.local_received_items and (not (room[0] == map_area and map_room in room[1]) or location_table[room[2]] in self.checked_locations):
                                 self.game_process.write_uchar(main_struct + offset, 1)
                             else:
                                 self.game_process.write_uchar(main_struct + offset, 0)
