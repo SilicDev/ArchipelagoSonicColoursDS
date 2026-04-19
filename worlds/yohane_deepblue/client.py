@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 FLAGS_STRUCT_BASE_OFFSET = 0x0115B498
 MAIN_BASE_OFFSET = 0x0166B418
 
+YEN_OFFSET = 0x51050
 GAME_FLAGS_OFFSET = 0x51058
 CHARACTER_UNLOCK_FLAGS_OFFSET = 0x51064
 GAME_PROGRESSION_FLAGS_OFFSET = 0x51071
@@ -37,6 +38,7 @@ PTR_FLAGS_STRUCT = [0x28, 0x8, 0x8]
 OFFSET_AREA = 0xA0
 OFFSET_AREA_RELOAD = 0xCD
 OFFSET_IN_CREDITS = 0xCE
+OFFSET_INGAME_TIME = 0x238
 OFFSET_IS_DEAD = 0x360
 
 class ConnectionStatus(enum.IntEnum):
@@ -135,10 +137,10 @@ class YohaneDeepblueContext(CommonContext):
                         self.in_parlor = in_parlor
                     
                     dungeon_flags = int(self.game_process.read_uchar(main_struct + DUNGEON_FLAGS_OFFSET))
-                    if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x3 != 0x3:
+                    if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x2 == 0:
                         if self.debug_log:
                             logger.info("Setting Chika Block flags")
-                        dungeon_flags |= 0x3
+                        dungeon_flags |= 0x2
                         self.game_process.write_uchar(main_struct + DUNGEON_FLAGS_OFFSET, dungeon_flags)
                     
                     game_progression_flags = int(self.game_process.read_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET))
@@ -148,7 +150,7 @@ class YohaneDeepblueContext(CommonContext):
                         elif game_progression_flags & DataMaps.character_rescue_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
                     game_progression_flags &= 0x7FFF
-                    if ItemNames.boss_token in self.local_received_items and self.local_received_items[ItemNames.boss_token] == 8:
+                    if ItemNames.boss_token in self.local_received_items and self.local_received_items[ItemNames.boss_token] >= 8:
                         game_progression_flags |= 0x8000 # Spawns Infernal Altar cutscene
                         game_flags |= 0x02
                     self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
