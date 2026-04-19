@@ -36,6 +36,15 @@ big_weapon_rule = HasAny(ItemNames.threaded_blade, ItemNames.shamrock, ItemNames
 
 def set_rules(world: World) -> None:
     set_chest_rules(world)
+    world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule)
+    world.set_rule(world.get_location(LocationNames.chika_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.kanan_rescue), CanReachLocation(LocationNames.ruins_boss_defeated_3))
+    world.set_rule(world.get_location(LocationNames.dia_rescue), CanReachLocation(LocationNames.grotto_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.ruby_rescue), CanReachLocation(LocationNames.coral_hill_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.you_rescue), CanReachLocation(LocationNames.sea_of_trees_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.mari_rescue), CanReachLocation(LocationNames.crystalline_grotto_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.riko_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.hanamaru_rescue), CanReachLocation(LocationNames.shipwreck_boss_defeated))
     pass
 
 def set_chest_rules(world: World) -> None:

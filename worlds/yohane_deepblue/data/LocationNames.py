@@ -25,7 +25,7 @@ sunken_volcano_next_to_first_save_room_chest = "Sunken Volcano - Next To First S
 hotspring_room_chest = "Sunken Volcano - Hotspring Room - Chest"
 soarshoes_room_chest = "Sunken Volcano - Soarshoes Room - Chest" # room 37
 soarshoes_obligatory_issue_room_chest = "Sunken Volcano - Soarshoes Obligatory Issue Room - Chest"
-tonosamas_parts_room_chest = "Sunken Volcano - Tonosama's Parts Room - Chest" # no number
+tonosamas_parts_room_chest = "Sunken Volcano - Tonosama's Parts Room - Chest" # room 55
 
 really_sealed_off_chest_room_chest = "Shipwreck - Really Sealed Off Chest Room - Chest"
 spikey_ball_fish_room_chest = "Shipwreck - Spikey Ball Fish Room - Chest"
