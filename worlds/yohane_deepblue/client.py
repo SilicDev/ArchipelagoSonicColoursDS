@@ -262,6 +262,8 @@ class YohaneDeepblueContext(CommonContext):
                             offset = INVENTORY_OFFSET + (0x18 * item.item)
                             value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
                             self.game_process.write_uchar(main_struct + offset, value)
+                            self.game_process.write_uchar(main_struct + offset + 1, 0)
+                            self.game_process.write_uchar(main_struct + offset - 0x10, value)
                         if accessories_changed != 0:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xFF - accessories_changed)
