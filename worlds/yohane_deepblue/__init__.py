@@ -60,6 +60,8 @@ class YohaneDeepblueWorld(World):
     item_name_groups = item_groups
     location_name_groups = location_groups
 
+    origin_region_name = LocationNames.origin_region
+
     required_client_version = (0, 6, 7)
 
     def create_regions(self) -> None:

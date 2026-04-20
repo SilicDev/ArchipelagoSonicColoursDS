@@ -54,13 +54,11 @@ def set_chest_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule)
 
     # Grotto
-    #world.set_rule(world.get_location(LocationNames.first_waterfall_room_chest), )
-    #world.set_rule(world.get_location(LocationNames.first_lake_room_chest), )
-    #world.set_rule(world.get_location(LocationNames.second_lake_room_chest), )
+    world.set_rule(world.get_location(LocationNames.first_lake_room_chest), sea_charm_rule)
     world.set_rule(world.get_location(LocationNames.spellbook_room_chest), riko_rule)
-    #world.set_rule(world.get_location(LocationNames.long_waterfall_room_chest), )
-    #world.set_rule(world.get_location(LocationNames.isolated_climb_room_chest), )
-    #world.set_rule(world.get_location(LocationNames.small_cave_climb_room_chest), )
+    world.set_rule(world.get_location(LocationNames.long_waterfall_room_chest), sea_charm_rule)
+    world.set_rule(world.get_location(LocationNames.isolated_climb_room_chest), sea_charm_rule & (soarshoes_rule | gloves_rule))
+    world.set_rule(world.get_location(LocationNames.small_cave_climb_room_chest), sea_charm_rule & (soarshoes_rule | gloves_rule))
 
     # Ruins
     world.set_rule(world.get_location(LocationNames.sandy_trap_room_chest), soarshoes_rule | kanan_rule | you_rule)
@@ -72,7 +70,7 @@ def set_chest_rules(world: World) -> None:
     # Sunken Volcano
     #world.set_rule(world.get_location(LocationNames.sunken_volcano_next_to_first_save_room_chest), )
     #world.set_rule(world.get_location(LocationNames.hotspring_room_chest), )
-    world.set_rule(world.get_location(LocationNames.soarshoes_room_chest), kanan_rule | (soarshoes_rule & gloves_rule) | you_rule)
+    world.set_rule(world.get_location(LocationNames.soarshoes_room_chest), CanReachRegion(LocationNames.sunken_volcano_main_region) | (soarshoes_rule & (gloves_rule | you_rule)))
     #world.set_rule(world.get_location(LocationNames.soarshoes_obligatory_issue_room_chest), )
     world.set_rule(world.get_location(LocationNames.tonosamas_parts_room_chest), kanan_rule & riko_rule & (big_weapon_rule | dia_rule | upgraded_hanamaru_rule | upgraded_mari_rule))
 

@@ -8,12 +8,12 @@ chika_testing_grounds_chest = "Sunken Temple - Chika Testing Grounds - Chest" # 
 
 grotto_next_to_first_save_room_chest = "Grotto - Next To First Save Room - Chest" # room 64
 first_waterfall_room_chest = "Grotto - First Waterfall Room - Chest"
-first_lake_room_chest = "Grotto - First Lake Room - Chest"
+first_lake_room_chest = "Grotto - First Lake Room - Chest" # room 14
 second_lake_room_chest = "Grotto - Second Lake Room - Chest"
 spellbook_room_chest = "Grotto - Spellbook Room - Chest" # room 29
-long_waterfall_room_chest = "Grotto - Long Waterfall Room - Chest"
-isolated_climb_room_chest = "Grotto - Isolated Climb Room - Chest"
-small_cave_climb_room_chest = "Grotto - Small Cave Climb Room - Chest"
+long_waterfall_room_chest = "Grotto - Long Waterfall Room - Chest" # room 25
+isolated_climb_room_chest = "Grotto - Isolated Climb Room - Chest" # room 54
+small_cave_climb_room_chest = "Grotto - Small Cave Climb Room - Chest" # room 55
 
 sandy_trap_room_chest = "Ruins - Sandy Trap Room - Chest" # room 2
 vertical_poison_room_chest = "Ruins - Vertical Poison Room - Chest"
@@ -100,14 +100,17 @@ sunken_volcano_boss_refight = "Sunken Volcano Boss (Refight)"
 shipwreck_boss_refight = "Shipwreck Boss (Refight)"
 infernal_altar_boss_refight = "Infernal Altar Boss (Refight)"
 
+origin_region = "Yohane's Fortune Parlor"
 sunken_temple_region = "Sunken Temple"
 ruins_region = "Ruins"
+ruins_lower_region = "Ruins - Lower"
 grotto_region = "Grotto"
 coral_hill_region = "Coral Hill"
 sea_of_trees_region = "Sea of Trees"
 crystalline_grotto_region = "Crystalline Grotto"
-sunken_volcano_left_region = "Sunken Volcano - Left Side"
-sunken_volcano_right_region = "Sunken Volcano - Right Side"
+sunken_volcano_left_region = "Sunken Volcano - Left Entrance"
+sunken_volcano_main_region = "Sunken Volcano"
+sunken_volcano_boss_region = "Sunken Volcano - Right Side"
 shipwreck_region = "Shipwreck"
 infernal_altar_region = "Infernal Altar"
 aqours_memoria_region = "Aquors Memoria"

@@ -143,13 +143,16 @@ sunken_temple_region_locations = {
 ruins_region_locations = {
     LocationNames.ruins_boss_defeated_1,
     LocationNames.ruins_boss_defeated_2,
-    LocationNames.ruins_boss_defeated_3,
 
     LocationNames.sandy_trap_room_chest,
     LocationNames.vertical_poison_room_chest,
     LocationNames.rolling_rocks_room_chest,
     LocationNames.laptop_room_chest,
     LocationNames.hall_of_shame_chest,
+}
+
+ruins_lower_region_locations = {
+    LocationNames.ruins_boss_defeated_3,
     
     LocationNames.kanan_rescue,
 }
@@ -205,16 +208,19 @@ crystalline_grotto_region_locations = {
     LocationNames.mari_rescue,
 }
 
-sunken_volcano_left_region_locations = set() # Left empty for now
+sunken_volcano_left_region_locations = {
+    LocationNames.soarshoes_room_chest
+}
 
-sunken_volcano_right_region_locations = {
-    LocationNames.sunken_volcano_boss_defeated,
-
+sunken_volcano_main_region_locations = {
     LocationNames.sunken_volcano_next_to_first_save_room_chest,
     LocationNames.hotspring_room_chest,
-    LocationNames.soarshoes_room_chest,
     LocationNames.soarshoes_obligatory_issue_room_chest,
     LocationNames.tonosamas_parts_room_chest,
+}
+
+sunken_volcano_boss_region_locations = {
+    LocationNames.sunken_volcano_boss_defeated,
 
     LocationNames.riko_rescue,
 }

@@ -8,15 +8,17 @@ from .locations import *
 from .data import LocationNames, ItemNames
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
-    menu_region = create_region(world, "Menu", active_locations, menu_region_locations)
+    menu_region = create_region(world, world.origin_region_name, active_locations, menu_region_locations)
     sunken_temple_region = create_region(world, LocationNames.sunken_temple_region, active_locations, sunken_temple_region_locations)
     ruins_region = create_region(world, LocationNames.ruins_region, active_locations, ruins_region_locations)
+    ruins_lower_region = create_region(world, LocationNames.ruins_lower_region, active_locations, ruins_lower_region_locations)
     grotto_region = create_region(world, LocationNames.grotto_region, active_locations, grotto_region_locations)
     coral_hill_region = create_region(world, LocationNames.coral_hill_region, active_locations, coral_hill_region_locations)
     sea_of_trees_region = create_region(world, LocationNames.sea_of_trees_region, active_locations, sea_of_trees_region_locations)
     crystalline_grotto_region = create_region(world, LocationNames.crystalline_grotto_region, active_locations, crystalline_grotto_region_locations)
     sunken_volcano_left_region = create_region(world, LocationNames.sunken_volcano_left_region, active_locations, sunken_volcano_left_region_locations)
-    sunken_volcano_right_region = create_region(world, LocationNames.sunken_volcano_right_region, active_locations, sunken_volcano_right_region_locations)
+    sunken_volcano_main_region = create_region(world, LocationNames.sunken_volcano_main_region, active_locations, sunken_volcano_main_region_locations)
+    sunken_volcano_boss_region = create_region(world, LocationNames.sunken_volcano_boss_region, active_locations, sunken_volcano_boss_region_locations)
     shipwreck_region = create_region(world, LocationNames.shipwreck_region, active_locations, shipwreck_region_locations)
     infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, infernal_altar_region_locations)
     aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, aqours_memoria_region_locations)
@@ -25,12 +27,14 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         menu_region,
         sunken_temple_region,
         ruins_region,
+        ruins_lower_region,
         grotto_region,
         coral_hill_region,
         sea_of_trees_region,
         crystalline_grotto_region,
         sunken_volcano_left_region,
-        sunken_volcano_right_region,
+        sunken_volcano_main_region,
+        sunken_volcano_boss_region,
         shipwreck_region,
         infernal_altar_region,
         aqours_memoria_region,
@@ -62,9 +66,16 @@ def connect_regions(world: World) -> None:
                 ], world.player))
     connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_region, 
             lambda state: state.has(ItemNames.gloves_of_might, world.player))
+    connect(world, LocationNames.ruins_region, LocationNames.ruins_lower_region, None, True)
     connect(world, LocationNames.ruins_region, LocationNames.sunken_volcano_left_region, None)
-    connect(world, LocationNames.sunken_volcano_left_region, LocationNames.sunken_volcano_right_region, 
+    connect(world, LocationNames.ruins_lower_region, LocationNames.sunken_volcano_main_region,  
             lambda state: state.has(ItemNames.kanan_unlock, world.player))
+    connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_left_region, None, True)
+    connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, 
+            lambda state: state.has_any([
+                    ItemNames.you_unlock,
+                    ItemNames.fallen_angels_soarshoes
+                ], world.player))
     connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, 
             lambda state: state.has(ItemNames.sea_deitys_charm, world.player))
     connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_region, 

@@ -10,12 +10,12 @@ chest_location_map = { # locations marked with ! are guesses and need to be conf
 
     LocationNames.grotto_next_to_first_save_room_chest: (0x512F4, 0x80),
     LocationNames.first_waterfall_room_chest: (0x512F4, 0x02), #!
-    LocationNames.first_lake_room_chest: (0x512F4, 0x40), #!
+    LocationNames.first_lake_room_chest: (0x512F4, 0x40),
     LocationNames.second_lake_room_chest: (0x512F5, 0x01), #!
     LocationNames.spellbook_room_chest: (0x512F4, 0x01),
-    LocationNames.long_waterfall_room_chest: (0x512A7, 0x20), #!
-    LocationNames.isolated_climb_room_chest: (0x512A7, 0x40), #!
-    LocationNames.small_cave_climb_room_chest: (0x512A7, 0x80), #!
+    LocationNames.long_waterfall_room_chest: (0x512A7, 0x80),
+    LocationNames.isolated_climb_room_chest: (0x512A7, 0x40),
+    LocationNames.small_cave_climb_room_chest: (0x512A7, 0x20),
 
     LocationNames.sandy_trap_room_chest: (0x512A3, 0x80),
     LocationNames.vertical_poison_room_chest: (0x512F0, 0x01), #!
