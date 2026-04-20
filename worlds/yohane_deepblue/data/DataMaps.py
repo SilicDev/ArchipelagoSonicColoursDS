@@ -146,3 +146,60 @@ character_upgrade_to_area_room = {
     ItemNames.hanamaru_upgrade: (2, [19, 24], LocationNames.laptop_room_chest),
     ItemNames.ruby_upgrade: (6, [41, 40, 42], LocationNames.isolated_chest_room_chest),
 }
+
+chest_to_vanilla_content = {
+    LocationNames.cast_tutorial_left_chest: ItemNames.sea_tamahagane,
+    LocationNames.case_tutorial_right_chest: ItemNames.violet_shell,
+    LocationNames.fishy_archery_chest: ItemNames.enchanted_optical_lens,
+    LocationNames.pathway_to_infernal_altar_chest: ItemNames.sharp_arrowhead,
+    LocationNames.katys_mask_room_chest: ItemNames.chika_upgrade,
+    LocationNames.chika_testing_grounds_chest: ItemNames.extra_accessory_slot,
+
+    LocationNames.grotto_next_to_first_save_room_chest: ItemNames.broken_lance,
+    LocationNames.first_waterfall_room_chest: ItemNames.fragmented_shell,
+    LocationNames.first_lake_room_chest: ItemNames.sardine_oil,
+    LocationNames.second_lake_room_chest: ItemNames.canola_bouquet,
+    LocationNames.spellbook_room_chest: ItemNames.riko_upgrade,
+    LocationNames.long_waterfall_room_chest: ItemNames.sea_tamahagane,
+    LocationNames.isolated_climb_room_chest: ItemNames.huge_conch,
+    LocationNames.small_cave_climb_room_chest: ItemNames.tidelight,
+
+    LocationNames.sandy_trap_room_chest: ItemNames.sea_deitys_charm,
+    LocationNames.vertical_poison_room_chest: ItemNames.slender_tentacle,
+    LocationNames.rolling_rocks_room_chest: ItemNames.splendid_shield,
+    LocationNames.laptop_room_chest: ItemNames.hanamaru_upgrade,
+    LocationNames.hall_of_shame_chest: ItemNames.ichimonji_scabbard,
+
+    LocationNames.sunken_volcano_next_to_first_save_room_chest: ItemNames.miniature_train,
+    LocationNames.hotspring_room_chest: ItemNames.sea_silk,
+    LocationNames.soarshoes_room_chest: ItemNames.fallen_angels_soarshoes,
+    LocationNames.soarshoes_obligatory_issue_room_chest: ItemNames.chilled_enzyme,
+    LocationNames.tonosamas_parts_room_chest: ItemNames.kanan_upgrade,
+
+    LocationNames.really_sealed_off_chest_room_chest: ItemNames.hole_filled_cube,
+    LocationNames.spikey_ball_fish_room_chest: ItemNames.extra_accessory_slot,
+    LocationNames.final_guard_room_chest: ItemNames.torn_collar,
+    LocationNames.gloves_of_might_room_chest: ItemNames.gloves_of_might,
+    LocationNames.postal_guild_bag_room: ItemNames.you_upgrade,
+
+    LocationNames.soarshoesnt_chest_room_chest: ItemNames.magicolight,
+    LocationNames.annoying_teleporting_fish_room_chest: ItemNames.lady_of_the_lakes_bromide, 
+    LocationNames.wallcrab_chest_room_chest: ItemNames.sardine_oil,
+    LocationNames.dumb_block_room_chest: ItemNames.charge_stone,
+    LocationNames.lost_monstie_room_chest: ItemNames.mari_upgrade,
+
+    LocationNames.one_way_slide_room_chest: ItemNames.poison_pouch,
+    LocationNames.giant_sliding_crystals_room_chest: ItemNames.ripple_shell,
+    LocationNames.isolated_chest_room_chest: ItemNames.draconic_crest,
+    LocationNames.looong_slide_room_chest: ItemNames.ruby_upgrade,
+    LocationNames.mari_issue_room_chest: ItemNames.deepsea_magicite,
+
+    LocationNames.giant_poison_enemy_crab_room_chest: ItemNames.princesss_diary,
+    LocationNames.scarlet_delta_suit_room_chest: ItemNames.dia_upgrade,
+    LocationNames.golden_snail_room_chest: ItemNames.shark_rib,
+    LocationNames.slope_room_chest: ItemNames.sturdy_tuft,
+    LocationNames.you_testing_grounds_chest: ItemNames.bright_red_cloth,
+
+    LocationNames.purple_goo_room_chest: ItemNames.lady_of_the_lakes_fin,
+    LocationNames.dark_room_chest: ItemNames.numazu_star,
+}

@@ -216,7 +216,7 @@ class YohaneDeepblueContext(CommonContext):
                                 self.game_process.write_uchar(main_struct + offset, 0)
 
                     cache: dict[int, int] = {}
-                    for location in DataMaps.chest_location_map:
+                    for location in DataMaps.chest_location_map.keys():
                         if location in self.checked_locations:
                             continue
                         data = DataMaps.chest_location_map[location]
@@ -230,6 +230,12 @@ class YohaneDeepblueContext(CommonContext):
                             cache[offset] = value
                         if value & mask != 0:
                             self.queued_locations.append(location_table[location])
+                            vanilla_item = DataMaps.chest_to_vanilla_content[location]
+                            if vanilla_item in stackables_set:
+                                offset = INVENTORY_OFFSET + (0x18 * item_table[vanilla_item].code)
+                                value = int(self.game_process.read_uchar(main_struct + offset)) - 1 
+                                self.game_process.write_uchar(main_struct + offset, value)
+                                self.game_process.write_uchar(main_struct + offset - 0x10, value)
                         if location in [LocationNames.sandy_trap_room_chest, LocationNames.soarshoes_room_chest, LocationNames.gloves_of_might_room_chest]:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xF8 | self.local_accessories_enabled)
