@@ -226,13 +226,15 @@ sunken_volcano_boss_region_locations = {
 }
 
 shipwreck_region_locations = {
-    LocationNames.shipwreck_boss_defeated,
-
     LocationNames.really_sealed_off_chest_room_chest,
     LocationNames.spikey_ball_fish_room_chest,
     LocationNames.final_guard_room_chest,
     LocationNames.gloves_of_might_room_chest,
     LocationNames.postal_guild_bag_room,
+}
+
+shipwreck_boss_region_locations = {
+    LocationNames.shipwreck_boss_defeated,
     
     LocationNames.hanamaru_rescue,
 }

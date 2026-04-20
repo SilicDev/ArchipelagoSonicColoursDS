@@ -6,6 +6,7 @@ from worlds.AutoWorld import World
 from Options import Toggle
 from .locations import *
 from .data import LocationNames, ItemNames
+from .rules import *
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
     menu_region = create_region(world, world.origin_region_name, active_locations, menu_region_locations)
@@ -20,6 +21,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     sunken_volcano_main_region = create_region(world, LocationNames.sunken_volcano_main_region, active_locations, sunken_volcano_main_region_locations)
     sunken_volcano_boss_region = create_region(world, LocationNames.sunken_volcano_boss_region, active_locations, sunken_volcano_boss_region_locations)
     shipwreck_region = create_region(world, LocationNames.shipwreck_region, active_locations, shipwreck_region_locations)
+    shipwreck_boss_region = create_region(world, LocationNames.shipwreck_boss_region, active_locations, shipwreck_boss_region_locations)
     infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, infernal_altar_region_locations)
     aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, aqours_memoria_region_locations)
 
@@ -36,6 +38,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         sunken_volcano_main_region,
         sunken_volcano_boss_region,
         shipwreck_region,
+        shipwreck_boss_region,
         infernal_altar_region,
         aqours_memoria_region,
     ]
@@ -43,50 +46,21 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
 def connect_regions(world: World) -> None:
     connect(world, world.origin_region_name, LocationNames.sunken_temple_region, None)
     connect(world, LocationNames.grotto_region, LocationNames.ruins_region, None)
-    if world.options.earlychikablocksmoved == Toggle.option_true:
-        connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, None)
-    else:
-        connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
-                lambda state: state.has(ItemNames.chika_unlock, world.player) or 
-                    state.has_all([
-                        ItemNames.ruby_unlock,
-                        ItemNames.ruby_upgrade
-                    ], world.player))
-    connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, 
-            lambda state: _coral_hill_access_rule(world, state))
-    connect(world, LocationNames.shipwreck_region, LocationNames.coral_hill_region,  
-            lambda state: _coral_hill_access_rule(world, state))
-    connect(world, LocationNames.shipwreck_region, LocationNames.sea_of_trees_region, 
-            lambda state: state.has(ItemNames.kanan_unlock, world.player) or 
-                state.has_all([
-                    ItemNames.mari_unlock,
-                    ItemNames.mari_upgrade,
-                    ItemNames.fallen_angels_soarshoes,
-                    ItemNames.gloves_of_might
-                ], world.player))
-    connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_region, 
-            lambda state: state.has(ItemNames.gloves_of_might, world.player))
+    connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
+            Filtered(chika_rule | upgraded_ruby_rule, options=chika_blocks_filter, filtered_resolution=True))
+    connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, gloves_rule & (soarshoes_rule | you_rule | dia_rule))
+    connect(world, LocationNames.shipwreck_region, LocationNames.shipwreck_boss_region, gloves_rule)
+    connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, None)
+    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
+    connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_region, gloves_rule)
     connect(world, LocationNames.ruins_region, LocationNames.ruins_lower_region, None, True)
     connect(world, LocationNames.ruins_region, LocationNames.sunken_volcano_left_region, None)
-    connect(world, LocationNames.ruins_lower_region, LocationNames.sunken_volcano_main_region,  
-            lambda state: state.has(ItemNames.kanan_unlock, world.player))
+    connect(world, LocationNames.ruins_lower_region, LocationNames.sunken_volcano_main_region, kanan_rule)
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_left_region, None, True)
-    connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, 
-            lambda state: state.has_any([
-                    ItemNames.you_unlock,
-                    ItemNames.fallen_angels_soarshoes
-                ], world.player))
-    connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, 
-            lambda state: state.has(ItemNames.sea_deitys_charm, world.player))
-    connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_region, 
-            lambda state: state.has(ItemNames.sea_deitys_charm, world.player))
-    connect(world, LocationNames.sea_of_trees_region, LocationNames.shipwreck_region, None)
-    connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, 
-            lambda state: state.has(ItemNames.boss_token, world.player, 8) and state.has_all([
-                    ItemNames.riko_unlock,
-                    ItemNames.kanan_unlock,
-                    ItemNames.gloves_of_might
-                ], world.player))
+    connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, you_rule | soarshoes_rule)
+    connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, sea_charm_rule & (kanan_rule | riko_rule))
+    connect(world, LocationNames.sea_of_trees_region, LocationNames.shipwreck_boss_region, None, True)
+    connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, boss_token_rule & riko_rule & kanan_rule & gloves_rule)
     connect(world, LocationNames.infernal_altar_region, LocationNames.aqours_memoria_region, None)
     pass
 
@@ -117,14 +91,3 @@ def connect(world: World, source: str, destination: str, rule: typing.Optional[R
     
     source_region.exits.append(entrance)
     entrance.connect(dest_region)
-
-def _coral_hill_access_rule(world: World, state: CollectionState) -> bool:
-    return (state.has(ItemNames.gloves_of_might, world.player) and state.has_any([
-        ItemNames.you_unlock,
-        ItemNames.dia_unlock,
-        ItemNames.fallen_angels_soarshoes
-    ], world.player)) or (state.has(ItemNames.you_unlock, world.player) and state.has_any([
-        ItemNames.gloves_of_might,
-        ItemNames.dia_unlock,
-        ItemNames.fallen_angels_soarshoes
-    ], world.player))

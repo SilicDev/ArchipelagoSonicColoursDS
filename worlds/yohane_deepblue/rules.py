@@ -33,10 +33,11 @@ upgraded_hanamaru_rule = Has(ItemNames.hanamaru_upgrade) & hanamaru_rule
 upgraded_ruby_rule = Has(ItemNames.ruby_upgrade) & ruby_rule
 
 big_weapon_rule = HasAny(ItemNames.threaded_blade, ItemNames.shamrock, ItemNames.demon_slayer, ItemNames.claiomh_solais)
+boss_token_rule = Has(ItemNames.boss_token, 8)
 
 def set_rules(world: World) -> None:
     set_chest_rules(world)
-    world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule)
+    world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule & (kanan_rule | riko_rule))
     world.set_rule(world.get_location(LocationNames.chika_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
     world.set_rule(world.get_location(LocationNames.kanan_rescue), CanReachLocation(LocationNames.ruins_boss_defeated_3))
     world.set_rule(world.get_location(LocationNames.dia_rescue), CanReachLocation(LocationNames.grotto_boss_defeated))
@@ -63,7 +64,7 @@ def set_chest_rules(world: World) -> None:
     # Ruins
     world.set_rule(world.get_location(LocationNames.sandy_trap_room_chest), soarshoes_rule | kanan_rule | you_rule)
     world.set_rule(world.get_location(LocationNames.laptop_room_chest), hanamaru_rule & (you_rule | hanamaru_rule))
-    world.set_rule(world.get_location(LocationNames.hall_of_shame_chest), soarshoes_rule | (gloves_rule & you_rule))
+    world.set_rule(world.get_location(LocationNames.hall_of_shame_chest), (soarshoes_rule | gloves_rule) & you_rule)
 
     # Sunken Volcano
     world.set_rule(world.get_location(LocationNames.sunken_volcano_next_to_first_save_room_chest), gloves_rule)
@@ -99,7 +100,7 @@ def set_chest_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.one_way_slide_room_chest), gloves_rule)
     world.set_rule(world.get_location(LocationNames.giant_sliding_crystals_room_chest), gloves_rule)
     world.set_rule(world.get_location(LocationNames.isolated_chest_room_chest), gloves_rule) # & (you_rule | soarshoes_rule) for easier access
-    world.set_rule(world.get_location(LocationNames.looong_slide_room_chest), gloves_rule & you_rule)
+    world.set_rule(world.get_location(LocationNames.looong_slide_room_chest), gloves_rule & you_rule & ruby_rule)
     world.set_rule(world.get_location(LocationNames.mari_issue_room_chest), gloves_rule & mari_rule)
 
     # Sea of Trees
