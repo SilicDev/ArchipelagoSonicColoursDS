@@ -294,7 +294,7 @@ class YohaneDeepblueContext(CommonContext):
                             accessories_changed |= 0x04
                         if item_name in stackables_set:
                             offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
-                            value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
+                            value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
                             self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
                             self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
                             self.game_process.write_ushort(main_struct + offset, value << 8 + value)
