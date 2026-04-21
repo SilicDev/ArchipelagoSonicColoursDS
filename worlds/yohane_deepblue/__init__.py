@@ -71,6 +71,7 @@ class YohaneDeepblueWorld(World):
 
     def create_items(self) -> None:
         self.multiworld.push_precollected(self.create_item(ItemNames.katar))
+        self.multiworld.push_precollected(self.create_item(ItemNames.lailaps_unlock))
         self.multiworld.get_location(LocationNames.sunken_temple_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
         self.multiworld.get_location(LocationNames.ruins_boss_defeated_3, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
         self.multiworld.get_location(LocationNames.grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
@@ -89,7 +90,8 @@ class YohaneDeepblueWorld(World):
             for i in range(rare_material_table[item].quantity):
                 itempool.append(self.create_item(item))
         for item in character_unlock_table.keys():
-            itempool.append(self.create_item(item))
+            if item != ItemNames.lailaps_unlock:
+                itempool.append(self.create_item(item))
         for item in character_upgrade_table.keys():
             itempool.append(self.create_item(item))
         surplus_checks = num_locations_to_fill - len(itempool)
