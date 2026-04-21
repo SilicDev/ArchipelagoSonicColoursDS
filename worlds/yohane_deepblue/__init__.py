@@ -7,7 +7,7 @@ from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, Type, components, launch
 
-from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table
+from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table, rare_material_table, consumables_table
 from .locations import YohaneDeepblueLocation, location_groups, location_table, setup_locations
 from .regions import create_regions, connect_regions
 from .rules import set_rules
@@ -102,6 +102,8 @@ class YohaneDeepblueWorld(World):
         classification = ItemClassification.filler
         if data.progression:
             classification = ItemClassification.progression
+        elif name in rare_material_table.keys() or name in consumables_table.keys():
+            classification = ItemClassification.useful
         item = YohaneDeepblueItem(name, classification, data.code, self.player)
         return item
 
