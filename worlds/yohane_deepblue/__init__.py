@@ -85,6 +85,9 @@ class YohaneDeepblueWorld(World):
         for item in unique_accessories_table.keys():
             for i in range(unique_accessories_table[item].quantity):
                 itempool.append(self.create_item(item))
+        for item in rare_material_table.keys():
+            for i in range(rare_material_table[item].quantity):
+                itempool.append(self.create_item(item))
         for item in character_unlock_table.keys():
             itempool.append(self.create_item(item))
         for item in character_upgrade_table.keys():
