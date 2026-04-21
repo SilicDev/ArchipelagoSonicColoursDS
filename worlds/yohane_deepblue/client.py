@@ -174,7 +174,6 @@ class YohaneDeepblueContext(CommonContext):
                     game_progression_flags &= 0x7FFF
                     if ItemNames.boss_token in self.local_received_items and self.local_received_items[ItemNames.boss_token] >= 8:
                         game_progression_flags |= 0x8000 # Spawns Infernal Altar cutscene
-                        game_flags |= 0x02
                     self.game_process.write_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET, game_progression_flags)
                     self.game_process.write_ushort(main_struct + GAME_FLAGS_OFFSET, game_flags)
                     
