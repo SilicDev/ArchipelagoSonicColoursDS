@@ -144,7 +144,7 @@ character_upgrade_to_area_room = {
     ItemNames.you_upgrade: (8, [17, 16, 18], LocationNames.postal_guild_bag_room),
     ItemNames.mari_upgrade: (4, [9, 8, 10], LocationNames.lost_monstie_room_chest),
     ItemNames.hanamaru_upgrade: (2, [19, 24], LocationNames.laptop_room_chest),
-    ItemNames.ruby_upgrade: (6, [41, 40, 42], LocationNames.isolated_chest_room_chest),
+    ItemNames.ruby_upgrade: (6, [41, 40, 42], LocationNames.looong_slide_room_chest),
 }
 
 chest_to_vanilla_content = {
