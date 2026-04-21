@@ -51,7 +51,7 @@ def set_rules(world: World) -> None:
 def set_chest_rules(world: World) -> None:
     # Sunken Temple
     world.set_rule(world.get_location(LocationNames.fishy_archery_chest), gloves_rule | soarshoes_rule)
-    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (you_rule | (soarshoes_rule & (chika_rule | upgraded_ruby_rule))))
+    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (Filtered(you_rule, options=you_enabled_filter, filtered_resolution=True) | (soarshoes_rule & (chika_rule | upgraded_ruby_rule))))
     world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule)
 
     # Grotto
@@ -73,7 +73,10 @@ def set_chest_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.tonosamas_parts_room_chest), kanan_rule & riko_rule & (big_weapon_rule | dia_rule | upgraded_hanamaru_rule | upgraded_mari_rule))
 
     # Shipwreck
-    world.set_rule(world.get_location(LocationNames.really_sealed_off_chest_room_chest), you_rule | (kanan_rule & riko_rule & CanReachRegion(LocationNames.grotto_region)))
+    world.set_rule(
+        world.get_location(LocationNames.really_sealed_off_chest_room_chest), 
+        (CanReachRegion(LocationNames.grotto_region) & (you_rule | (riko_rule & (soarshoes_rule | gloves_rule | kanan_rule)))) | 
+        (CanReachRegion(LocationNames.coral_hill_region) & ((riko_rule | you_rule) & (gloves_rule | soarshoes_rule))))
     world.set_rule(
         world.get_location(LocationNames.spikey_ball_fish_room_chest), 
         (CanReachRegion(LocationNames.grotto_region) & (soarshoes_rule | gloves_rule)) | (CanReachRegion(LocationNames.coral_hill_region) & gloves_rule))
