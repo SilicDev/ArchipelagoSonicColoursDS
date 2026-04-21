@@ -129,6 +129,25 @@ class YohaneDeepblueContext(CommonContext):
                 if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
                     await self.update_death_link(self.deathlink_enabled)
                 try:
+                    flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
+                    if flags_struct == -1:
+                        logger.info("ERROR: Couldn't find flags struct!")
+                        await asyncio.sleep(1)
+                        continue
+
+                    ingame_time = self.game_process.read_uint(flags_struct + OFFSET_INGAME_TIME)
+                    if ingame_time == 0:
+                        await asyncio.sleep(0.1)
+                        continue
+
+                    is_dead = self.game_process.read_uchar(flags_struct + OFFSET_IS_DEAD)
+                    if self.deathlink_enabled:
+                        if not is_dead and not self.can_send_deathlink:
+                            self.can_send_deathlink = True
+                        elif is_dead and self.can_send_deathlink:
+                            await self.send_death()
+                            self.can_send_deathlink = False
+                    
                     main_struct = self.get_base_address(MAIN_BASE_OFFSET)
                     if main_struct == -1:
                         logger.info("ERROR: Couldn't find main data struct!")
@@ -255,20 +274,6 @@ class YohaneDeepblueContext(CommonContext):
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xF8 | self.local_accessories_enabled)
                             self.game_process.write_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET, accessories_enabled)
-
-                    flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
-                    if flags_struct == -1:
-                        logger.info("ERROR: Couldn't find flags struct!")
-                        await asyncio.sleep(1)
-                        continue
-
-                    is_dead = self.game_process.read_uchar(flags_struct + OFFSET_IS_DEAD)
-                    if self.deathlink_enabled:
-                        if not is_dead and not self.can_send_deathlink:
-                            self.can_send_deathlink = True
-                        elif is_dead and self.can_send_deathlink:
-                            await self.send_death()
-                            self.can_send_deathlink = False
 
                     while self.queued_locations:
                         location = self.queued_locations.pop(0)
