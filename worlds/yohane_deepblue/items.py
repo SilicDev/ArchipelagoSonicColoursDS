@@ -314,10 +314,15 @@ token_items = {
     ItemNames.boss_token: ItemData(2000, True),
 }
 
+bundle_items = {
+    ItemNames.small_yen: ItemData(3000, False),
+    ItemNames.medium_yen: ItemData(3001, False),
+    ItemNames.big_yen: ItemData(3002, False),
+}
+
 junk_table: set[str] = {
-    *breakable_material_table.keys(),
-    *enemy_material_table.keys(),
     *consumables_table.keys(),
+    *bundle_items.keys(),
 }
 
 event_table: dict[str, ItemData] = {
@@ -333,6 +338,12 @@ stackables_set = {
     *accessories_table.keys(),
 }
 
+yen_set = {
+    ItemNames.small_yen,
+    ItemNames.medium_yen,
+    ItemNames.big_yen,
+}
+
 item_table: dict[str, ItemData] = {
     **unique_accessories_table,
     **character_unlock_table,
@@ -343,6 +354,7 @@ item_table: dict[str, ItemData] = {
     **consumables_table,
     **weapons_table,
     **accessories_table,
+    **bundle_items,
     **token_items
 }
 
@@ -353,4 +365,5 @@ item_groups: dict[str, set[str]] = {
     "Characters": set(character_unlock_table.keys()),
     "Upgrades": set(character_upgrade_table.keys()),
     "Rare Materials": set(rare_material_table.keys()),
+    
 }

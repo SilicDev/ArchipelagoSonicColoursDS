@@ -14,7 +14,7 @@ from Options import Toggle
 
 from .data import DataMaps, ItemNames, LocationNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
-from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, lookup_id_to_name as item_id_to_name
+from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, yen_set, lookup_id_to_name as item_id_to_name
 
 if TYPE_CHECKING:
     import kvui
@@ -289,6 +289,27 @@ class YohaneDeepblueContext(CommonContext):
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
+                        if item_name in stackables_set:
+                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
+                            value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
+                            self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
+                            self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
+                            self.game_process.write_ushort(main_struct + offset, value << 8 + value)
+                        elif item_name in yen_set:
+                            amount = 0
+                            match (item_name):
+                                case ItemNames.small_yen:
+                                    amount = 10000
+                                case ItemNames.medium_yen:
+                                    amount = 25000
+                                case ItemNames.big_yen:
+                                    amount = 50000
+                                case _:
+                                    raise ValueError("Unknown yen item '%s' received!".format(item_name))
+                            yen = int(self.game_process.read_uint(main_struct + YEN_OFFSET))
+                            yen += amount
+                            self.game_process.write_uint(main_struct + YEN_OFFSET, yen)
+
                         accessories_changed = 0
                         if item_name == ItemNames.fallen_angels_soarshoes:
                             accessories_changed |= 0x01
@@ -296,12 +317,6 @@ class YohaneDeepblueContext(CommonContext):
                             accessories_changed |= 0x02
                         elif item_name == ItemNames.sea_deitys_charm:
                             accessories_changed |= 0x04
-                        if item_name in stackables_set:
-                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
-                            value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
-                            self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
-                            self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
-                            self.game_process.write_ushort(main_struct + offset, value << 8 + value)
                         if accessories_changed != 0:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xFF - accessories_changed)

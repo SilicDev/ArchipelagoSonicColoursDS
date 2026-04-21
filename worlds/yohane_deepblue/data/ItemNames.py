@@ -288,3 +288,7 @@ sphene_earring = "Sphene Earring"
 
 victory = "Victory"
 boss_token = "Boss Token" # boss check item
+
+small_yen = "10000 Yen"
+medium_yen = "25000 Yen"
+big_yen = "50000 Yen"
