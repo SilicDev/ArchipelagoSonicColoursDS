@@ -29,7 +29,11 @@ GAME_PROGRESSION_FLAGS_OFFSET = 0x51071
 CHARACTER_QUEST_FLAGS_OFFSET = 0x51073
 BOSS_DEFEATED_FLAGS = 0x5107D
 DUNGEON_FLAGS_OFFSET = 0x5124E
-INVENTORY_OFFSET = 0x52570
+INVENTORY_OFFSET = 0x52560
+ITEM_SECOND_MAGIC_OFFSET = 0x08
+ITEM_COUNT_OFFSET = 0x10
+ITEM_NEW_OFFSET = 0x11
+ITEM_STRUCT_SIZE = 0x18
 EQUIPPED_ABILITIES_FLAGS_OFFSET = 0x58560
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
@@ -67,6 +71,15 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
             logger.info("Enabled debug logging")
         else:
             logger.info("Disabled debug logging")
+
+    def _cmd_deathlink(self):
+        """Toggles Deathlink"""
+        if self.ctx.deathlink_enabled:
+            self.ctx.deathlink_enabled = False
+            self.output(f"Death Link turned off")
+        else:
+            self.ctx.deathlink_enabled = True
+            self.output(f"Death Link turned on")
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -154,7 +167,7 @@ class YohaneDeepblueContext(CommonContext):
                     
                     game_progression_flags = int(self.game_process.read_ushort(main_struct + GAME_PROGRESSION_FLAGS_OFFSET))
                     for location in DataMaps.character_rescue_flag_map:
-                        if location in self.checked_locations:
+                        if location_table[location] in self.checked_locations:
                             game_progression_flags |= DataMaps.character_rescue_flag_map[location]
                         elif game_progression_flags & DataMaps.character_rescue_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
@@ -167,7 +180,7 @@ class YohaneDeepblueContext(CommonContext):
                     
                     character_quest_flags = int(self.game_process.read_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET))
                     for location in DataMaps.character_quest_flag_map:
-                        if location in self.checked_locations:
+                        if location_table[location] in self.checked_locations:
                             continue
                         flag = DataMaps.character_quest_flag_map[location]
                         if character_quest_flags & flag != 0:
@@ -176,7 +189,7 @@ class YohaneDeepblueContext(CommonContext):
 
                     boss_defeated_flags = int(self.game_process.read_uint(main_struct + BOSS_DEFEATED_FLAGS))
                     for location in DataMaps.boss_defeated_flag_map:
-                        if location in self.checked_locations:
+                        if location_table[location] in self.checked_locations:
                             continue
                         if boss_defeated_flags & DataMaps.boss_defeated_flag_map[location] != 0:
                             self.queued_locations.append(location_table[location])
@@ -194,30 +207,30 @@ class YohaneDeepblueContext(CommonContext):
                     for item in character_upgrade_table.keys():
                         item_data = character_upgrade_table[item]
                         if item_data.code is not None: # events aren't real
-                            offset = INVENTORY_OFFSET + (0x18 * item_data.code)
+                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item_data.code)
                             room = DataMaps.character_upgrade_to_area_room[item]
                             if item in self.local_received_items and (not (room[0] == map_area and map_room in room[1]) or location_table[room[2]] in self.checked_locations):
-                                self.game_process.write_uchar(main_struct + offset, 1)
+                                self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 1)
                             else:
-                                self.game_process.write_uchar(main_struct + offset, 0)
+                                self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 0)
 
                     for item in unique_accessories_table.keys():
                         item_data = unique_accessories_table[item]
                         if item_data.code is not None: # events aren't real
-                            offset = INVENTORY_OFFSET + (0x18 * item_data.code)
+                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item_data.code)
                             if item in self.local_received_items:
-                                self.game_process.write_uchar(main_struct + offset, 1)
+                                self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 1)
                                 if item == ItemNames.extra_accessory_slot:
                                     if self.local_received_items[item] > 1:
-                                        self.game_process.write_uchar(main_struct + offset + 0x18, 1)
+                                        self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET + ITEM_STRUCT_SIZE, 1)
                                     else:
-                                        self.game_process.write_uchar(main_struct + offset + 0x18, 0)
+                                        self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET + ITEM_STRUCT_SIZE, 0)
                             else:
-                                self.game_process.write_uchar(main_struct + offset, 0)
+                                self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 0)
 
                     cache: dict[int, int] = {}
                     for location in DataMaps.chest_location_map.keys():
-                        if location in self.checked_locations:
+                        if location_table[location] in self.checked_locations:
                             continue
                         data = DataMaps.chest_location_map[location]
                         offset = data[0]
@@ -231,11 +244,14 @@ class YohaneDeepblueContext(CommonContext):
                         if value & mask != 0:
                             self.queued_locations.append(location_table[location])
                             vanilla_item = DataMaps.chest_to_vanilla_content[location]
-                            if vanilla_item in stackables_set:
-                                offset = INVENTORY_OFFSET + (0x18 * item_table[vanilla_item].code)
-                                value = int(self.game_process.read_uchar(main_struct + offset)) - 1 
-                                self.game_process.write_uchar(main_struct + offset, value)
-                                self.game_process.write_uchar(main_struct + offset - 0x10, value)
+                            vanilla_item_code = item_table[vanilla_item].code
+                            if vanilla_item in stackables_set and vanilla_item_code is not None:
+                                item_offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * vanilla_item_code)
+                                item_count = int(self.game_process.read_uchar(main_struct + item_offset + ITEM_COUNT_OFFSET))
+                                if item_count != 0:
+                                    item_count -= 1
+                                self.game_process.write_uchar(main_struct + item_offset + ITEM_COUNT_OFFSET, item_count)
+                                self.game_process.write_ushort(main_struct + item_offset, item_count << 8 + item_count)
                         if location in [LocationNames.sandy_trap_room_chest, LocationNames.soarshoes_room_chest, LocationNames.gloves_of_might_room_chest]:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xF8 | self.local_accessories_enabled)
@@ -277,11 +293,11 @@ class YohaneDeepblueContext(CommonContext):
                         elif item_name == ItemNames.sea_deitys_charm:
                             accessories_changed |= 0x04
                         if item_name in stackables_set:
-                            offset = INVENTORY_OFFSET + (0x18 * item.item)
+                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
                             value = int(self.game_process.read_uchar(main_struct + offset)) + 1 # make bundles?
-                            self.game_process.write_uchar(main_struct + offset, value)
-                            self.game_process.write_uchar(main_struct + offset + 1, 0)
-                            self.game_process.write_uchar(main_struct + offset - 0x10, value)
+                            self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
+                            self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
+                            self.game_process.write_ushort(main_struct + offset, value << 8 + value)
                         if accessories_changed != 0:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
                             accessories_enabled &= (0xFF - accessories_changed)
@@ -337,6 +353,7 @@ class YohaneDeepblueContext(CommonContext):
 
             self.slot_data = args["slot_data"]
             self.highest_processed_item_index = 0
+            self.local_received_items = {}
             self.locations_checked = set(args["checked_locations"])
             self.deathlink_enabled = self.slot_data.get("deathlink", False)
 

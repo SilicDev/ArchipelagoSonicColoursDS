@@ -70,6 +70,7 @@ class YohaneDeepblueWorld(World):
         connect_regions(self)
 
     def create_items(self) -> None:
+        self.multiworld.push_precollected(self.create_item(ItemNames.katar))
         self.multiworld.get_location(LocationNames.sunken_temple_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
         self.multiworld.get_location(LocationNames.ruins_boss_defeated_3, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
         self.multiworld.get_location(LocationNames.grotto_boss_defeated, self.player).place_locked_item(self.create_item(ItemNames.boss_token))
