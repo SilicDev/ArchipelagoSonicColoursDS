@@ -50,8 +50,8 @@ def connect_regions(world: World) -> None:
             Filtered(chika_rule | upgraded_ruby_rule, options=chika_blocks_filter, filtered_resolution=True))
     connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, gloves_rule & (soarshoes_rule | you_rule | dia_rule))
     connect(world, LocationNames.shipwreck_region, LocationNames.shipwreck_boss_region, gloves_rule)
-    connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, None)
-    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
+    connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
+    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_region, hanamaru_rule)
     connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_region, gloves_rule)
     connect(world, LocationNames.ruins_region, LocationNames.ruins_lower_region, None, True)
     connect(world, LocationNames.ruins_region, LocationNames.sunken_volcano_left_region, None)
@@ -59,7 +59,6 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_left_region, None, True)
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, you_rule | soarshoes_rule)
     connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, sea_charm_rule & (kanan_rule | riko_rule))
-    connect(world, LocationNames.sea_of_trees_region, LocationNames.shipwreck_boss_region, None, True)
     connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, boss_token_rule & riko_rule & kanan_rule & gloves_rule)
     connect(world, LocationNames.infernal_altar_region, LocationNames.aqours_memoria_region, None)
     pass
