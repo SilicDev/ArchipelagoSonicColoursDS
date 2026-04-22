@@ -80,6 +80,19 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
         else:
             self.ctx.deathlink_enabled = True
             self.output(f"Death Link turned on")
+    
+    def _cmd_gamestatus(self):
+        """Print information about the game's status"""
+        game_process = "None"
+        if self.ctx.game_process is not None:
+            game_process = "Found"
+        game_connected = "false"
+        if self.ctx.game_connected:
+            game_connected = "true"
+        server_connection = "Not Connected"
+        if self.ctx.connection_status == ConnectionStatus.CONNECTED:
+            server_connection = "Connected"
+        self.output(f"Game: {game_process}, Client connection: {game_connected}, Server: {server_connection}")
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -125,9 +138,14 @@ class YohaneDeepblueContext(CommonContext):
 
     async def game_watcher(self):
         while not self.exit_event.is_set():
-            if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED and self.game_process is not None:
+            if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED:
                 if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
                     await self.update_death_link(self.deathlink_enabled)
+                if self.game_process is None:
+                    logger.info("ERROR: Game process was none during main loop! Reconnecting...")
+                    self.game_connected = False
+                    await asyncio.sleep(1)
+                    continue
                 try:
                     flags_struct = _resolve_pointer(self, self.get_base_address(FLAGS_STRUCT_BASE_OFFSET), PTR_FLAGS_STRUCT)
                     if flags_struct == -1:
@@ -351,12 +369,18 @@ class YohaneDeepblueContext(CommonContext):
                     self.game_connected = False
                     logger.exception(e)
                 pass # game specific logic
-            elif not self.game_connected:
+            elif (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
                 logger.info("Connection to the game lost!")
                 # connect game
-                self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
-                if self.game_process is not None:
-                    self.game_connected = True
+                self.game_process = None
+                while (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
+                    try:
+                        self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
+                        if self.game_process is not None:
+                            self.game_connected = True
+                            logger.info("Reconnected!")
+                    except Exception as e:
+                            await asyncio.sleep(1)
                 pass
             else:
                 # server disconnected?
@@ -389,10 +413,16 @@ class YohaneDeepblueContext(CommonContext):
         return super().on_deathlink(data)
 
     async def disconnect(self, *args: Any, **kwargs: Any) -> None:
-        self.finished_game = False
+        self.game_connected = False
         self.locations_checked = set()
         self.connection_status = ConnectionStatus.NOT_CONNECTED
         await super().disconnect(*args, **kwargs)
+
+    async def connection_closed(self):
+        self.game_connected = False
+        self.locations_checked = set()
+        self.connection_status = ConnectionStatus.NOT_CONNECTED
+        return await super().connection_closed()
     
     def connect_to_game(self) -> None:
         try:
