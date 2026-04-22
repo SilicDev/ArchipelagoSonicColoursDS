@@ -16,7 +16,9 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     grotto_region = create_region(world, LocationNames.grotto_region, active_locations, grotto_region_locations)
     coral_hill_region = create_region(world, LocationNames.coral_hill_region, active_locations, coral_hill_region_locations)
     sea_of_trees_region = create_region(world, LocationNames.sea_of_trees_region, active_locations, sea_of_trees_region_locations)
-    crystalline_grotto_region = create_region(world, LocationNames.crystalline_grotto_region, active_locations, crystalline_grotto_region_locations)
+    crystalline_grotto_left_region = create_region(world, LocationNames.crystalline_grotto_left_region, active_locations, crystalline_grotto_left_region_locations)
+    crystalline_grotto_main_region = create_region(world, LocationNames.crystalline_grotto_main_region, active_locations, crystalline_grotto_main_region_locations)
+    crystalline_grotto_boss_region = create_region(world, LocationNames.crystalline_grotto_boss_region, active_locations, crystalline_grotto_boss_region_locations)
     sunken_volcano_left_region = create_region(world, LocationNames.sunken_volcano_left_region, active_locations, sunken_volcano_left_region_locations)
     sunken_volcano_main_region = create_region(world, LocationNames.sunken_volcano_main_region, active_locations, sunken_volcano_main_region_locations)
     sunken_volcano_boss_region = create_region(world, LocationNames.sunken_volcano_boss_region, active_locations, sunken_volcano_boss_region_locations)
@@ -33,7 +35,9 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         grotto_region,
         coral_hill_region,
         sea_of_trees_region,
-        crystalline_grotto_region,
+        crystalline_grotto_left_region,
+        crystalline_grotto_main_region,
+        crystalline_grotto_boss_region,
         sunken_volcano_left_region,
         sunken_volcano_main_region,
         sunken_volcano_boss_region,
@@ -47,12 +51,15 @@ def connect_regions(world: World) -> None:
     connect(world, world.origin_region_name, LocationNames.sunken_temple_region, None)
     connect(world, LocationNames.grotto_region, LocationNames.ruins_region, None)
     connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
-            Filtered(chika_rule | upgraded_ruby_rule, options=chika_blocks_filter, filtered_resolution=True))
+            Filtered(chika_block_rule, options=chika_blocks_filter, filtered_resolution=True))
     connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, gloves_rule & (soarshoes_rule | you_rule | dia_rule))
     connect(world, LocationNames.shipwreck_region, LocationNames.shipwreck_boss_region, gloves_rule)
     connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
     connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_region, hanamaru_rule | you_rule)
-    connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_region, gloves_rule)
+    connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_left_region, gloves_rule)
+    connect(world, LocationNames.crystalline_grotto_left_region, LocationNames.crystalline_grotto_main_region, hanamaru_rule | you_rule | upgraded_ruby_rule)
+    connect(world, LocationNames.crystalline_grotto_main_region, LocationNames.crystalline_grotto_boss_region, dia_rule | upgraded_ruby_rule, True)
+    connect(world, LocationNames.crystalline_grotto_boss_region, LocationNames.crystalline_grotto_main_region, None, True)
     connect(world, LocationNames.ruins_region, LocationNames.ruins_lower_region, None, True)
     connect(world, LocationNames.ruins_region, LocationNames.sunken_volcano_left_region, None)
     connect(world, LocationNames.ruins_lower_region, LocationNames.sunken_volcano_main_region, kanan_rule)

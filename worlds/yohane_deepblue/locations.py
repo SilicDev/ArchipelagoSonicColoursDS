@@ -196,14 +196,20 @@ sea_of_trees_region_locations = {
     LocationNames.you_rescue,
 }
 
-crystalline_grotto_region_locations = {
-    LocationNames.crystalline_grotto_boss_defeated,
-
+crystalline_grotto_left_region_locations = {
     LocationNames.one_way_slide_room_chest,
     LocationNames.giant_sliding_crystals_room_chest,
+}
+
+crystalline_grotto_main_region_locations = {
+    LocationNames.mari_issue_room_chest,
+}
+
+crystalline_grotto_boss_region_locations = {
+    LocationNames.crystalline_grotto_boss_defeated,
+
     LocationNames.isolated_chest_room_chest,
     LocationNames.looong_slide_room_chest,
-    LocationNames.mari_issue_room_chest,
 
     LocationNames.mari_rescue,
 }
