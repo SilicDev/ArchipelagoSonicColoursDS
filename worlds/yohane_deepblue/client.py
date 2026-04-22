@@ -354,7 +354,7 @@ class YohaneDeepblueContext(CommonContext):
             elif not self.game_connected:
                 logger.info("Connection to the game lost!")
                 # connect game
-                self.game_process = pymem.Pymem("game.exe")
+                self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
                 if self.game_process is not None:
                     self.game_connected = True
                 pass
@@ -396,7 +396,7 @@ class YohaneDeepblueContext(CommonContext):
     
     def connect_to_game(self) -> None:
         try:
-            self.game_process = pymem.Pymem("game.exe")
+            self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
             if self.game_process is not None:
                 self.game_connected = True
                 logger.info("Successfully connected to %s.", self.game)
