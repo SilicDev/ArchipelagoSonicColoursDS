@@ -7,7 +7,7 @@ from .data import LocationNames, ItemNames
 
 
 you_enabled_filter = [OptionFilter(EnableYouSkips, EnableYouSkips.option_true)]
-chika_blocks_filter = [OptionFilter(EarlyChikaBlockMoved, EarlyChikaBlockMoved.option_true)]
+chika_blocks_filter = [OptionFilter(EarlyChikaBlockMoved, EarlyChikaBlockMoved.option_false)]
 
 soarshoes_rule = Has(ItemNames.fallen_angels_soarshoes)
 gloves_rule = Has(ItemNames.gloves_of_might)
@@ -33,6 +33,7 @@ upgraded_hanamaru_rule = Has(ItemNames.hanamaru_upgrade) & hanamaru_rule
 upgraded_ruby_rule = Has(ItemNames.ruby_upgrade) & ruby_rule
 
 chika_block_rule = chika_rule | upgraded_ruby_rule
+you_skip_rule = Filtered(you_rule, options=you_enabled_filter, filtered_resolution=False)
 
 big_weapon_rule = HasAny(ItemNames.threaded_blade, ItemNames.shamrock, ItemNames.demon_slayer, ItemNames.claiomh_solais)
 boss_token_rule = Has(ItemNames.boss_token, 8)
@@ -55,7 +56,7 @@ def set_rules(world: World) -> None:
 def set_chest_rules(world: World) -> None:
     # Sunken Temple
     world.set_rule(world.get_location(LocationNames.fishy_archery_chest), gloves_rule | soarshoes_rule)
-    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (Filtered(you_rule, options=you_enabled_filter, filtered_resolution=True) | (soarshoes_rule & chika_block_rule)))
+    world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (you_skip_rule | (soarshoes_rule & chika_block_rule)))
     world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule)
 
     # Grotto
