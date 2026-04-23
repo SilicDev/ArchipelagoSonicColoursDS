@@ -37,6 +37,9 @@ ITEM_STRUCT_SIZE = 0x18
 EQUIPPED_ABILITIES_FLAGS_OFFSET = 0x58560
 MAP_AREA_OFFSET = 0x585EC
 MAP_ROOM_OFFSET = 0x585EF
+MUSICAL_SCORES_INVENTORY_OFFSET = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item_table[ItemNames.musical_score].code)
+RECEIVED_ITEMS_COUNTER_OFFSET = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * 233) # Supreme Squid Ink (Unused)
+STORED_MUSICAL_SCORE_COUNTER_OFFSET = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * 237) # Dried Jellyfish (Unused)
 
 PTR_FLAGS_STRUCT = [0x28, 0x8, 0x8]
 OFFSET_AREA = 0xA0
@@ -93,6 +96,10 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
         if self.ctx.connection_status == ConnectionStatus.CONNECTED:
             server_connection = "Connected"
         self.output(f"Game: {game_process}, Client connection: {game_connected}, Server: {server_connection}")
+    
+    def _cmd_musicalscores(self):
+        """Check how many musical scores are currently queued"""
+        self.output(f"The client currently has {self.ctx.stored_musical_scores} Musical Score(s) stored.")
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -116,6 +123,8 @@ class YohaneDeepblueContext(CommonContext):
     last_map_area = -1
     last_map_room = -1
     in_parlor = False
+
+    stored_musical_scores = 0
 
     debug_log = True
 
@@ -297,6 +306,13 @@ class YohaneDeepblueContext(CommonContext):
                         location = self.queued_locations.pop(0)
                         self.locations_checked.add(location)
                         await self.check_locations({location})
+                    
+                    self.stored_musical_scores = int(self.game_process.read_uchar(main_struct + STORED_MUSICAL_SCORE_COUNTER_OFFSET + ITEM_COUNT_OFFSET))
+                    musical_scores = int(self.game_process.read_uchar(main_struct + MUSICAL_SCORES_INVENTORY_OFFSET + ITEM_COUNT_OFFSET))
+                    if musical_scores == 0 and self.stored_musical_scores > 0:
+                        self.game_process.write_uchar(main_struct + MUSICAL_SCORES_INVENTORY_OFFSET + ITEM_COUNT_OFFSET, 1)
+                        self.stored_musical_scores -= 1
+                    self.highest_processed_item_index = int(self.game_process.read_uint(main_struct + RECEIVED_ITEMS_COUNTER_OFFSET + ITEM_COUNT_OFFSET))
 
                     new_items = self.items_received[self.highest_processed_item_index :]
                     for item in new_items:
@@ -307,7 +323,9 @@ class YohaneDeepblueContext(CommonContext):
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
-                        if item_name in stackables_set:
+                        if item_name == ItemNames.musical_score:
+                            self.stored_musical_scores += 1
+                        elif item_name in stackables_set:
                             offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
                             value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
                             self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
@@ -337,9 +355,11 @@ class YohaneDeepblueContext(CommonContext):
                             accessories_changed |= 0x04
                         if accessories_changed != 0:
                             accessories_enabled = int(self.game_process.read_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET))
-                            accessories_enabled &= (0xFF - accessories_changed)
+                            accessories_enabled &= (0xFF ^ accessories_changed)
                             self.local_accessories_enabled |= accessories_changed
                             self.game_process.write_uchar(main_struct + EQUIPPED_ABILITIES_FLAGS_OFFSET, accessories_enabled | accessories_changed)
+                    self.game_process.write_uint(main_struct + RECEIVED_ITEMS_COUNTER_OFFSET + ITEM_COUNT_OFFSET, self.highest_processed_item_index)
+                    self.game_process.write_uchar(main_struct + STORED_MUSICAL_SCORE_COUNTER_OFFSET + ITEM_COUNT_OFFSET, self.stored_musical_scores)
 
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
                         location_name = location_id_to_name[new_remotely_cleared_location]
