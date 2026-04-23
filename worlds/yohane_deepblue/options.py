@@ -14,7 +14,8 @@ class EarlyChikaBlockMoved(DefaultOnToggle):
 
 class EnableYouSkips(DefaultOnToggle):
     """
-    If `true` considers using You to fit through 1 tile gaps in-logic"""
+    If `true` considers using You to fit through 1 tile gaps while in the air in-logic
+    """
     display_name = "Enable You Skips"
 
 yohane_deepblue_option_groups = [
