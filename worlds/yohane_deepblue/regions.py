@@ -15,6 +15,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     ruins_lower_region = create_region(world, LocationNames.ruins_lower_region, active_locations, ruins_lower_region_locations)
     grotto_region = create_region(world, LocationNames.grotto_region, active_locations, grotto_region_locations)
     coral_hill_region = create_region(world, LocationNames.coral_hill_region, active_locations, coral_hill_region_locations)
+    sea_of_trees_left_region = create_region(world, LocationNames.sea_of_trees_left_region, active_locations, sea_of_trees_left_region_locations)
     sea_of_trees_region = create_region(world, LocationNames.sea_of_trees_region, active_locations, sea_of_trees_region_locations)
     crystalline_grotto_left_region = create_region(world, LocationNames.crystalline_grotto_left_region, active_locations, crystalline_grotto_left_region_locations)
     crystalline_grotto_main_region = create_region(world, LocationNames.crystalline_grotto_main_region, active_locations, crystalline_grotto_main_region_locations)
@@ -34,6 +35,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         ruins_lower_region,
         grotto_region,
         coral_hill_region,
+        sea_of_trees_left_region,
         sea_of_trees_region,
         crystalline_grotto_left_region,
         crystalline_grotto_main_region,
@@ -55,7 +57,9 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, gloves_rule & (soarshoes_rule | you_rule | dia_rule))
     connect(world, LocationNames.shipwreck_region, LocationNames.shipwreck_boss_region, gloves_rule)
     connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
-    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_region, hanamaru_rule | you_rule)
+    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_left_region, hanamaru_rule | you_rule)
+    connect(world, LocationNames.sea_of_trees_left_region, LocationNames.sea_of_trees_region, riko_rule, True)
+    connect(world, LocationNames.sea_of_trees_region, LocationNames.sea_of_trees_left_region, riko_rule | kanan_rule, True)
     connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_left_region, gloves_rule)
     connect(world, LocationNames.crystalline_grotto_left_region, LocationNames.crystalline_grotto_main_region, hanamaru_rule | you_rule | upgraded_ruby_rule)
     connect(world, LocationNames.crystalline_grotto_main_region, LocationNames.crystalline_grotto_boss_region, dia_rule | upgraded_ruby_rule, True)

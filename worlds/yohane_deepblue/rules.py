@@ -116,10 +116,10 @@ def set_chest_rules(world: World) -> None:
 
     # Sea of Trees
     world.set_rule(world.get_location(LocationNames.giant_poison_enemy_crab_room_chest), hanamaru_rule | (you_rule & (soarshoes_rule | gloves_rule)))
-    world.set_rule(world.get_location(LocationNames.scarlet_delta_suit_room_chest), dia_rule & gloves_rule & riko_rule)
-    world.set_rule(world.get_location(LocationNames.golden_snail_room_chest), gloves_rule & riko_rule & (chika_rule | kanan_rule | mari_rule))
-    world.set_rule(world.get_location(LocationNames.slope_room_chest), gloves_rule & riko_rule & (chika_rule | kanan_rule | mari_rule))
-    world.set_rule(world.get_location(LocationNames.you_testing_grounds_chest), gloves_rule & riko_rule & you_rule & (chika_rule | kanan_rule | mari_rule))
+    world.set_rule(world.get_location(LocationNames.scarlet_delta_suit_room_chest), dia_rule & gloves_rule)
+    world.set_rule(world.get_location(LocationNames.golden_snail_room_chest), gloves_rule & (chika_rule | kanan_rule | mari_rule))
+    world.set_rule(world.get_location(LocationNames.slope_room_chest), gloves_rule & (chika_rule | kanan_rule | mari_rule))
+    world.set_rule(world.get_location(LocationNames.you_testing_grounds_chest), gloves_rule & you_rule & (chika_rule | kanan_rule | mari_rule))
 
     # Infernal Altar
     world.set_rule(world.get_location(LocationNames.purple_goo_room_chest), you_rule & (soarshoes_rule | gloves_rule))

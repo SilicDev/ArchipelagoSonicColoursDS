@@ -184,10 +184,13 @@ coral_hill_region_locations = {
     LocationNames.ruby_rescue,
 }
 
+sea_of_trees_left_region_locations = {
+    LocationNames.giant_poison_enemy_crab_room_chest,
+}
+
 sea_of_trees_region_locations = {
     LocationNames.sea_of_trees_boss_defeated,
 
-    LocationNames.giant_poison_enemy_crab_room_chest,
     LocationNames.scarlet_delta_suit_room_chest,
     LocationNames.golden_snail_room_chest,
     LocationNames.slope_room_chest,
