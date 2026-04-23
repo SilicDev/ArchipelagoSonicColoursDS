@@ -42,7 +42,7 @@ def set_rules(world: World) -> None:
     set_chest_rules(world)
     world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule)
     world.set_rule(world.get_location(LocationNames.shipwreck_boss_defeated), ruby_rule)
-    world.set_rule(world.get_location(LocationNames.infernal_altar_boss_defeated), riko_rule & kanan_rule & gloves_rule & soarshoes_rule)
+    world.set_rule(world.get_location(LocationNames.infernal_altar_boss_defeated), riko_rule & kanan_rule & hanamaru_rule & gloves_rule & soarshoes_rule)
     world.set_rule(world.get_location(LocationNames.chika_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
     world.set_rule(world.get_location(LocationNames.kanan_rescue), CanReachLocation(LocationNames.ruins_boss_defeated_3))
     world.set_rule(world.get_location(LocationNames.dia_rescue), CanReachLocation(LocationNames.grotto_boss_defeated))
