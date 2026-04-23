@@ -66,8 +66,8 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_left_region, None, True)
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, you_rule | soarshoes_rule)
     connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, sea_charm_rule & (kanan_rule | riko_rule))
-    connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, boss_token_rule & riko_rule & kanan_rule & gloves_rule)
-    connect(world, LocationNames.infernal_altar_region, LocationNames.aqours_memoria_region, None)
+    connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, boss_token_rule)
+    connect(world, LocationNames.infernal_altar_region, LocationNames.aqours_memoria_region, CanReachLocation(LocationNames.infernal_altar_boss_defeated))
     pass
 
 def create_region(world: World, name: str, active_locations: dict[str, int], location_set: set[str]) -> Region:
