@@ -73,7 +73,7 @@ character_quest_flag_map = {
     LocationNames.spellbook_room_chest: 0x0400,
     LocationNames.tonosamas_parts_room_chest: 0x2000,
     LocationNames.laptop_room_chest: 0x010000,
-    LocationNames.isolated_chest_room_chest: 0x080000,
+    LocationNames.looong_slide_room_chest: 0x080000,
     LocationNames.postal_guild_bag_room: 0x400000,
     LocationNames.scarlet_delta_suit_room_chest: 0x02000000,
     LocationNames.lost_monstie_room_chest: 0x10000000,
