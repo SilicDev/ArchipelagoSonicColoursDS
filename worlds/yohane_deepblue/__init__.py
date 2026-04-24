@@ -4,6 +4,7 @@ Archipelago World definition for YOHANE THE PARHELION -BLAZE in the DEEPBLUE-
 import typing
 
 from BaseClasses import Item, ItemClassification, Tutorial
+from rule_builder.cached_world import CachedRuleBuilderWorld
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, Type, components, launch
 
@@ -47,7 +48,7 @@ class YohaneDeepblueWebWorld(WebWorld):
 
     option_groups = yohane_deepblue_option_groups
 
-class YohaneDeepblueWorld(World):
+class YohaneDeepblueWorld(CachedRuleBuilderWorld):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
     web = YohaneDeepblueWebWorld()
     topology_present = True
