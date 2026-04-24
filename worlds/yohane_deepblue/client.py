@@ -116,6 +116,7 @@ class YohaneDeepblueContext(CommonContext):
     game_process: pymem.Pymem | None = None
 
     highest_processed_item_index: int = 0
+    highest_received_item_index: int = 0
     queued_locations: list[int]
     local_received_items: dict[str, int]
     local_accessories_enabled: int = 0
@@ -314,37 +315,43 @@ class YohaneDeepblueContext(CommonContext):
                         self.stored_musical_scores -= 1
                     self.highest_processed_item_index = int(self.game_process.read_uint(main_struct + RECEIVED_ITEMS_COUNTER_OFFSET + ITEM_COUNT_OFFSET))
 
-                    new_items = self.items_received[self.highest_processed_item_index :]
+                    new_items = self.items_received[self.highest_received_item_index :]
                     for item in new_items:
-                        self.highest_processed_item_index += 1
+                        new_item = False
+                        if self.highest_received_item_index == self.highest_processed_item_index:
+                            new_item = True
+                        if new_item:
+                            self.highest_processed_item_index += 1
+
                         item_name = item_id_to_name[item.item]
                         if not item_name in self.local_received_items.keys():
                             self.local_received_items[item_name] = 1
                         else:
                             self.local_received_items[item_name] += 1
                         # receive item
-                        if item_name == ItemNames.musical_score:
-                            self.stored_musical_scores += 1
-                        elif item_name in stackables_set:
-                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
-                            value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
-                            self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
-                            self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
-                            self.game_process.write_ushort(main_struct + offset, value << 8 + value)
-                        elif item_name in yen_set:
-                            amount = 0
-                            match (item_name):
-                                case ItemNames.small_yen:
-                                    amount = 10000
-                                case ItemNames.medium_yen:
-                                    amount = 25000
-                                case ItemNames.big_yen:
-                                    amount = 50000
-                                case _:
-                                    raise ValueError("Unknown yen item '%s' received!".format(item_name))
-                            yen = int(self.game_process.read_uint(main_struct + YEN_OFFSET))
-                            yen += amount
-                            self.game_process.write_uint(main_struct + YEN_OFFSET, yen)
+                        if new_item:
+                            if item_name == ItemNames.musical_score:
+                                self.stored_musical_scores += 1
+                            elif item_name in stackables_set:
+                                offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
+                                value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
+                                self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
+                                self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
+                                self.game_process.write_ushort(main_struct + offset, value << 8 + value)
+                            elif item_name in yen_set:
+                                amount = 0
+                                match (item_name):
+                                    case ItemNames.small_yen:
+                                        amount = 10000
+                                    case ItemNames.medium_yen:
+                                        amount = 25000
+                                    case ItemNames.big_yen:
+                                        amount = 50000
+                                    case _:
+                                        raise ValueError("Unknown yen item '%s' received!".format(item_name))
+                                yen = int(self.game_process.read_uint(main_struct + YEN_OFFSET))
+                                yen += amount
+                                self.game_process.write_uint(main_struct + YEN_OFFSET, yen)
 
                         accessories_changed = 0
                         if item_name == ItemNames.fallen_angels_soarshoes:
@@ -415,7 +422,7 @@ class YohaneDeepblueContext(CommonContext):
             self.connection_status = ConnectionStatus.NOT_CONNECTED
 
             self.slot_data = args["slot_data"]
-            self.highest_processed_item_index = 0
+            self.highest_received_item_index = 0
             self.local_received_items = {}
             self.locations_checked = set(args["checked_locations"])
             self.deathlink_enabled = self.slot_data.get("deathlink", False)
