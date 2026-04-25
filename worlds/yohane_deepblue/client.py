@@ -14,7 +14,7 @@ from Options import Toggle
 
 from .data import DataMaps, ItemNames, LocationNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
-from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, yen_set, lookup_id_to_name as item_id_to_name
+from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, equips_set, yen_set, lookup_id_to_name as item_id_to_name
 
 if TYPE_CHECKING:
     import kvui
@@ -100,6 +100,11 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
     def _cmd_musicalscores(self):
         """Check how many musical scores are currently queued"""
         self.output(f"The client currently has {self.ctx.stored_musical_scores} Musical Score(s) stored.")
+    
+    def _cmd_resync(self):
+        """Force the client to resend every important item to the game."""
+        self.ctx.highest_received_item_index = 0
+        self.ctx.local_received_items = {}
 
 class YohaneDeepblueContext(CommonContext):
     game = "YOHANE THE PARHELION -BLAZE in the DEEPBLUE-"
@@ -318,10 +323,11 @@ class YohaneDeepblueContext(CommonContext):
                     new_items = self.items_received[self.highest_received_item_index :]
                     for item in new_items:
                         new_item = False
-                        if self.highest_received_item_index == self.highest_processed_item_index:
+                        if self.highest_received_item_index >= self.highest_processed_item_index:
                             new_item = True
                         if new_item:
                             self.highest_processed_item_index += 1
+                        self.highest_received_item_index += 1
 
                         item_name = item_id_to_name[item.item]
                         if not item_name in self.local_received_items.keys():
@@ -352,6 +358,13 @@ class YohaneDeepblueContext(CommonContext):
                                 yen = int(self.game_process.read_uint(main_struct + YEN_OFFSET))
                                 yen += amount
                                 self.game_process.write_uint(main_struct + YEN_OFFSET, yen)
+                        
+                        if item_name in equips_set:
+                            offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * item.item)
+                            value = int(self.game_process.read_uchar(main_struct + offset + ITEM_COUNT_OFFSET)) + 1 # make bundles?
+                            self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, value)
+                            self.game_process.write_uchar(main_struct + offset + ITEM_NEW_OFFSET, 0)
+                            self.game_process.write_ushort(main_struct + offset, value << 8 + value)
 
                         accessories_changed = 0
                         if item_name == ItemNames.fallen_angels_soarshoes:

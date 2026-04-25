@@ -334,6 +334,9 @@ stackables_set = {
     *enemy_material_table.keys(),
     *rare_material_table.keys(),
     *consumables_table.keys(),
+}
+
+equips_set = {
     *weapons_table.keys(),
     *accessories_table.keys(),
 }
