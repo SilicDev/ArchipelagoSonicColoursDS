@@ -322,9 +322,7 @@ class YohaneDeepblueContext(CommonContext):
 
                     new_items = self.items_received[self.highest_received_item_index :]
                     for item in new_items:
-                        new_item = False
-                        if self.highest_received_item_index >= self.highest_processed_item_index:
-                            new_item = True
+                        new_item = self.highest_received_item_index >= self.highest_processed_item_index
                         if new_item:
                             self.highest_processed_item_index += 1
                         self.highest_received_item_index += 1
