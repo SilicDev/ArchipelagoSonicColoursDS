@@ -125,6 +125,7 @@ class YohaneDeepblueContext(CommonContext):
     queued_locations: list[int]
     local_received_items: dict[str, int]
     local_accessories_enabled: int = 0
+    hinted_quest_flags: int = 0
 
     last_map_area = -1
     last_map_room = -1
@@ -234,7 +235,8 @@ class YohaneDeepblueContext(CommonContext):
                         if location_table[location] in self.checked_locations:
                             continue
                         flag = DataMaps.character_quest_flag_map[location]
-                        if character_quest_flags & flag != 0:
+                        if character_quest_flags & flag != 0 and self.hinted_quest_flags & flag == 0:
+                            self.hinted_quest_flags |= flag
                             await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
                     character_quest_flags &= 0xDB6DB6FF # Disable collection flags
 
@@ -435,6 +437,7 @@ class YohaneDeepblueContext(CommonContext):
             self.slot_data = args["slot_data"]
             self.highest_received_item_index = 0
             self.local_received_items = {}
+            self.hinted_quest_flags = 0
             self.locations_checked = set(args["checked_locations"])
             self.deathlink_enabled = self.slot_data.get("deathlink", False)
 
