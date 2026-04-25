@@ -18,6 +18,20 @@ class EnableYouSkips(DefaultOnToggle):
     """
     display_name = "Enable You Skips"
 
+class UpgradeHints(OptionSet):
+    """
+    The type of hints to create when obtaining a character.
+
+    - Vanilla: Hints what item is at the normal upgrade chest
+    - AP: Hints where the upgrade item is located.
+    """
+    display_name = "Upgrade Hints"
+    valid_keys = frozenset({"Vanilla", "AP"})
+    default = frozenset({"Vanilla"})
+    
+    _option_vanilla = "Vanilla"
+    _option_ap = "AP"
+
 yohane_deepblue_option_groups = [
     OptionGroup("Logic Customization", [
         EarlyChikaBlockMoved,
@@ -30,5 +44,8 @@ class YohaneDeepblueOptions(PerGameCommonOptions):
     deathlink: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
+    upgrade_hints: UpgradeHints
+
     earlychikablocksmoved: EarlyChikaBlockMoved
     enableyouskips: EnableYouSkips
+

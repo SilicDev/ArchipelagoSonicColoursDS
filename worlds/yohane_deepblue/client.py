@@ -15,6 +15,7 @@ from Options import Toggle
 from .data import DataMaps, ItemNames, LocationNames
 from .locations import location_table, lookup_id_to_name as location_id_to_name
 from .items import item_table, unique_accessories_table, character_upgrade_table, stackables_set, equips_set, yen_set, lookup_id_to_name as item_id_to_name
+from .options import UpgradeHints
 
 if TYPE_CHECKING:
     import kvui
@@ -237,7 +238,13 @@ class YohaneDeepblueContext(CommonContext):
                         flag = DataMaps.character_quest_flag_map[location]
                         if character_quest_flags & flag != 0 and self.hinted_quest_flags & flag == 0:
                             self.hinted_quest_flags |= flag
-                            await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
+                            if UpgradeHints._option_vanilla in self.slot_data["upgrade_hints"]:
+                                await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
+                            if UpgradeHints._option_ap in self.slot_data["upgrade_hints"]:
+                                item = DataMaps.chest_to_vanilla_content[location]
+                                if not item in self.local_received_items:
+                                    real_location = self.slot_data["upgrades"][item_table[item].code - 1]
+                                    await self.send_msgs([{"cmd": "CreateHints", "player": real_location[0], "locations": [real_location[1]]}])
                     character_quest_flags &= 0xDB6DB6FF # Disable collection flags
 
                     boss_defeated_flags = int(self.game_process.read_uint(main_struct + BOSS_DEFEATED_FLAGS))

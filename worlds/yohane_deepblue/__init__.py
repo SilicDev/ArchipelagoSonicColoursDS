@@ -125,6 +125,12 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
         slot_data = self.options.as_dict(
             "deathlink",
             "earlychikablocksmoved",
-            "enableyouskips"
+            "enableyouskips",
+            "upgrade_hints"
         )
+        upgrades = []
+        for item in character_upgrade_table.keys():
+            location = self.multiworld.find_item(item, self.player)
+            upgrades.append((location.player, location.address))
+        slot_data["upgrades"] = upgrades
         return slot_data
