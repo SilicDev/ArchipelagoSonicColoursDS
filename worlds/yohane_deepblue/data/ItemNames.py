@@ -289,6 +289,15 @@ sphene_earring = "Sphene Earring"
 victory = "Victory"
 boss_token = "Boss Token" # boss check item
 
+progressive_chika_unlock = "Progressive Chika"
+progressive_riko_unlock = "Progressive Riko"
+progressive_kanan_unlock = "Progressive Kanan"
+progressive_dia_unlock = "Progressive Dia"
+progressive_you_unlock = "Progressive You"
+progressive_mari_unlock = "Progressive Mari"
+progressive_hanamaru_unlock = "Progressive Hanamaru"
+progressive_ruby_unlock = "Progressive Ruby"
+
 small_yen = "10000 Yen"
 medium_yen = "25000 Yen"
 big_yen = "50000 Yen"

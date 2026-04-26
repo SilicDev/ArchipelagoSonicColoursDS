@@ -18,6 +18,14 @@ class EnableYouSkips(DefaultOnToggle):
     """
     display_name = "Enable You Skips"
 
+class ProgressiveCharacterUnlocks(Toggle):
+    """
+    If `true` places progressive unlocks for characters and upgrades instead of individual ones.
+    
+    Example: Two items "Progressive Chika" instead of "Chika" and "Katy's Mask"
+    """
+    display_name = "Progressive Character Unlocks"
+
 class UpgradeHints(OptionSet):
     """
     The type of hints to create when obtaining a character.
@@ -44,6 +52,7 @@ class YohaneDeepblueOptions(PerGameCommonOptions):
     deathlink: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
+    progressive_character_unlocks: ProgressiveCharacterUnlocks
     upgrade_hints: UpgradeHints
 
     earlychikablocksmoved: EarlyChikaBlockMoved

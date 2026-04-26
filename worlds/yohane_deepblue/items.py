@@ -314,6 +314,18 @@ token_items = {
     ItemNames.boss_token: ItemData(2000, True),
 }
 
+progressive_character_table: dict[str, ItemData] = {
+    #ItemNames.lailaps_upgrade: ItemData(0, True), # Unused
+    ItemNames.progressive_chika_unlock: ItemData(2101, True),
+    ItemNames.progressive_riko_unlock: ItemData(2102, True),
+    ItemNames.progressive_kanan_unlock: ItemData(2103, True),
+    ItemNames.progressive_hanamaru_unlock: ItemData(2104, True),
+    ItemNames.progressive_ruby_unlock: ItemData(2105, True),
+    ItemNames.progressive_you_unlock: ItemData(2106, True),
+    ItemNames.progressive_dia_unlock: ItemData(2107, True),
+    ItemNames.progressive_mari_unlock: ItemData(2108, True),
+}
+
 bundle_items = {
     ItemNames.small_yen: ItemData(3000, False),
     ItemNames.medium_yen: ItemData(3001, False),
@@ -351,6 +363,7 @@ item_table: dict[str, ItemData] = {
     **unique_accessories_table,
     **character_unlock_table,
     **character_upgrade_table,
+    **progressive_character_table,
     **breakable_material_table,
     **enemy_material_table,
     **rare_material_table,
@@ -365,8 +378,7 @@ lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in
 
 item_groups: dict[str, set[str]] = {
     "Accessories": set(unique_accessories_table.keys()),
-    "Characters": set(character_unlock_table.keys()),
-    "Upgrades": set(character_upgrade_table.keys()),
+    "Characters": set(character_unlock_table.keys() | progressive_character_table.keys()),
+    "Upgrades": set(character_upgrade_table.keys() | progressive_character_table.keys()),
     "Rare Materials": set(rare_material_table.keys()),
-    
 }

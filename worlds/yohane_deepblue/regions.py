@@ -5,7 +5,8 @@ from rule_builder.rules import *
 from worlds.AutoWorld import World
 from Options import Toggle
 from .locations import *
-from .data import LocationNames, ItemNames
+from .items import YohaneDeepblueItem
+from .data import LocationNames, ItemNames, DataMaps
 from .rules import *
 
 def create_regions(world: World, active_locations: dict[str, int]) -> None:
@@ -27,6 +28,11 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     shipwreck_boss_region = create_region(world, LocationNames.shipwreck_boss_region, active_locations, shipwreck_boss_region_locations)
     infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, infernal_altar_region_locations)
     aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, aqours_memoria_region_locations)
+
+    if world.options.progressive_character_unlocks == Toggle.option_true:
+        for item in DataMaps.character_item_to_progressive_map.keys():
+            progressive = DataMaps.character_item_to_progressive_map[item]
+            menu_region.add_event(item, item, Has(progressive[0], progressive[1]), YohaneDeepblueLocation, YohaneDeepblueItem, False)
 
     world.multiworld.regions += [
         menu_region,

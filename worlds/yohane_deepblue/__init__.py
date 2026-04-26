@@ -4,11 +4,13 @@ Archipelago World definition for YOHANE THE PARHELION -BLAZE in the DEEPBLUE-
 import typing
 
 from BaseClasses import Item, ItemClassification, Tutorial
+from Options import Toggle
 from rule_builder.cached_world import CachedRuleBuilderWorld
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, Type, components, launch
 
-from .items import YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, character_upgrade_table, rare_material_table, consumables_table
+from .items import (YohaneDeepblueItem, item_groups, item_table, junk_table, event_table, unique_accessories_table, character_unlock_table, 
+                    character_upgrade_table, rare_material_table, consumables_table, progressive_character_table)
 from .locations import YohaneDeepblueLocation, location_groups, location_table, setup_locations
 from .regions import create_regions, connect_regions
 from .rules import set_rules
@@ -90,11 +92,16 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
         for item in rare_material_table.keys():
             for i in range(rare_material_table[item].quantity):
                 itempool.append(self.create_item(item))
-        for item in character_unlock_table.keys():
-            if item != ItemNames.lailaps_unlock:
+        if self.options.progressive_character_unlocks == Toggle.option_true:
+            for item in progressive_character_table.keys():
                 itempool.append(self.create_item(item))
-        for item in character_upgrade_table.keys():
-            itempool.append(self.create_item(item))
+                itempool.append(self.create_item(item))
+        else:
+            for item in character_unlock_table.keys():
+                if item != ItemNames.lailaps_unlock:
+                    itempool.append(self.create_item(item))
+            for item in character_upgrade_table.keys():
+                itempool.append(self.create_item(item))
         surplus_checks = num_locations_to_fill - len(itempool)
         itempool += [self.create_filler() for _ in range(surplus_checks)]
         self.multiworld.itempool += itempool
@@ -126,7 +133,8 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
             "deathlink",
             "earlychikablocksmoved",
             "enableyouskips",
-            "upgrade_hints"
+            "progressive_character_unlocks",
+            "upgrade_hints",
         )
         upgrades = []
         for item in character_upgrade_table.keys():

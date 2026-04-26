@@ -347,6 +347,12 @@ class YohaneDeepblueContext(CommonContext):
                             self.local_received_items[item_name] = 1
                         else:
                             self.local_received_items[item_name] += 1
+                        if item_name in DataMaps.progressive_to_character_item_map:
+                            items = DataMaps.progressive_to_character_item_map[item_name]
+                            if self.local_received_items[item_name] > 0:
+                                self.local_received_items[items[0]] = 1
+                            if self.local_received_items[item_name] > 1:
+                                self.local_received_items[items[1]] = 1
                         # receive item
                         if new_item:
                             if item_name == ItemNames.musical_score:

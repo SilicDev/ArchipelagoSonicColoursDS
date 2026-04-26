@@ -138,7 +138,7 @@ character_to_upgrade_map = {
     ItemNames.ruby_unlock: ItemNames.ruby_upgrade,
 }
 
-upgrade_to_character_map = {upgrade: character for character, upgrade in character_to_upgrade_map if upgrade is not None}
+upgrade_to_character_map = {upgrade: character for character, upgrade in character_to_upgrade_map.items() if upgrade is not None}
 
 upgrade_item_to_quest_location_map = {
     ItemNames.chika_upgrade: LocationNames.chika_upgrade_quest,
@@ -149,6 +149,36 @@ upgrade_item_to_quest_location_map = {
     ItemNames.mari_upgrade: LocationNames.mari_upgrade_quest,
     ItemNames.hanamaru_upgrade: LocationNames.hanamaru_upgrade_quest,
     ItemNames.ruby_upgrade: LocationNames.ruby_upgrade_quest,
+}
+
+character_item_to_progressive_map = {
+    ItemNames.chika_unlock: (ItemNames.progressive_chika_unlock, 1),
+    ItemNames.chika_upgrade: (ItemNames.progressive_chika_unlock, 2),
+    ItemNames.riko_unlock: (ItemNames.progressive_riko_unlock, 1),
+    ItemNames.riko_upgrade: (ItemNames.progressive_riko_unlock, 2),
+    ItemNames.kanan_unlock: (ItemNames.progressive_kanan_unlock, 1),
+    ItemNames.kanan_upgrade: (ItemNames.progressive_kanan_unlock, 2),
+    ItemNames.hanamaru_unlock: (ItemNames.progressive_hanamaru_unlock, 1),
+    ItemNames.hanamaru_upgrade: (ItemNames.progressive_hanamaru_unlock, 2),
+    ItemNames.ruby_unlock: (ItemNames.progressive_ruby_unlock, 1),
+    ItemNames.ruby_upgrade: (ItemNames.progressive_ruby_unlock, 2),
+    ItemNames.you_unlock: (ItemNames.progressive_you_unlock, 1),
+    ItemNames.you_upgrade: (ItemNames.progressive_you_unlock, 2),
+    ItemNames.dia_unlock: (ItemNames.progressive_dia_unlock, 1),
+    ItemNames.dia_upgrade: (ItemNames.progressive_dia_unlock, 2),
+    ItemNames.mari_unlock: (ItemNames.progressive_mari_unlock, 1),
+    ItemNames.mari_upgrade: (ItemNames.progressive_mari_unlock, 2),
+}
+
+progressive_to_character_item_map = {
+    ItemNames.progressive_chika_unlock: (ItemNames.chika_unlock, ItemNames.chika_upgrade),
+    ItemNames.progressive_riko_unlock: (ItemNames.riko_unlock, ItemNames.riko_upgrade),
+    ItemNames.progressive_kanan_unlock: (ItemNames.kanan_unlock, ItemNames.kanan_upgrade),
+    ItemNames.progressive_hanamaru_unlock: (ItemNames.hanamaru_unlock, ItemNames.hanamaru_upgrade),
+    ItemNames.progressive_ruby_unlock: (ItemNames.ruby_unlock, ItemNames.ruby_upgrade),
+    ItemNames.progressive_you_unlock: (ItemNames.you_unlock, ItemNames.you_upgrade),
+    ItemNames.progressive_dia_unlock: (ItemNames.dia_unlock, ItemNames.dia_upgrade),
+    ItemNames.progressive_mari_unlock: (ItemNames.mari_unlock, ItemNames.mari_upgrade),
 }
 
 character_item_to_quest_map = {
