@@ -234,12 +234,15 @@ sunken_volcano_boss_region_locations = {
     LocationNames.riko_rescue,
 }
 
-shipwreck_region_locations = {
+shipwreck_left_region_locations = {
     LocationNames.really_sealed_off_chest_room_chest,
     LocationNames.spikey_ball_fish_room_chest,
+    LocationNames.postal_guild_bag_room,
+}
+
+shipwreck_center_region_locations = {
     LocationNames.final_guard_room_chest,
     LocationNames.gloves_of_might_room_chest,
-    LocationNames.postal_guild_bag_room,
 }
 
 shipwreck_boss_region_locations = {

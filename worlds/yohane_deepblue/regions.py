@@ -24,7 +24,8 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     sunken_volcano_left_region = create_region(world, LocationNames.sunken_volcano_left_region, active_locations, sunken_volcano_left_region_locations)
     sunken_volcano_main_region = create_region(world, LocationNames.sunken_volcano_main_region, active_locations, sunken_volcano_main_region_locations)
     sunken_volcano_boss_region = create_region(world, LocationNames.sunken_volcano_boss_region, active_locations, sunken_volcano_boss_region_locations)
-    shipwreck_region = create_region(world, LocationNames.shipwreck_region, active_locations, shipwreck_region_locations)
+    shipwreck_left_region = create_region(world, LocationNames.shipwreck_left_region, active_locations, shipwreck_left_region_locations)
+    shipwreck_center_region = create_region(world, LocationNames.shipwreck_center_region, active_locations, shipwreck_center_region_locations)
     shipwreck_boss_region = create_region(world, LocationNames.shipwreck_boss_region, active_locations, shipwreck_boss_region_locations)
     infernal_altar_region = create_region(world, LocationNames.infernal_altar_region, active_locations, infernal_altar_region_locations)
     aqours_memoria_region = create_region(world, LocationNames.aqours_memoria_region, active_locations, aqours_memoria_region_locations)
@@ -49,7 +50,8 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         sunken_volcano_left_region,
         sunken_volcano_main_region,
         sunken_volcano_boss_region,
-        shipwreck_region,
+        shipwreck_left_region,
+        shipwreck_center_region,
         shipwreck_boss_region,
         infernal_altar_region,
         aqours_memoria_region,
@@ -61,7 +63,9 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.sunken_temple_region, LocationNames.grotto_region, 
             Filtered(chika_block_rule, options=chika_blocks_filter, filtered_resolution=True))
     connect(world, LocationNames.grotto_region, LocationNames.coral_hill_region, gloves_rule & (soarshoes_rule | you_rule | dia_rule))
-    connect(world, LocationNames.shipwreck_region, LocationNames.shipwreck_boss_region, gloves_rule)
+    connect(world, LocationNames.grotto_region, LocationNames.shipwreck_left_region, sea_charm_rule & (kanan_rule | riko_rule))
+    connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_center_region, gloves_rule | soarshoes_rule | chika_rule)
+    connect(world, LocationNames.shipwreck_center_region, LocationNames.shipwreck_boss_region, gloves_rule)
     connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
     connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_left_region, hanamaru_rule | you_rule)
     connect(world, LocationNames.sea_of_trees_left_region, LocationNames.sea_of_trees_region, riko_rule, True)
@@ -75,7 +79,6 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.ruins_lower_region, LocationNames.sunken_volcano_main_region, kanan_rule)
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_left_region, None, True)
     connect(world, LocationNames.sunken_volcano_main_region, LocationNames.sunken_volcano_boss_region, you_rule | soarshoes_rule)
-    connect(world, LocationNames.grotto_region, LocationNames.shipwreck_region, sea_charm_rule & (kanan_rule | riko_rule))
     connect(world, LocationNames.sunken_temple_region, LocationNames.infernal_altar_region, boss_token_rule)
     connect(world, LocationNames.infernal_altar_region, LocationNames.aqours_memoria_region, CanReachLocation(LocationNames.infernal_altar_boss_defeated))
     pass
