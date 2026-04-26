@@ -1,5 +1,7 @@
 from . import ItemNames, LocationNames
 
+# TODO: Some of these tables can probably be combined
+
 chest_location_map = {
     LocationNames.cast_tutorial_left_chest: (0x5129F, 0x20),
     LocationNames.case_tutorial_right_chest: (0x5129F, 0x40),
@@ -122,6 +124,31 @@ character_item_flags_map = {
     #ItemNames.hanamaru_upgrade: 0x100000,
     ItemNames.ruby_unlock: 0x200000,
     #ItemNames.ruby_upgrade: 0x400000,
+}
+
+character_to_upgrade_map = {
+    ItemNames.lailaps_unlock: None,
+    ItemNames.chika_unlock: ItemNames.chika_upgrade,
+    ItemNames.riko_unlock: ItemNames.riko_upgrade,
+    ItemNames.kanan_unlock: ItemNames.kanan_upgrade,
+    ItemNames.dia_unlock: ItemNames.dia_upgrade,
+    ItemNames.you_unlock: ItemNames.you_upgrade,
+    ItemNames.mari_unlock: ItemNames.mari_upgrade,
+    ItemNames.hanamaru_unlock: ItemNames.hanamaru_upgrade,
+    ItemNames.ruby_unlock: ItemNames.ruby_upgrade,
+}
+
+upgrade_to_character_map = {upgrade: character for character, upgrade in character_to_upgrade_map if upgrade is not None}
+
+upgrade_item_to_quest_location_map = {
+    ItemNames.chika_upgrade: LocationNames.chika_upgrade_quest,
+    ItemNames.riko_upgrade: LocationNames.riko_upgrade_quest,
+    ItemNames.kanan_upgrade: LocationNames.kanan_upgrade_quest,
+    ItemNames.dia_upgrade: LocationNames.dia_upgrade_quest,
+    ItemNames.you_upgrade: LocationNames.you_upgrade_quest,
+    ItemNames.mari_upgrade: LocationNames.mari_upgrade_quest,
+    ItemNames.hanamaru_upgrade: LocationNames.hanamaru_upgrade_quest,
+    ItemNames.ruby_upgrade: LocationNames.ruby_upgrade_quest,
 }
 
 character_item_to_quest_map = {

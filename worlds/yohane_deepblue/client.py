@@ -257,10 +257,16 @@ class YohaneDeepblueContext(CommonContext):
                     character_unlock_flags = int(self.game_process.read_uint(main_struct + CHARACTER_UNLOCK_FLAGS_OFFSET))
                     character_unlock_flags &= 0xFFD5555F
                     for item in DataMaps.character_item_flags_map:
+                        flag = DataMaps.character_item_flags_map[item]
                         if item in self.local_received_items:
-                            character_unlock_flags |= DataMaps.character_item_flags_map[item]
+                            character_unlock_flags |= flag
                             if item in DataMaps.character_item_to_quest_map.keys():
                                 character_quest_flags |= DataMaps.character_item_to_quest_map[item]
+                        if character_unlock_flags & (flag << 1) != 0:
+                            upgrade = DataMaps.character_to_upgrade_map[item]
+                            if upgrade is not None:
+                                self.queued_locations.append(location_table[DataMaps.upgrade_item_to_quest_location_map[upgrade]])
+
                     self.game_process.write_uint(main_struct + CHARACTER_UNLOCK_FLAGS_OFFSET, character_unlock_flags)
                     self.game_process.write_uint(main_struct + CHARACTER_QUEST_FLAGS_OFFSET, character_quest_flags)
 

@@ -51,6 +51,14 @@ def set_rules(world: World) -> None:
     world.set_rule(world.get_location(LocationNames.mari_rescue), CanReachLocation(LocationNames.crystalline_grotto_boss_defeated))
     world.set_rule(world.get_location(LocationNames.riko_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
     world.set_rule(world.get_location(LocationNames.hanamaru_rescue), CanReachLocation(LocationNames.shipwreck_boss_defeated))
+    world.set_rule(world.get_location(LocationNames.chika_upgrade_quest), Has(ItemNames.chika_upgrade))
+    world.set_rule(world.get_location(LocationNames.kanan_upgrade_quest), Has(ItemNames.kanan_upgrade))
+    world.set_rule(world.get_location(LocationNames.dia_upgrade_quest), Has(ItemNames.dia_upgrade))
+    world.set_rule(world.get_location(LocationNames.ruby_upgrade_quest), Has(ItemNames.ruby_upgrade))
+    world.set_rule(world.get_location(LocationNames.you_upgrade_quest), Has(ItemNames.you_upgrade))
+    world.set_rule(world.get_location(LocationNames.mari_upgrade_quest), Has(ItemNames.mari_upgrade))
+    world.set_rule(world.get_location(LocationNames.riko_upgrade_quest), Has(ItemNames.riko_upgrade))
+    world.set_rule(world.get_location(LocationNames.hanamaru_upgrade_quest), Has(ItemNames.hanamaru_upgrade))
     pass
 
 def set_chest_rules(world: World) -> None:
