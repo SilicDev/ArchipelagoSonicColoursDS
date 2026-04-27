@@ -115,6 +115,8 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
         classification = ItemClassification.filler
         if data.progression:
             classification = ItemClassification.progression
+        elif data.trap:
+            classification = ItemClassification.trap
         elif name in rare_material_table.keys() or name in consumables_table.keys():
             classification = ItemClassification.useful
         item = YohaneDeepblueItem(name, classification, data.code, self.player)

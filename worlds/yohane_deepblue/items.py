@@ -7,6 +7,7 @@ from .data import ItemNames
 class ItemData(typing.NamedTuple):
     code: typing.Optional[int]
     progression: bool
+    trap: bool = False
     quantity: int = 1
 
 class YohaneDeepblueItem(Item):
@@ -26,7 +27,7 @@ character_upgrade_table: dict[str, ItemData] = {
 }
 
 unique_accessories_table: dict[str, ItemData] = {
-    ItemNames.extra_accessory_slot: ItemData(9, True, 2), # also 10
+    ItemNames.extra_accessory_slot: ItemData(9, True, False, 2), # also 10
     ItemNames.fallen_angels_soarshoes: ItemData(11, True),
     ItemNames.gloves_of_might: ItemData(12, True),
     ItemNames.sea_deitys_charm: ItemData(13, True),
@@ -155,17 +156,17 @@ enemy_material_table: dict[str, ItemData] = {
 }
 
 rare_material_table: dict[str, ItemData] = {
-    ItemNames.whale_harp: ItemData(226, False, 2),
+    ItemNames.whale_harp: ItemData(226, False, False, 2),
     ItemNames.shark_rib: ItemData(270, False),
     ItemNames.ichimonji_scabbard: ItemData(284, False),
     ItemNames.ripple_shell: ItemData(311, False),
     ItemNames.world_pinetree_lumber: ItemData(320, False),
     ItemNames.phantom_jewel: ItemData(321, False),
     ItemNames.lunar_grindstone: ItemData(323, False),
-    ItemNames.twinkling_stardust: ItemData(324, False, 2),
-    ItemNames.lucent_matter: ItemData(325, False, 2),
+    ItemNames.twinkling_stardust: ItemData(324, False, False, 2),
+    ItemNames.lucent_matter: ItemData(325, False, False, 2),
     ItemNames.princesss_diary: ItemData(326, False),
-    ItemNames.numazu_star: ItemData(327, False, 3),
+    ItemNames.numazu_star: ItemData(327, False, False, 3),
     ItemNames.torn_collar: ItemData(328, False),
     ItemNames.enchanted_optical_lens: ItemData(329, False),
     ItemNames.lady_of_the_lakes_fin: ItemData(330, False),
