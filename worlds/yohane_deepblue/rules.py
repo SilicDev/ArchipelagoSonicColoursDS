@@ -41,6 +41,7 @@ boss_token_rule = Has(ItemNames.boss_token, 8)
 def set_rules(world: World) -> None:
     set_chest_rules(world)
     world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule)
+    world.set_rule(world.get_location(LocationNames.sunken_volcano_boss_defeated), soarshoes_rule) # remove for hard logic
     world.set_rule(world.get_location(LocationNames.shipwreck_boss_defeated), ruby_rule)
     world.set_rule(world.get_location(LocationNames.infernal_altar_boss_defeated), riko_rule & kanan_rule & hanamaru_rule & gloves_rule & soarshoes_rule)
     world.set_rule(world.get_location(LocationNames.chika_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
