@@ -241,7 +241,7 @@ class YohaneDeepblueContext(CommonContext):
                             if UpgradeHints._option_vanilla in self.slot_data["upgrade_hints"]:
                                 await self.send_msgs([{"cmd": "CreateHints", "locations": [location_table[location]]}])
                             if UpgradeHints._option_ap in self.slot_data["upgrade_hints"]:
-                                item = DataMaps.chest_to_vanilla_content[location]
+                                item = DataMaps.chest_data_map[location].vanilla_item
                                 if not item in self.local_received_items:
                                     real_location = self.slot_data["upgrades"][item_table[item].code - 1]
                                     await self.send_msgs([{"cmd": "CreateHints", "player": real_location[0], "locations": [real_location[1]]}])
@@ -295,23 +295,20 @@ class YohaneDeepblueContext(CommonContext):
                                 self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 0)
 
                     cache: dict[int, int] = {}
-                    for location in DataMaps.chest_location_map.keys():
+                    for location in DataMaps.chest_data_map.keys():
                         if location_table[location] in self.checked_locations:
                             continue
-                        data = DataMaps.chest_location_map[location]
-                        offset = data[0]
-                        mask = data[1]
+                        data = DataMaps.chest_data_map[location]
                         value = 0
-                        if offset in cache:
-                            value = cache[offset]
+                        if data.offset in cache:
+                            value = cache[data.offset]
                         else:
-                            value = int(self.game_process.read_uchar(main_struct + offset))
-                            cache[offset] = value
-                        if value & mask != 0:
+                            value = int(self.game_process.read_uchar(main_struct + data.offset))
+                            cache[data.offset] = value
+                        if value & data.mask != 0:
                             self.queued_locations.append(location_table[location])
-                            vanilla_item = DataMaps.chest_to_vanilla_content[location]
-                            vanilla_item_code = item_table[vanilla_item].code
-                            if vanilla_item in stackables_set and vanilla_item_code is not None:
+                            vanilla_item_code = item_table[data.vanilla_item].code
+                            if data.vanilla_item in stackables_set and vanilla_item_code is not None:
                                 item_offset = INVENTORY_OFFSET + (ITEM_STRUCT_SIZE * vanilla_item_code)
                                 item_count = int(self.game_process.read_uchar(main_struct + item_offset + ITEM_COUNT_OFFSET))
                                 if item_count != 0:
@@ -402,13 +399,11 @@ class YohaneDeepblueContext(CommonContext):
 
                     for new_remotely_cleared_location in self.checked_locations - self.locations_checked:
                         location_name = location_id_to_name[new_remotely_cleared_location]
-                        if location_name in DataMaps.chest_location_map.keys():
-                            data = DataMaps.chest_location_map[location_name]
-                            offset = data[0]
-                            mask = data[1]
-                            value = int(self.game_process.read_uchar(main_struct + offset))
-                            value |= mask
-                            self.game_process.write_uchar(main_struct + offset, value)
+                        if location_name in DataMaps.chest_data_map.keys():
+                            data = DataMaps.chest_data_map[location_name]
+                            value = int(self.game_process.read_uchar(main_struct + data.offset))
+                            value |= data.mask
+                            self.game_process.write_uchar(main_struct + data.offset, value)
                         elif location_name in DataMaps.character_rescue_flag_map.keys():
                             flag = DataMaps.character_rescue_flag_map[location_name]
                             game_progression_flags |= flag

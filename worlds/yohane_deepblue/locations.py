@@ -288,4 +288,18 @@ def setup_locations(world: World, player: int):
 lookup_id_to_name: dict[int, str] = {idx: name for name, idx in location_table.items()}
 
 location_groups: dict[str, set[str]] = {
+    "Bosses": set(boss_fight_locations.keys() | boss_refight_locations.keys()),
+    "Chests": set(chest_locations.keys()),
+    "Rescues": set(character_rescue_locations.keys()),
+    "Upgrade Quests": set(character_upgrade_locations.keys()),
+    "Sunken Temple": sunken_temple_region_locations,
+    "Grotto": grotto_region_locations,
+    "Ruins": ruins_region_locations | ruins_lower_region_locations,
+    "Sunken Volcano": sunken_volcano_left_region_locations | sunken_volcano_main_region_locations | sunken_volcano_boss_region_locations,
+    "Coral Hill": coral_hill_region_locations,
+    "Crystalline Grotto": crystalline_grotto_left_region_locations | crystalline_grotto_main_region_locations | crystalline_grotto_boss_region_locations,
+    "Shipwreck": shipwreck_left_region_locations | shipwreck_center_region_locations | shipwreck_boss_region_locations,
+    "Sea of Trees": sea_of_trees_left_region_locations | sea_of_trees_region_locations,
+    "Infernal Altar": infernal_altar_region_locations,
+    "Aqours Memoria": aqours_memoria_region_locations,
 }

@@ -377,8 +377,14 @@ item_table: dict[str, ItemData] = {
 lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
 
 item_groups: dict[str, set[str]] = {
-    "Accessories": set(unique_accessories_table.keys()),
+    "Movement": set(unique_accessories_table.keys()),
+    "Accessories": set(accessories_table.keys()),
     "Characters": set(character_unlock_table.keys() | progressive_character_table.keys()),
     "Upgrades": set(character_upgrade_table.keys() | progressive_character_table.keys()),
+    "Materials": set(breakable_material_table.keys() | enemy_material_table.keys() | rare_material_table.keys()),
     "Rare Materials": set(rare_material_table.keys()),
+    "Consumables": set(consumables_table.keys()),
+    "Weapons": set(weapons_table.keys()),
+    "Currency": yen_set,
+    "Yen": yen_set,
 }
