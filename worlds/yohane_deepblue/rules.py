@@ -101,8 +101,10 @@ def set_chest_rules(world: World) -> None:
         (CanReachRegion(LocationNames.grotto_region) & ((chika_rule & (kanan_rule | riko_rule)) | soarshoes_rule | gloves_rule))))
     world.set_rule(
         world.get_location(LocationNames.gloves_of_might_room_chest), 
-        (CanReachRegion(LocationNames.grotto_region) & ((you_rule & (kanan_rule | soarshoes_rule | gloves_rule | riko_rule)) | (chika_rule & (kanan_rule | soarshoes_rule | gloves_rule)))) | 
-        (CanReachRegion(LocationNames.coral_hill_region) & (chika_rule | you_rule)))
+        (CanReachRegion(LocationNames.grotto_region) & 
+            ((chika_rule & (kanan_rule | (soarshoes_rule & gloves_rule))) | 
+            (you_rule & ((riko_rule & (soarshoes_rule | gloves_rule) | (soarshoes_rule & gloves_rule)))))
+        ) | (CanReachRegion(LocationNames.coral_hill_region) & (chika_rule | you_rule)))
     world.set_rule(
         world.get_location(LocationNames.postal_guild_bag_room),
         you_rule & 
