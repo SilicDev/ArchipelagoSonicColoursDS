@@ -67,7 +67,7 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_center_region, gloves_rule | soarshoes_rule | chika_rule)
     connect(world, LocationNames.shipwreck_center_region, LocationNames.shipwreck_boss_region, gloves_rule)
     connect(world, LocationNames.coral_hill_region, LocationNames.shipwreck_boss_region, kanan_rule | (upgraded_mari_rule & soarshoes_rule & gloves_rule), True)
-    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_left_region, hanamaru_rule | you_rule)
+    connect(world, LocationNames.shipwreck_boss_region, LocationNames.sea_of_trees_left_region, CanReachLocation(LocationNames.shipwreck_boss_defeated) & (hanamaru_rule | you_rule))
     connect(world, LocationNames.sea_of_trees_left_region, LocationNames.sea_of_trees_region, riko_rule, True)
     connect(world, LocationNames.sea_of_trees_region, LocationNames.sea_of_trees_left_region, riko_rule | kanan_rule, True)
     connect(world, LocationNames.coral_hill_region, LocationNames.crystalline_grotto_left_region, gloves_rule)
