@@ -33,6 +33,7 @@ upgraded_hanamaru_rule = Has(ItemNames.hanamaru_upgrade) & hanamaru_rule
 upgraded_ruby_rule = Has(ItemNames.ruby_upgrade) & ruby_rule
 
 chika_block_rule = chika_rule | upgraded_ruby_rule
+ignore_projectile_rule = ruby_rule | upgraded_you_rule | upgraded_mari_rule
 you_skip_rule = Filtered(you_rule, options=you_enabled_filter, filtered_resolution=False)
 
 big_weapon_rule = HasAny(ItemNames.threaded_blade, ItemNames.shamrock, ItemNames.demon_slayer, ItemNames.claiomh_solais)
@@ -42,7 +43,7 @@ def set_rules(world: World) -> None:
     set_chest_rules(world)
     world.set_rule(world.get_location(LocationNames.grotto_boss_defeated), sea_charm_rule)
     world.set_rule(world.get_location(LocationNames.sunken_volcano_boss_defeated), soarshoes_rule) # remove for hard logic
-    world.set_rule(world.get_location(LocationNames.shipwreck_boss_defeated), ruby_rule)
+    world.set_rule(world.get_location(LocationNames.shipwreck_boss_defeated), ignore_projectile_rule)
     world.set_rule(world.get_location(LocationNames.infernal_altar_boss_defeated), riko_rule & kanan_rule & hanamaru_rule & gloves_rule & soarshoes_rule)
     world.set_rule(world.get_location(LocationNames.chika_rescue), CanReachLocation(LocationNames.sunken_temple_boss_defeated))
     world.set_rule(world.get_location(LocationNames.kanan_rescue), CanReachLocation(LocationNames.ruins_boss_defeated_3))
