@@ -451,7 +451,8 @@ class YohaneDeepblueContext(CommonContext):
                         self.finished_game = True
                 except Exception as e:
                     self.game_connected = False
-                    logger.exception(e)
+                    if self.debug_log:
+                        logger.exception(e)
                 pass # game specific logic
             elif (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
                 logger.info("Connection to the game lost!")
@@ -464,7 +465,7 @@ class YohaneDeepblueContext(CommonContext):
                             self.game_connected = True
                             logger.info("Reconnected!")
                     except Exception as e:
-                            await asyncio.sleep(1)
+                        await asyncio.sleep(1)
                 pass
             else:
                 # server disconnected?
