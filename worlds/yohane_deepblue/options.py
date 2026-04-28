@@ -3,8 +3,9 @@ Option definitions for YOHANE THE PARHELION -BLAZE in the DEEPBLUE-
 """
 from dataclasses import dataclass
 
-from Options import (Choice, DeathLink, DefaultOnToggle, OptionSet, NamedRange, Range, Toggle, FreeText,
+from Options import (Choice, DeathLinkMixin, DefaultOnToggle, OptionSet, NamedRange, Range, Toggle, FreeText,
                      PerGameCommonOptions, OptionGroup, StartInventory, StartInventoryPool, OptionList)
+
 
 class EarlyChikaBlockMoved(DefaultOnToggle):
     """
@@ -12,11 +13,13 @@ class EarlyChikaBlockMoved(DefaultOnToggle):
     """
     display_name = "Move Early Chika Blocks"
 
+
 class EnableYouSkips(DefaultOnToggle):
     """
     If `true` considers using You to fit through 1 tile gaps while in the air in-logic
     """
     display_name = "Enable You Skips"
+
 
 class ProgressiveCharacterUnlocks(Toggle):
     """
@@ -25,6 +28,7 @@ class ProgressiveCharacterUnlocks(Toggle):
     Example: Two items "Progressive Chika" instead of "Chika" and "Katy's Mask"
     """
     display_name = "Progressive Character Unlocks"
+
 
 class UpgradeHints(OptionSet):
     """
@@ -40,6 +44,14 @@ class UpgradeHints(OptionSet):
     _option_vanilla = "Vanilla"
     _option_ap = "AP"
 
+
+class DeathLinkGroup(FreeText):
+    """Death Link only applies to players with an identical Group name.
+    Games that don't support the Group option count as having an empty group name."""
+    display_name = "Death Link Group"
+    rich_text_doc = True
+
+
 yohane_deepblue_option_groups = [
     OptionGroup("Logic Customization", [
         EarlyChikaBlockMoved,
@@ -47,14 +59,19 @@ yohane_deepblue_option_groups = [
     ])
 ]
 
+
 @dataclass
-class YohaneDeepblueOptions(PerGameCommonOptions):
-    deathlink: DeathLink
+class DeathLinkGroupMixin(DeathLinkMixin):
+    death_link_group: DeathLinkGroup
+    
+
+@dataclass
+class YohaneDeepblueOptions(PerGameCommonOptions, DeathLinkGroupMixin):
     start_inventory_from_pool: StartInventoryPool
 
     progressive_character_unlocks: ProgressiveCharacterUnlocks
     upgrade_hints: UpgradeHints
 
-    earlychikablocksmoved: EarlyChikaBlockMoved
-    enableyouskips: EnableYouSkips
+    early_chika_blocks_moved: EarlyChikaBlockMoved
+    enable_you_skips: EnableYouSkips
 

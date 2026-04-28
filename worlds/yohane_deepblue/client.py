@@ -84,6 +84,18 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
         else:
             self.ctx.deathlink_enabled = True
             self.output(f"Death Link turned on")
+
+    async def _cmd_deathlink_group(self, group: str = ""):
+        """Sets Deathlink group"""
+        if group != self.ctx.death_link_group:
+            await self.ctx.update_death_link_group(group)
+            if group == "":
+                self.output(f"Death Link group changed to global default group")
+            else:
+                self.output(f"Death Link group changed to '{group}'")
+        else:
+            self.output(f"Already in Death Link group '{group}'")
+
     
     def _cmd_gamestatus(self):
         """Print information about the game's status"""
@@ -138,6 +150,8 @@ class YohaneDeepblueContext(CommonContext):
 
     deathlink_enabled = False
     can_send_deathlink = False
+    death_link_group: str
+    """Group to use when participating in DeathLink"""
 
     command_processor = YohaneDeepblueCommandProcessor
 
@@ -147,6 +161,7 @@ class YohaneDeepblueContext(CommonContext):
         self.queued_locations = []
         self.local_received_items = {}
         self.slot_data = {}
+        self.death_link_group = ""
 
     async def server_auth(self, password_requested: bool = False) -> None:
         await super().server_auth(password_requested)
@@ -156,7 +171,8 @@ class YohaneDeepblueContext(CommonContext):
     async def game_watcher(self):
         while not self.exit_event.is_set():
             if self.game_connected and self.connection_status == ConnectionStatus.CONNECTED:
-                if (self.deathlink_enabled and "DeathLink" not in self.tags) or (not self.deathlink_enabled and "DeathLink" in self.tags):
+                if (self.deathlink_enabled and f"DeathLink{self.death_link_group}" not in self.tags) or (not self.deathlink_enabled and f"DeathLink{self.death_link_group}" in self.tags):
+                    await self.update_death_link_group(self.death_link_group)
                     await self.update_death_link(self.deathlink_enabled)
                 if self.game_process is None:
                     logger.info("ERROR: Game process was none during main loop! Reconnecting...")
@@ -213,7 +229,7 @@ class YohaneDeepblueContext(CommonContext):
                         self.in_parlor = in_parlor
                     
                     dungeon_flags = int(self.game_process.read_uchar(main_struct + DUNGEON_FLAGS_OFFSET))
-                    if self.slot_data["earlychikablocksmoved"] == Toggle.option_true and dungeon_flags & 0x2 == 0:
+                    if self.slot_data["early_chika_blocks_moved"] == Toggle.option_true and dungeon_flags & 0x2 == 0:
                         if self.debug_log:
                             logger.info("Setting Chika Block flags")
                         dungeon_flags |= 0x2
@@ -453,10 +469,51 @@ class YohaneDeepblueContext(CommonContext):
             self.local_received_items = {}
             self.hinted_quest_flags = 0
             self.locations_checked = set(args["checked_locations"])
-            self.deathlink_enabled = self.slot_data.get("deathlink", False)
+            self.deathlink_enabled = self.slot_data.get("death_link", False)
+            self.death_link_group = self.slot_data.get("death_link_group", "")
 
             self.connection_status = ConnectionStatus.CONNECTED
             self.connect_to_game()
+        elif cmd == "Bounced":
+            tags = args.get("tags", [])
+            # we can skip checking "DeathLink" in ctx.tags, as otherwise we wouldn't have been send this
+            if f"DeathLink{self.death_link_group}" in tags and self.last_death_link != args["data"]["time"]:
+                self.on_deathlink(args["data"])
+    
+    async def send_death(self, death_text: str = ""):
+        """Helper function to send a deathlink using death_text as the unique death cause string."""
+        if self.server and self.server.socket:
+            logger.info("DeathLink: Sending death to your friends...")
+            self.last_death_link = time.time()
+            await self.send_msgs([{
+                "cmd": "Bounce", "tags": [f"DeathLink{self.death_link_group}"],
+                "data": {
+                    "time": self.last_death_link,
+                    "source": self.player_names[self.slot],
+                    "cause": death_text
+                }
+            }])
+    
+    async def update_death_link(self, death_link: bool):
+        """Helper function to set Death Link connection tag on/off and update the connection if already connected."""
+        old_tags = self.tags.copy()
+        if death_link:
+            self.tags.add(f"DeathLink{self.death_link_group}")
+        else:
+            self.tags -= {f"DeathLink{self.death_link_group}"}
+        if old_tags != self.tags and self.server and not self.server.socket.closed:
+            await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
+
+    async def update_death_link_group(self, group_name: str):
+        """Helper function to change the Death Link group, updating the connection tag as needed if already connected."""
+        death_link: bool = f"DeathLink{self.death_link_group}" in self.tags
+        if death_link:
+            self.tags -= {f"DeathLink{self.death_link_group}"}
+        self.death_link_group = group_name
+        if death_link:
+            self.tags.add(f"DeathLink{self.death_link_group}")
+            if self.server and not self.server.socket.closed:
+                await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
     
     def on_deathlink(self, data: Dict[str, Any]) -> None:
         if self.game_process is not None:

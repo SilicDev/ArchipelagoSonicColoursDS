@@ -128,13 +128,14 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
     
     def get_filler_item_name(self) -> str:
         junk_items = list(junk_table)
-        return self.multiworld.random.choice(junk_items)
+        return self.random.choice(junk_items)
     
     def fill_slot_data(self) -> dict[str, typing.Any]:
         slot_data = self.options.as_dict(
-            "deathlink",
-            "earlychikablocksmoved",
-            "enableyouskips",
+            "death_link",
+            "death_link_group",
+            "early_chika_blocks_moved",
+            "enable_you_skips",
             "progressive_character_unlocks",
             "upgrade_hints",
         )
