@@ -67,7 +67,7 @@ def set_chest_rules(world: World) -> None:
     # Sunken Temple
     world.set_rule(world.get_location(LocationNames.fishy_archery_chest), gloves_rule | soarshoes_rule)
     world.set_rule(world.get_location(LocationNames.katys_mask_room_chest), chika_rule & (you_skip_rule | (soarshoes_rule & chika_block_rule)))
-    world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule)
+    world.set_rule(world.get_location(LocationNames.chika_testing_grounds_chest), you_rule & Filtered(chika_block_rule, options=chika_blocks_filter, filtered_resolution=True))
 
     # Grotto
     world.set_rule(world.get_location(LocationNames.first_lake_room_chest), sea_charm_rule)

@@ -310,6 +310,8 @@ class YohaneDeepblueContext(CommonContext):
                                         self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET + ITEM_STRUCT_SIZE, 0)
                             else:
                                 self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET, 0)
+                                if item == ItemNames.extra_accessory_slot:
+                                    self.game_process.write_uchar(main_struct + offset + ITEM_COUNT_OFFSET + ITEM_STRUCT_SIZE, 0)
 
                     cache: dict[int, int] = {}
                     for location in DataMaps.chest_data_map.keys():
