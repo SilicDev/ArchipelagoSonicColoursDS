@@ -28,6 +28,7 @@ components.append(
         game_name="YOHANE THE PARHELION -BLAZE in the DEEPBLUE-",
         component_type=Type.CLIENT,
         supports_uri=True,
+        description="Yohane BiD Client",
     )
 )
 

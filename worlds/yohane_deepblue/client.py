@@ -552,6 +552,19 @@ class YohaneDeepblueContext(CommonContext):
         self.locations_checked = set()
         self.connection_status = ConnectionStatus.NOT_CONNECTED
         return await super().connection_closed()
+
+    def run_gui(self):
+        """Import kivy UI system and start running it as self.ui_task."""
+        from kvui import GameManager
+
+        class YohaneDeepblueManager(GameManager):
+            logging_pairs = [
+                ("Client", "Archipelago")
+            ]
+            base_title = "Archipelago Yohane BiD Client"
+
+        self.ui = YohaneDeepblueManager(self)
+        self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
     
     def connect_to_game(self) -> None:
         try:
@@ -572,7 +585,7 @@ class YohaneDeepblueContext(CommonContext):
 
 
 def launch_client(*args: Sequence[str]) -> None:
-    parser = get_base_parser()
+    parser = get_base_parser(description="Yohane BiD Client")
     parser.add_argument("--name", default=None, help="Slot Name to connect as.")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
 
