@@ -451,10 +451,15 @@ class YohaneDeepblueContext(CommonContext):
                     if (in_credits != 0 or game_flags & 0x1 != 0) and not self.finished_game:
                         await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                         self.finished_game = True
-                except Exception as e:
+                except (pymem.exception.MemoryReadError, pymem.exception.ProcessError) as me:
                     self.game_connected = False
                     if self.debug_log:
-                        logger.exception(e)
+                        logger.exception(me)
+                except Exception as e:
+                    self.game_connected = False
+                    logger.exception(e)
+                    logger.error("Unexpected client error!\nThis may be due to a host and client APWorld version mismatch.")
+                    await asyncio.sleep(5)
                 pass # game specific logic
             elif (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
                 logger.info("Connection to the game lost!")
