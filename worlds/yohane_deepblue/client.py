@@ -147,7 +147,7 @@ class YohaneDeepblueContext(CommonContext):
 
     stored_musical_scores = 0
 
-    debug_log = True
+    debug_log = False
 
     deathlink_enabled = False
     can_send_deathlink = False
