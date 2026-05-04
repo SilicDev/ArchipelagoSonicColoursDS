@@ -261,7 +261,8 @@ class YohaneDeepblueContext(CommonContext):
                                 item = DataMaps.chest_data_map[location].vanilla_item
                                 if not item in self.local_received_items:
                                     real_location = self.slot_data["upgrades"][item_table[item].code - 1]
-                                    await self.send_msgs([{"cmd": "CreateHints", "player": real_location[0], "locations": [real_location[1]]}])
+                                    if real_location[1] is not None:
+                                        await self.send_msgs([{"cmd": "CreateHints", "player": real_location[0], "locations": [real_location[1]]}])
                     character_quest_flags &= 0xDB6DB6FF # Disable collection flags
 
                     boss_defeated_flags = int(self.game_process.read_uint(main_struct + BOSS_DEFEATED_FLAGS))
