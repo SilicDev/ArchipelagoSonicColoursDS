@@ -14,8 +14,8 @@ What you'll need:
  * Matching C compiler
    * possibly optional, read operating system specific sections
 
-If you intend to make your own APWorld, it is highly recommended to fork the repository and make your own branch for it for 
-easier updates from the main repository. For more information on how to use Git see [Git](#optional-git).
+If you intend to make your own APWorld, it is highly recommended to fork the repository and make your own branch for 
+easier updates from the main repository. For more information on how to use Git see [Optional: Git](#optional-git).
 
 Then run any of the starting point scripts, like Generate.py, and the included ModuleUpdater should prompt to install or update the
 required modules and after pressing enter proceed to install everything automatically.
