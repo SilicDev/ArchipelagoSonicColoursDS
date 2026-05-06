@@ -52,6 +52,18 @@ class DeathLinkGroup(FreeText):
     rich_text_doc = True
 
 
+class DamageLink(Toggle):
+    """When you take damage, everyone who enabled damage link also takes damage. Of course, the reverse is true too."""
+    display_name = "Damage Link"
+
+
+class DamageLinkGroup(FreeText):
+    """Damage Link only applies to players with an identical Group name.
+    Games that don't support the Group option count as having an empty group name."""
+    display_name = "Damage Link Group"
+    rich_text_doc = True
+
+
 yohane_deepblue_option_groups = [
     OptionGroup("Logic Customization", [
         EarlyChikaBlockMoved,
@@ -63,10 +75,20 @@ yohane_deepblue_option_groups = [
 @dataclass
 class DeathLinkGroupMixin(DeathLinkMixin):
     death_link_group: DeathLinkGroup
+
+
+@dataclass
+class DamageLinkMixin:
+    damage_link: DamageLink
+
+
+@dataclass
+class DamageLinkGroupMixin(DamageLinkMixin):
+    damage_link_group: DamageLinkGroup
     
 
 @dataclass
-class YohaneDeepblueOptions(PerGameCommonOptions, DeathLinkGroupMixin):
+class YohaneDeepblueOptions(PerGameCommonOptions, DeathLinkGroupMixin, DamageLinkGroupMixin):
     start_inventory_from_pool: StartInventoryPool
 
     progressive_character_unlocks: ProgressiveCharacterUnlocks

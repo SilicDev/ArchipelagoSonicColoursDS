@@ -135,6 +135,8 @@ class YohaneDeepblueWorld(CachedRuleBuilderWorld):
         slot_data = self.options.as_dict(
             "death_link",
             "death_link_group",
+            "damage_link",
+            "damage_link_group",
             "early_chika_blocks_moved",
             "enable_you_skips",
             "progressive_character_unlocks",

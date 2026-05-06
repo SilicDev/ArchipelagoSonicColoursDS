@@ -1,10 +1,14 @@
 import asyncio
+import ctypes
 import enum
 from argparse import Namespace
 import time
 from typing import TYPE_CHECKING, Any, Dict
 from collections.abc import Sequence
 
+import Utils
+
+from .pymem_ex import pymem_ex
 from pymem import pymem
 import colorama
 from CommonClient import ClientCommandProcessor, CommonContext, logger, get_base_parser, handle_url_arg, server_loop
@@ -49,6 +53,13 @@ OFFSET_AREA_RELOAD = 0xCD
 OFFSET_IN_CREDITS = 0xCE
 OFFSET_INGAME_TIME = 0x238
 OFFSET_IS_DEAD = 0x360
+
+THREADSTACK0_KEY = 0x7ffaa2d7e8d7
+YOHANE_PTR = [-0xFE8, 0x148, 0x8, 0x10, 0x28, 0x58]
+CURRENT_HP_OFFSET = 0x28
+MAX_HP_OFFSET = 0x2C
+CURRENT_DP_OFFSET = 0x30
+MAX_DP_OFFSET = 0x34
 
 class ConnectionStatus(enum.IntEnum):
     NOT_CONNECTED = 1
@@ -97,6 +108,25 @@ class YohaneDeepblueCommandProcessor(ClientCommandProcessor):
         else:
             self.output(f"Already in Death Link group '{group}'")
 
+    def _cmd_damagelink(self):
+        """Toggles Damagelink"""
+        if self.ctx.damagelink_enabled:
+            self.ctx.damagelink_enabled = False
+            self.output(f"Damage Link turned off")
+        else:
+            self.ctx.damagelink_enabled = True
+            self.output(f"Damage Link turned on")
+
+    async def _cmd_damagelink_group(self, group: str = ""):
+        """Sets Damagelink group"""
+        if group != self.ctx.damage_link_group:
+            await self.ctx.update_damage_link_group(group)
+            if group == "":
+                self.output(f"Damage Link group changed to global default group")
+            else:
+                self.output(f"Damage Link group changed to '{group}'")
+        else:
+            self.output(f"Already in Damage Link group '{group}'")
     
     def _cmd_gamestatus(self):
         """Print information about the game's status"""
@@ -147,12 +177,22 @@ class YohaneDeepblueContext(CommonContext):
 
     stored_musical_scores = 0
 
+    threadstack0: int = -1
+    yohane_pointer: int = -1 # the pointer is unstable so we cache it
+    last_health: int = 0
+    last_max_health: int = 0
+
     debug_log = False
 
     deathlink_enabled = False
     can_send_deathlink = False
     death_link_group: str
     """Group to use when participating in DeathLink"""
+    damagelink_enabled = False
+    can_send_damagelink = False
+    damage_link_group: str
+    """Group to use when participating in DamageLink"""
+    last_damage_link: float = time.time()
 
     command_processor = YohaneDeepblueCommandProcessor
 
@@ -163,6 +203,7 @@ class YohaneDeepblueContext(CommonContext):
         self.local_received_items = {}
         self.slot_data = {}
         self.death_link_group = ""
+        self.damage_link_group = ""
 
     async def server_auth(self, password_requested: bool = False) -> None:
         await super().server_auth(password_requested)
@@ -175,6 +216,9 @@ class YohaneDeepblueContext(CommonContext):
                 if (self.deathlink_enabled and f"DeathLink{self.death_link_group}" not in self.tags) or (not self.deathlink_enabled and f"DeathLink{self.death_link_group}" in self.tags):
                     await self.update_death_link_group(self.death_link_group)
                     await self.update_death_link(self.deathlink_enabled)
+                if (self.damagelink_enabled and f"SharedDamage{self.damage_link_group}" not in self.tags) or (not self.damagelink_enabled and f"SharedDamage{self.damage_link_group}" in self.tags):
+                    await self.update_damage_link_group(self.damage_link_group)
+                    await self.update_damage_link(self.damagelink_enabled)
                 if self.game_process is None:
                     logger.info("ERROR: Game process was none during main loop! Reconnecting...")
                     self.game_connected = False
@@ -200,6 +244,35 @@ class YohaneDeepblueContext(CommonContext):
                             await self.send_death()
                             self.can_send_deathlink = False
                     
+                    try:
+                        main_thread = self.game_process.main_thread
+                        for i in range(main_thread._query_teb().NtTib.StackBase - 8, main_thread._query_teb().NtTib.StackLimit, -8):
+                            try:
+                                value = int(self.game_process.read_ulonglong(i))
+                                if value == THREADSTACK0_KEY:
+                                    self.threadstack0 = i
+                                    break
+                            except Exception as e:
+                                pass
+                        if self.threadstack0 >= 0:
+                            self.yohane_pointer = _resolve_pointer(self, self.threadstack0, YOHANE_PTR)
+                    except Exception as e:
+                        #logger.info(e)
+                        pass
+                    if self.yohane_pointer >= 0:
+                        try:
+                            health = int(self.game_process.read_ulong(self.yohane_pointer + CURRENT_HP_OFFSET))
+                            max_health = int(self.game_process.read_ulong(self.yohane_pointer + MAX_HP_OFFSET))
+                            if health < self.last_health and max_health == self.last_max_health and self.can_send_damagelink:
+                                await self.send_damage(self.last_health - health)
+                                self.can_send_damagelink = False
+                            else:
+                                self.can_send_damagelink = True
+                            self.last_health = health
+                            self.last_max_health = max_health
+                        except:
+                            pass
+
                     main_struct = self.get_base_address(MAIN_BASE_OFFSET)
                     if main_struct == -1:
                         logger.info("ERROR: Couldn't find main data struct!")
@@ -468,7 +541,7 @@ class YohaneDeepblueContext(CommonContext):
                 self.game_process = None
                 while (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
                     try:
-                        self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
+                        self.game_process = pymem_ex.PymemEX(process_name="game.exe", exact_match=True)
                         if self.game_process is not None:
                             self.game_connected = True
                             logger.info("Reconnected!")
@@ -494,6 +567,8 @@ class YohaneDeepblueContext(CommonContext):
             self.locations_checked = set(args["checked_locations"])
             self.deathlink_enabled = self.slot_data.get("death_link", False)
             self.death_link_group = self.slot_data.get("death_link_group", "")
+            self.deathlink_enabled = self.slot_data.get("death_link", False)
+            self.death_link_group = self.slot_data.get("death_link_group", "")
 
             self.connection_status = ConnectionStatus.CONNECTED
             self.connect_to_game()
@@ -502,6 +577,9 @@ class YohaneDeepblueContext(CommonContext):
             # we can skip checking "DeathLink" in ctx.tags, as otherwise we wouldn't have been send this
             if f"DeathLink{self.death_link_group}" in tags and self.last_death_link != args["data"]["time"]:
                 self.on_deathlink(args["data"])
+            # we can skip checking "SharedDamage" in ctx.tags, as otherwise we wouldn't have been send this
+            if f"SharedDamage{self.damage_link_group}" in tags and self.last_damage_link != args["data"]["time"]:
+                self.on_damagelink(args["data"])
     
     async def send_death(self, death_text: str = ""):
         """Helper function to send a deathlink using death_text as the unique death cause string."""
@@ -546,6 +624,52 @@ class YohaneDeepblueContext(CommonContext):
             self.game_process.write_uchar(flags_struct + OFFSET_AREA_RELOAD, 1)
             self.can_send_deathlink = False
         return super().on_deathlink(data)
+    
+    async def send_damage(self, damage: int, damage_text: str = ""):
+        """Helper function to send a damagelink using damage_text as the unique damage cause string."""
+        if self.server and self.server.socket:
+            logger.info(f"DamageLink: Sending {damage} damage to your friends...")
+            self.last_damage_link = time.time()
+            await self.send_msgs([{
+                "cmd": "Bounce", "tags": [f"SharedDamage{self.damage_link_group}"],
+                "data": {
+                    "time": time.time(),
+                    "uuid": Utils.get_unique_identifier(),
+                    "source": self.player_names[self.slot],
+                    "damage_points": damage,
+                    "cause": damage_text
+                },
+            }])
+    
+    async def update_damage_link(self, damage_link: bool):
+        """Helper function to set Damage Link connection tag on/off and update the connection if already connected."""
+        old_tags = self.tags.copy()
+        if damage_link:
+            self.tags.add(f"SharedDamage{self.damage_link_group}")
+        else:
+            self.tags -= {f"SharedDamage{self.damage_link_group}"}
+        if old_tags != self.tags and self.server and not self.server.socket.closed:
+            await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
+
+    async def update_damage_link_group(self, group_name: str):
+        """Helper function to change the Damage Link group, updating the connection tag as needed if already connected."""
+        damage_link: bool = f"SharedDamage{self.damage_link_group}" in self.tags
+        if damage_link:
+            self.tags -= {f"SharedDamage{self.damage_link_group}"}
+        self.damage_link_group = group_name
+        if damage_link:
+            self.tags.add(f"SharedDamage{self.damage_link_group}")
+            if self.server and not self.server.socket.closed:
+                await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
+    
+    def on_damagelink(self, data: Dict[str, Any]) -> None:
+        if self.game_process is not None:
+            text = data.get("cause", "") # for ingame display
+            damage = data.get("damage_points", 0)
+            health = int(self.game_process.read_ulong(self.yohane_pointer + CURRENT_HP_OFFSET))
+            health = max(0, health - damage)
+            self.game_process.write_ulong(self.yohane_pointer + CURRENT_HP_OFFSET, health)
+            self.can_send_damagelink = False
 
     async def disconnect(self, *args: Any, **kwargs: Any) -> None:
         self.game_connected = False
@@ -574,7 +698,7 @@ class YohaneDeepblueContext(CommonContext):
     
     def connect_to_game(self) -> None:
         try:
-            self.game_process = pymem.Pymem(process_name="game.exe", exact_match=True)
+            self.game_process = pymem_ex.PymemEX(process_name="game.exe", exact_match=True)
             if self.game_process is not None:
                 self.game_connected = True
                 logger.info("Successfully connected to %s.", self.game)
@@ -619,10 +743,7 @@ async def main(args: Namespace) -> None:
 def _read_address(ctx: YohaneDeepblueContext, address: int) -> int:
     if not ctx.game_connected or ctx.game_process is None:
         raise Exception("Must be connected to the game!")
-    if ctx.game_process.is_64_bit:
-        return int(ctx.game_process.read_longlong(address))
-    else:
-        return int(ctx.game_process.read_long(address))
+    return int(ctx.game_process.read_ctype(address, ctypes.c_void_p()))
 
 def _resolve_pointer(ctx: YohaneDeepblueContext, base_address: int, pointer: list[int]) -> int:
     if not ctx.game_connected or ctx.game_process is None:
@@ -632,6 +753,5 @@ def _resolve_pointer(ctx: YohaneDeepblueContext, base_address: int, pointer: lis
         try:
             address = _read_address(ctx, address + offset)
         except Exception as e:
-            logger.info("Failed to read value at address %x + %x", address, offset)
             return -1
     return address
