@@ -94,6 +94,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
     shipwreck_left_region = create_region(world, LocationNames.shipwreck_left_region, active_locations, shipwreck_left_region_locations)
     shipwreck_left_mast_region = create_region(world, LocationNames.shipwreck_left_mast_region, active_locations, shipwreck_left_mast_region_locations)
     shipwreck_main_region = create_region(world, LocationNames.shipwreck_main_region, active_locations, shipwreck_main_region_locations)
+    shipwreck_bottom_region = create_region(world, LocationNames.shipwreck_bottom_region, active_locations, shipwreck_bottom_region_locations)
     shipwreck_sealed_off_chest_region = create_region(world, LocationNames.shipwreck_sealed_off_chest_region, active_locations, shipwreck_sealed_off_chest_region_locations)
     shipwreck_postal_guild_bag_region = create_region(world, LocationNames.shipwreck_postal_guild_bag_region, active_locations, shipwreck_postal_guild_bag_region_locations)
     shipwreck_gloves_region = create_region(world, LocationNames.shipwreck_gloves_region, active_locations, shipwreck_gloves_region_locations)
@@ -195,6 +196,7 @@ def create_regions(world: World, active_locations: dict[str, int]) -> None:
         shipwreck_left_region,
         shipwreck_left_mast_region,
         shipwreck_main_region,
+        shipwreck_bottom_region,
         shipwreck_sealed_off_chest_region,
         shipwreck_postal_guild_bag_region,
         shipwreck_gloves_region,
@@ -240,16 +242,18 @@ def connect_regions(world: World) -> None:
     connect(world, LocationNames.ruins_post_boss_3_region, LocationNames.sunken_volcano_top_region, None)
 
     connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_left_mast_region, soarshoes_rule | gloves_rule, True)
-    connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_main_region, kanan_rule)
+    connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_bottom_region, kanan_rule)
     connect(world, LocationNames.shipwreck_left_region, LocationNames.shipwreck_sealed_off_chest_region, you_skip_rule, True)
     connect(world, LocationNames.shipwreck_sealed_off_chest_region, LocationNames.shipwreck_left_region, None, True)
     connect(world, LocationNames.shipwreck_left_mast_region, LocationNames.shipwreck_left_region, None, True)
     connect(world, LocationNames.shipwreck_left_mast_region, LocationNames.shipwreck_main_region, None, True)
     connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_left_mast_region, gloves_rule, True)
-    connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_postal_guild_bag_region, 
+    connect(world, LocationNames.shipwreck_bottom_region, LocationNames.shipwreck_postal_guild_bag_region, 
             (you_skip_rule & kanan_rule & gloves_rule & soarshoes_rule) | (chika_block_rule & upgraded_mari_rule), True)
-    connect(world, LocationNames.shipwreck_postal_guild_bag_region, LocationNames.shipwreck_main_region, kanan_rule | upgraded_mari_rule, True)
-    connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_sealed_off_chest_region, riko_rule)
+    connect(world, LocationNames.shipwreck_postal_guild_bag_region, LocationNames.shipwreck_bottom_region, kanan_rule | upgraded_mari_rule, True)
+    connect(world, LocationNames.shipwreck_bottom_region, LocationNames.shipwreck_sealed_off_chest_region, riko_rule)
+    connect(world, LocationNames.shipwreck_bottom_region, LocationNames.shipwreck_main_region, chika_rule | soarshoes_rule | gloves_rule, True)
+    connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_bottom_region, None, True)
     connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_gloves_region, None, True)
     connect(world, LocationNames.shipwreck_main_region, LocationNames.shipwreck_top_gloves_region, you_skip_rule & (soarshoes_rule | gloves_rule), True)
     connect(world, LocationNames.shipwreck_top_gloves_region, LocationNames.shipwreck_main_region, None, True)
