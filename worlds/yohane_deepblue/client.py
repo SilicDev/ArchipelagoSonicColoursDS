@@ -8,7 +8,7 @@ from collections.abc import Sequence
 
 import Utils
 
-from .pymem_ex import pymem_ex
+from .pymem_ex import PymemEX
 from pymem import pymem
 import colorama
 from CommonClient import ClientCommandProcessor, CommonContext, logger, get_base_parser, handle_url_arg, server_loop
@@ -54,7 +54,6 @@ OFFSET_IN_CREDITS = 0xCE
 OFFSET_INGAME_TIME = 0x238
 OFFSET_IS_DEAD = 0x360
 
-THREADSTACK0_KEY = 0x7ffaa2d7e8d7
 YOHANE_PTR = [-0xFE8, 0x148, 0x8, 0x10, 0x28, 0x58]
 CURRENT_HP_OFFSET = 0x28
 MAX_HP_OFFSET = 0x2C
@@ -177,6 +176,7 @@ class YohaneDeepblueContext(CommonContext):
 
     stored_musical_scores = 0
 
+    kernel32: pymem.ressources.structure.MODULEINFO | None
     threadstack0: int = -1
     yohane_pointer: int = -1 # the pointer is unstable so we cache it
     last_health: int = 0
@@ -204,6 +204,7 @@ class YohaneDeepblueContext(CommonContext):
         self.slot_data = {}
         self.death_link_group = ""
         self.damage_link_group = ""
+        self.kernel32 = None
 
     async def server_auth(self, password_requested: bool = False) -> None:
         await super().server_auth(password_requested)
@@ -244,21 +245,24 @@ class YohaneDeepblueContext(CommonContext):
                             await self.send_death()
                             self.can_send_deathlink = False
                     
-                    try:
-                        main_thread = self.game_process.main_thread
-                        for i in range(main_thread._query_teb().NtTib.StackBase - 8, main_thread._query_teb().NtTib.StackLimit, -8):
-                            try:
-                                value = int(self.game_process.read_ulonglong(i))
-                                if value == THREADSTACK0_KEY:
-                                    self.threadstack0 = i
-                                    break
-                            except Exception as e:
-                                pass
-                        if self.threadstack0 >= 0:
-                            self.yohane_pointer = _resolve_pointer(self, self.threadstack0, YOHANE_PTR)
-                    except Exception as e:
-                        #logger.info(e)
-                        pass
+                    if self.kernel32 is None:
+                        self.kernel32 = pymem.process.module_from_name(self.game_process.process_handle, "kernel32.dll")
+                    if self.kernel32 is not None:
+                        try:
+                            main_thread = self.game_process.main_thread
+                            for i in range(main_thread._query_teb().NtTib.StackBase - 8, main_thread._query_teb().NtTib.StackLimit, -8):
+                                try:
+                                    value = int(self.game_process.read_ulonglong(i))
+                                    if value > self.kernel32.lpBaseOfDll and value < self.kernel32.lpBaseOfDll + self.kernel32.SizeOfImage:
+                                        self.threadstack0 = i
+                                        break
+                                except Exception as e:
+                                    pass
+                            if self.threadstack0 >= 0:
+                                self.yohane_pointer = _resolve_pointer(self, self.threadstack0, YOHANE_PTR)
+                        except Exception as e:
+                            #logger.info(e)
+                            pass
                     if self.yohane_pointer >= 0:
                         try:
                             health = int(self.game_process.read_ulong(self.yohane_pointer + CURRENT_HP_OFFSET))
@@ -541,7 +545,7 @@ class YohaneDeepblueContext(CommonContext):
                 self.game_process = None
                 while (not self.game_connected or self.game_process is None) and self.connection_status == ConnectionStatus.CONNECTED:
                     try:
-                        self.game_process = pymem_ex.PymemEX(process_name="game.exe", exact_match=True)
+                        self.game_process = PymemEX(process_name="game.exe", exact_match=True)
                         if self.game_process is not None:
                             self.game_connected = True
                             logger.info("Reconnected!")
@@ -666,10 +670,13 @@ class YohaneDeepblueContext(CommonContext):
         if self.game_process is not None:
             text = data.get("cause", "") # for ingame display
             damage = data.get("damage_points", 0)
-            health = int(self.game_process.read_ulong(self.yohane_pointer + CURRENT_HP_OFFSET))
-            health = max(0, health - damage)
-            self.game_process.write_ulong(self.yohane_pointer + CURRENT_HP_OFFSET, health)
-            self.can_send_damagelink = False
+            try:
+                health = int(self.game_process.read_ulong(self.yohane_pointer + CURRENT_HP_OFFSET))
+                health = max(0, health - damage)
+                self.game_process.write_ulong(self.yohane_pointer + CURRENT_HP_OFFSET, health)
+                self.can_send_damagelink = False
+            except (pymem.exception.MemoryReadError, pymem.exception.ProcessError) as me:
+                pass
 
     async def disconnect(self, *args: Any, **kwargs: Any) -> None:
         self.game_connected = False
@@ -698,7 +705,7 @@ class YohaneDeepblueContext(CommonContext):
     
     def connect_to_game(self) -> None:
         try:
-            self.game_process = pymem_ex.PymemEX(process_name="game.exe", exact_match=True)
+            self.game_process = PymemEX(process_name="game.exe", exact_match=True)
             if self.game_process is not None:
                 self.game_connected = True
                 logger.info("Successfully connected to %s.", self.game)
