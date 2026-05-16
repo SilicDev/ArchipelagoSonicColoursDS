@@ -80,13 +80,22 @@ class AssembleOptions(abc.ABCMeta):
     def __new__(mcs, name, bases, attrs):
         options = attrs["options"] = {}
         name_lookup = attrs["name_lookup"] = {}
+        options_visibilities = attrs["options_visibilities"] = {}
         # merge parent class options
         for base in bases:
             if getattr(base, "options", None):
                 options.update(base.options)
+                options_visibilities.update(base.options_visibilities)
                 name_lookup.update(base.name_lookup)
         new_options = {name[7:].lower(): option_id for name, option_id in attrs.items() if
                        name.startswith("option_")}
+        for option in new_options.keys():
+            value = new_options[option]
+            if isinstance(value, OptionValue):
+                options_visibilities[value.value] = value.visibility
+                new_options[option] = value.value
+            else:
+                options_visibilities[value] = Visibility.all
 
         assert "random" not in new_options, "Choice option 'random' cannot be manually assigned."
         assert len(new_options) == len(set(new_options.values())), "same ID cannot be used twice. Try alias?"
@@ -155,6 +164,11 @@ class AssembleOptions(abc.ABCMeta):
 T = typing.TypeVar('T')
 
 
+class OptionValue(typing.Generic[T], typing.NamedTuple):
+    value: T
+    visibility: Visibility = Visibility.all
+
+
 class Option(typing.Generic[T], metaclass=AssembleOptions):
     value: T
     default: typing.ClassVar[typing.Any]  # something that __init__ will be able to convert to the correct type
@@ -188,6 +202,7 @@ class Option(typing.Generic[T], metaclass=AssembleOptions):
     name_lookup: typing.ClassVar[typing.Dict[T, str]]  # type: ignore
     # https://github.com/python/typing/discussions/1460 the reason for this type: ignore
     options: typing.ClassVar[typing.Dict[str, int]]
+    options_visibilities: typing.ClassVar[typing.Dict[int, Visibility]]
     aliases: typing.ClassVar[typing.Dict[str, int]]
 
     def __repr__(self) -> str:
@@ -1872,6 +1887,7 @@ def generate_yaml_templates(target_folder: typing.Union[str, "pathlib.Path"], ge
                         cleandoc=cleandoc,
                         preset_name=name,
                         preset=preset,
+                        option_visible=lambda id,option: option.options_visibilities.get(id, Visibility.all) & Visibility.template != 0
                     )
                     preset_name = f" - {name}" if name else ""
                     with open(os.path.join(preset_folder if name else target_folder,

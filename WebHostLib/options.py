@@ -42,6 +42,7 @@ def render_options_page(template: str, world_name: str, is_complex: bool = False
         issubclass=issubclass,
         Options=Options,
         theme=get_world_theme(world_name),
+        option_visible=lambda id,option: option.options_visibilities.get(id, Options.Visibility.all) & visibility_flag != 0
     )
 
 
