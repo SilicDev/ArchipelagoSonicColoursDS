@@ -1864,6 +1864,9 @@ def generate_yaml_templates(target_folder: typing.Union[str, "pathlib.Path"], ge
     def yaml_dump_scalar(scalar) -> str:
         # yaml dump may add end of document marker and newlines.
         return yaml.dump(scalar).replace("...\n", "").strip()
+    
+    def visible(id: int, option: type[Option[typing.Any]]) -> bool:
+        return option.options_visibilities.get(id, Visibility.all) & Visibility.template != 0
 
     with open(local_path("data", "options.yaml")) as f:
         file_data = f.read()
@@ -1887,7 +1890,7 @@ def generate_yaml_templates(target_folder: typing.Union[str, "pathlib.Path"], ge
                         cleandoc=cleandoc,
                         preset_name=name,
                         preset=preset,
-                        option_visible=lambda id,option: option.options_visibilities.get(id, Visibility.all) & Visibility.template != 0
+                        option_visible=visible
                     )
                     preset_name = f" - {name}" if name else ""
                     with open(os.path.join(preset_folder if name else target_folder,
