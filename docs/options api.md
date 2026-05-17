@@ -139,9 +139,9 @@ options in a yaml. The flags are as follows:
 * `complex_ui` (`0b0100`): This option shows up on the advanced/weighted options page
 * `spoiler` (`0b1000`): This option shows up in spoiler logs
   
-Additionally Choice options can use the `OptionValue` class to hide specific options. Choices hidden this way 
+Additionally Choice options can use the `options_visibilities` dictionary to hide specific options. Choices hidden this way 
 are still valid choices in the yaml. Note that `spoiler` is not used for choices. If a hidden option is set as 
-the default value it will always be shown in the advanced/weighted options page to allow modifying its weight 
+the default value it will always be shown in the advanced/weighted options page and template to allow modifying its weight 
 from the default.
 
 ```python
@@ -155,8 +155,10 @@ class Difficulty(Choice):
     display_name = "Difficulty"
     option_easy = 0
     option_normal = 1
-    option_hard = OptionValue(2, visibility=Visibility.template|Visibility.complex_ui) # only show this to advanced users
+    option_hard = 2
     default = 1
+
+    options_visibilities = {option_hard: Visibility.template|Visibility.complex_ui}
 ```
 
 ### Option Groups

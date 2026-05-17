@@ -80,7 +80,7 @@ class AssembleOptions(abc.ABCMeta):
     def __new__(mcs, name, bases, attrs):
         options = attrs["options"] = {}
         name_lookup = attrs["name_lookup"] = {}
-        options_visibilities = attrs["options_visibilities"] = {}
+        options_visibilities = attrs["options_visibilities"] if "options_visibilities" in attrs else {}
         # merge parent class options
         for base in bases:
             if getattr(base, "options", None):
@@ -91,12 +91,10 @@ class AssembleOptions(abc.ABCMeta):
                        name.startswith("option_")}
         for option in new_options.keys():
             value = new_options[option]
-            if isinstance(value, OptionValue):
-                options_visibilities[value.value] = value.visibility
-                new_options[option] = value.value
-            else:
+            if value not in options_visibilities.keys():
                 options_visibilities[value] = Visibility.all
-
+        attrs["options_visibilities"] = options_visibilities
+        
         assert "random" not in new_options, "Choice option 'random' cannot be manually assigned."
         assert len(new_options) == len(set(new_options.values())), "same ID cannot be used twice. Try alias?"
 
@@ -162,11 +160,6 @@ class AssembleOptions(abc.ABCMeta):
 
 
 T = typing.TypeVar('T')
-
-
-class OptionValue(typing.Generic[T], typing.NamedTuple):
-    value: T
-    visibility: Visibility = Visibility.all
 
 
 class Option(typing.Generic[T], metaclass=AssembleOptions):
